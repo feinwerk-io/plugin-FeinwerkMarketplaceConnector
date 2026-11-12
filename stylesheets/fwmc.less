@@ -1,0 +1,769 @@
+// Feinwerk connector — Matomo-native styling, scoped to the plugin's screens. Palette: Matomo blue, green and gray.
+//
+// Dark mode: the colours are Matomo's theme CSS custom properties (light/dark values switch with
+// <html data-theme-mode>), with light fallbacks for Matomo versions without them. Matomo's own LESS
+// theme variables and the .inDarkMode() mixin only exist from 5.12 — this plugin allows 5.0, and a
+// LESS error puts Matomo's whole UI into safe mode, so neither is referenced here (checked by
+// tests/lesscheck.php against 5.3.2 and 5.11.2). Colours without a theme variable get an explicit dark
+// value through the local .fwmc-dark() mixin. File-scoped so the page, modal and lightbox blocks share them.
+@text: ~"var(--theme-color-text, #212121)";
+@text-body: ~"var(--theme-color-text-light, #374151)";
+@muted: ~"var(--theme-color-text-lighter, #6b7280)";
+@accent: ~"var(--theme-color-link, #4183C4)";
+@line: ~"var(--theme-color-border-alternative, var(--theme-color-border, #e5e7eb))";
+@surface: ~"var(--theme-color-background-contrast, #fff)";
+@subtle: ~"var(--theme-color-background-tinyContrast, #f9fafb)";
+@success: #43a047;
+@success-dark: #66bb6a;
+
+// Same output as Matomo's .inDarkMode(): explicit dark mode, or "auto" following the system.
+// Matomo versions without dark mode set no data-theme-mode, so the light look applies there.
+.fwmc-dark(@rules) {
+    [data-theme-mode="dark"]:root & {
+        @rules();
+    }
+
+    [data-theme-mode="auto"]:root & {
+        @media (prefers-color-scheme: dark) {
+            @rules();
+        }
+    }
+}
+
+// Status palettes: [background, text] in light and dark.
+.fwmc-tone(@bg, @fg, @bg-dark, @fg-dark) {
+    background: @bg;
+    color: @fg;
+    .fwmc-dark({ background: @bg-dark; color: @fg-dark; });
+}
+.fwmc-tone-green() { .fwmc-tone(#dcfce7, #166534, #14351f, #86efac); }
+.fwmc-tone-amber() { .fwmc-tone(#fef3c7, #92400e, #3b2a0d, #fcd34d); }
+.fwmc-tone-gray() { .fwmc-tone(#f3f4f6, #4b5563, #2a2f36, #c3c8d0); }
+.fwmc-tone-blue() { .fwmc-tone(#e3eef8, #2a5f91, #1b2c3d, #9cc3ea); }
+
+.fwmc {
+    // --- Header --------------------------------------------------------
+    .fwmc-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .fwmc-head-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .fwmc-sub {
+        color: @muted;
+        margin: -4px 0 18px;
+    }
+
+    .fwmc-meta {
+        color: @muted;
+        font-size: 12px;
+    }
+
+    .fwmc-note {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        .fwmc-dark({ background: #2e2410; border-color: #6b5214; color: #fcd34d; });
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 12px;
+        margin-bottom: 14px;
+    }
+
+    // Self-update banner for the connector itself (blue tone: informational, not a warning).
+    .fwmc-selfupdate {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+        border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px;
+        .fwmc-tone-blue();
+        form { margin: 0; }
+    }
+
+    // Not connected yet: the connect button, with the manual token way below it.
+    .fwmc-connect {
+        border: 1px solid @line; border-radius: 8px; background: @surface; padding: 20px 24px; max-width: 640px;
+        h3 { margin: 0 0 8px; color: @text; }
+        p { color: @text-body; margin: 0 0 16px; }
+        form { margin: 0 0 16px; }
+        .fwmc-meta { margin: 0; }
+        a { color: @accent; }
+    }
+
+    // Browse without an account (5.3.0): a quiet second way in the connect box (Matomo's outline button, so Connect
+    // stays the one filled button),
+    // after the load the card grid with a text link to load the list again.
+    .fwmc-connect .fwmc-browse-offer {
+        border-top: 1px solid @line; margin-top: 16px; padding-top: 16px;
+        form { display: inline-block; margin: 0; }
+        .fwmc-meta { margin: 8px 0 0; }
+    }
+    .fwmc-public { margin-top: 20px; }
+    .fwmc-browse-intro {
+        form { display: inline; margin: 0 0 0 6px; }
+    }
+    .fwmc-textbtn {
+        background: none; border: 0; padding: 0; font: inherit; color: @accent; text-decoration: underline; cursor: pointer;
+        &[disabled] { color: @muted; cursor: default; text-decoration: none; }
+    }
+    .fwmc-card-na { font-style: italic; }
+    .fwmc-note-action { display: inline-block; margin: 0 0 0 12px; vertical-align: middle; }
+    // "Use an existing license" and "Buy a license" sit in the action cell like Install/Update.
+    .fwmc-license-action { display: inline-block; margin: 0; }
+    // Matomo's button has a fixed height: a label that wraps loses its second line ("BUY A", rc1 RC-F2 at 1400 px).
+    // One line; the action cell takes the width and the description column wraps instead.
+    .fwmc-license-action .btn, .fwmc-install .btn { white-space: nowrap; }
+    // The offline note's docs link keeps the note's (light and dark) text colour.
+    .fwmc-note a { color: inherit; font-weight: 600; text-decoration: underline; }
+
+    // --- Tabs ------------------------------------------------------------
+    .fwmc-tabs {
+        display: flex; gap: 4px; margin: 16px 0 12px; padding: 0; list-style: none;
+        border-bottom: 2px solid @line;
+        li { margin: 0; }
+        a {
+            display: inline-block; padding: 8px 16px; color: @muted; text-decoration: none;
+            border-bottom: 2px solid transparent; margin-bottom: -2px; font-weight: 600;
+        }
+        li.active a { color: @text; border-bottom-color: @accent; }
+    }
+
+    // --- Browse: filters + card grid --------------------------------------
+    .fwmc-browse {
+        margin-top: 4px;
+    }
+
+    .fwmc-filters {
+        display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+        .fwmc-search { flex: 1 1 220px; max-width: 340px; }
+        .fwmc-filter { width: auto; }
+    }
+
+    .fwmc-grid {
+        display: grid; gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .fwmc-card {
+        position: relative; // the title button's ::after covers the card (stretched link)
+        border: 1px solid @line; border-radius: 4px; background: @surface; cursor: pointer;
+        display: flex; flex-direction: column; overflow: hidden;
+        transition: box-shadow .15s ease;
+        &:hover { box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+        &:focus-within { box-shadow: 0 0 0 2px @accent; }
+        .fwmc-dark({ &:hover { box-shadow: 0 2px 10px rgba(0,0,0,.5); } &:focus-within { box-shadow: 0 0 0 2px @accent; } });
+        @media (prefers-reduced-motion: reduce) { transition: none; }
+    }
+    .fwmc-card-link {
+        background: none; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; text-align: left;
+        cursor: pointer; line-height: inherit;
+        &::after { content: ""; position: absolute; inset: 0; }
+        &:focus, &:focus-visible { outline: none; }
+    }
+    .fwmc-count { margin: -6px 0 12px; color: @muted; font-size: 13px; }
+    .fwmc-empty {
+        padding: 32px 16px; text-align: center; color: @muted; border: 1px dashed @line; border-radius: 4px;
+        p { margin: 0 0 10px; }
+    }
+    // The artwork fills the whole media area in its own 8:5 format (the covers are drawn with a frame and a
+    // title block at the edges, so nothing may be cropped); the monogram fallback stays centred on the subtle background.
+    .fwmc-card-media {
+        aspect-ratio: 8 / 5; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        background: @subtle; border-bottom: 1px solid @line;
+        img { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .fwmc-dark({ img { filter: brightness(.88); } });
+    }
+    .fwmc-card-body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .fwmc-card-title { font-weight: 700; font-size: 14px; color: @text; display: flex; align-items: center; gap: 8px; margin: 0; }
+    // The whole description (backlog 11, Peter 2026-10-28: the 3-line clamp of 5.1.0 cut most of them off). The grid
+    // rows take the tallest card, and the foot stays at the bottom (margin-top: auto).
+    .fwmc-card-desc { color: @muted; font-size: 13px; margin: 0; overflow-wrap: anywhere; }
+    .fwmc-card-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+    .fwmc-price { color: @text; font-weight: 600; font-size: 13px; }
+
+    // --- Avatars -----------------------------------------------------------
+    .fwmc-avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        .fwmc-tone-blue();
+        font-weight: 700;
+        font-size: 12px;
+    }
+
+    .fwmc-avatar--lg { width: 56px; height: 56px; font-size: 24px; line-height: 56px; }
+
+    // --- Badges & status pills ----------------------------------------------
+    .fwmc-badge {
+        display: inline-block;
+        white-space: nowrap;   // "Not Installed" broke onto two lines in the Manage table (walkthrough 5.3.0)
+        padding: 2px 9px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    // Tier badges (built as `fwmc-badge--${tier}`, tier is "free" or "paid").
+    .fwmc-badge--free { .fwmc-tone-gray(); }
+
+    .fwmc-badge--paid { .fwmc-tone-blue(); }
+
+    // License badges.
+    .fwmc-badge--license-ok { .fwmc-tone-green(); }
+
+    .fwmc-badge--license-missing { .fwmc-tone-gray(); }
+
+    .fwmc-badge--dbwarn { .fwmc-tone-amber(); }
+    .fwmc-table form .fwmc-badge, .fwmc-cta form .fwmc-badge { margin-left: 8px; }
+
+    // Install-status pills (built as `fwmc-status--${status}`).
+    .fwmc-status--installed { .fwmc-tone-green(); }
+
+    .fwmc-status--update_available { .fwmc-tone-amber(); }
+
+    .fwmc-status--not_installed { .fwmc-tone-gray(); }
+
+    .fwmc-status--inactive { .fwmc-tone-amber(); margin-left: 4px; }
+
+    // Matomo 6 pads table cells wider: a wide table scrolls inside its card instead of overflowing it.
+    .fwmc-tablewrap { overflow-x: auto; max-width: 100%; }
+
+    // --- Manage table (native table view) -----------------------------------
+    table.fwmc-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: @surface;
+        border: 1px solid @line;
+        border-radius: 10px;
+        overflow: hidden;
+        font-size: 13px;
+    }
+
+    .fwmc-table thead th {
+        text-align: left;
+        font-weight: 600;
+        color: @muted;
+        background: @subtle;
+        padding: 10px 14px;
+        border-bottom: 1px solid @line;
+    }
+
+    .fwmc-table tbody td {
+        padding: 12px 14px;
+        border-bottom: 1px solid @line;
+        vertical-align: middle;
+    }
+
+    .fwmc-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .fwmc-table tbody tr:hover {
+        background: @subtle;
+    }
+
+    .fwmc-plugin-cell {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: @text;
+    }
+
+    .fwmc-name {
+        font-weight: 600;
+        color: @text;
+    }
+
+    .fwmc-desc {
+        color: @muted;
+        font-size: 12px;
+        line-height: 1.4;
+        max-width: 360px;
+    }
+
+    .fwmc-learn {
+        display: block;
+        width: fit-content;
+        font-size: 12px;
+        font-weight: 600;
+        color: @accent;
+        text-decoration: none;
+    }
+
+    .fwmc-learn:hover {
+        text-decoration: underline;
+    }
+}
+
+// --- Detail modal --------------------------------------------------------
+// MatomoDialog teleports this markup to body>.modal>.modal-content — it never
+// ends up nested inside the `.fwmc` wrapper above, so a
+// descendant selector there is dead. The modal div instead carries BOTH
+// classes, so this compound selector is what actually matches it — still
+// fully scoped per HARD RULE 2.
+.fwmc.fwmc-modal {
+    max-width: 920px; padding: 24px;
+    .fwmc-modal-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px;
+        h2 { margin: 0 0 4px; } }
+    .fwmc-card-media--modal { width: 154px; height: 96px; flex: 0 0 154px; border: 1px solid @line; border-radius: 4px; }
+    .fwmc-modal-columns { display: flex; gap: 24px; align-items: flex-start;
+        @media (max-width: 760px) { flex-direction: column; } }
+    .fwmc-modal-main {
+        flex: 1 1 60%; min-width: 0;
+
+        // Typography for the server-rendered plugin description (v-html from
+        // sanitized Markdown) — without this the raw h1/p/ul render cramped.
+        h1, h2, h3 { color: @text; line-height: 1.3; margin: 18px 0 8px; }
+        h1 { font-size: 20px; }
+        h2 { font-size: 17px; }
+        h3 { font-size: 15px; }
+        h1:first-child, h2:first-child, h3:first-child, p:first-child { margin-top: 0; }
+        p, li { color: @text-body; }
+        p { margin: 0 0 12px; line-height: 1.55; }
+        ul, ol { margin: 0 0 12px; padding-left: 22px; li { margin: 4px 0; line-height: 1.5; } }
+        code { background: @subtle; border: 1px solid @line; border-radius: 3px; padding: 1px 5px; font-size: 13px; color: @text; }
+        pre { background: @subtle; border: 1px solid @line; border-radius: 4px; padding: 10px 12px; overflow-x: auto; margin: 0 0 12px; color: @text;
+            code { background: none; border: 0; padding: 0; color: @text; } }
+        blockquote { border-left: 3px solid @line; margin: 0 0 12px; padding: 2px 0 2px 12px; color: @muted; }
+        a { color: @accent; }
+        img { max-width: 100%; border-radius: 4px; }
+        hr { border: 0; border-top: 1px solid @line; margin: 16px 0; }
+    }
+    .fwmc-modal-side { flex: 1 1 32%; min-width: 220px; }
+    .fwmc-shots { display: flex; gap: 8px; flex-wrap: wrap;
+        // Plain image buttons: reset what Matomo and Materialize give every button.
+        .fwmc-shot { padding: 0; margin: 0; border: 0; background: none; box-shadow: none; height: auto; line-height: 0;
+            border-radius: 4px; cursor: zoom-in;
+            &:focus { background: none; }
+            &:focus-visible { outline: 2px solid @accent; outline-offset: 2px; } }
+        img { width: 120px; height: 80px; object-fit: cover; border: 1px solid @line; border-radius: 4px; cursor: zoom-in; } }
+    .fwmc-features { padding-left: 18px; margin: 8px 0; li { margin: 4px 0; } }
+    .fwmc-plan { border: 1px solid @line; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px;
+        &.fwmc-plan--highlight { border-color: @success; box-shadow: 0 0 0 1px @success inset;
+            .fwmc-dark({ border-color: @success-dark; box-shadow: 0 0 0 1px @success-dark inset; }); } }
+    .fwmc-plan-name { font-weight: 700; color: @text; }
+    .fwmc-plan-price { color: @text; }
+    .fwmc-plan-link { color: inherit; text-decoration: none; display: block;
+        &:hover .fwmc-plan { border-color: @accent; } }
+    .fwmc-license-state { margin-top: 12px; }
+    .fwmc-versions {
+        margin-bottom: 12px;
+        summary { cursor: pointer; font-weight: 600; color: @text; margin-bottom: 8px; }
+    }
+    .fwmc-modal-foot { border-top: 1px solid @line; margin-top: 16px; padding-top: 12px;
+        display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .fwmc-cta form { display: inline-flex; align-items: center; gap: 8px; }
+    .fwmc-cta--top { margin-top: 12px; }
+    .fwmc-buy-link { color: @accent; font-weight: 700; }
+
+    // --- Bug report form -----------------------------------------------------
+    .fwmc-bugreport { flex-basis: 100%; margin-top: 8px; }
+    .fwmc-bugreport-toggle { color: @muted; font-size: 13px; text-decoration: underline; }
+    .fwmc-bugreport-form {
+        margin-top: 12px; padding: 14px; border: 1px solid @line; border-radius: 4px;
+        display: flex; flex-direction: column; gap: 10px; background: @subtle;
+        label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; color: @text; font-size: 13px; }
+        input[type="text"], textarea { font-weight: 400; }
+        .alert { margin: 0; }
+        button { align-self: flex-start; }
+    }
+    .fwmc-bugreport-files { margin: 0; padding-left: 18px; color: @muted; font-size: 13px; }
+}
+
+// --- Screenshot lightbox ----------------------------------------------------
+// Teleported to <body> (outside the transformed modal), so it gets its own top-level
+// compound selector — the element carries both classes, keeping HARD RULE 2.
+.fwmc.fwmc-lightbox {
+    position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 10000;
+    display: flex; align-items: center; justify-content: center; cursor: zoom-out;
+    img { max-width: 90vw; max-height: 90vh; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,.4); }
+    &:focus { outline: none; }
+}
+
+// Database-update warning before an install (InstallForm). Teleported to <body> above Matomo's own dialogs, so it
+// carries .fwmc itself (HARD RULE 2). Amber head: it must not be overlooked; the large-instance block is red-toned.
+.fwmc-tone-red() { .fwmc-tone(#fde8e8, #9b1c1c, #3d1717, #fca5a5); }
+
+.fwmc.fwmc-dbdialog {
+    position: fixed; inset: 0; z-index: 10001; background: rgba(0,0,0,.6);
+    display: flex; align-items: center; justify-content: center; padding: 16px;
+    .fwmc-dbdialog-box {
+        background: @surface; color: @text; border-radius: 8px; max-width: 640px; width: 100%;
+        max-height: 90vh; overflow: auto; box-shadow: 0 12px 48px rgba(0,0,0,.45);
+        border: 3px solid #f59e0b;
+    }
+    .fwmc-dbdialog-head {
+        .fwmc-tone-amber();
+        font-size: 18px; font-weight: 700; padding: 14px 20px;
+        span { font-size: 22px; margin-right: 6px; }
+    }
+    .fwmc-dbdialog-body {
+        padding: 16px 20px 4px; font-size: 14px; line-height: 1.5; color: @text-body;
+        p { margin: 0 0 12px; }
+        ul, ol { margin: 0 0 12px 20px; padding: 0; }
+        ul li { list-style: disc; }
+        ol li { list-style: decimal; margin-bottom: 8px; }
+        code {
+            display: inline-block; margin-top: 4px; padding: 2px 6px; border-radius: 4px; font-size: 13px; word-break: break-all;
+            background: ~"var(--theme-color-code-background, #f3f4f6)"; color: ~"var(--theme-color-code, #1f2937)";
+        }
+    }
+    .fwmc-dbdialog-plugin { font-weight: 600; color: @text; }
+    .fwmc-dbdialog-option { margin-bottom: 12px; code { margin-left: 35px; } }
+    .fwmc-dbdialog-duration { font-weight: 700; color: @text; }
+    .fwmc-dbdialog-large {
+        .fwmc-tone-red();
+        border-radius: 6px; padding: 12px 14px; margin-bottom: 12px;
+        strong { color: inherit; }
+        code { background: rgba(0,0,0,.08); color: inherit; }
+        .fwmc-dark({ code { background: rgba(255,255,255,.12); } });
+    }
+    // Matomo's (Materialize) checkbox: the input stays hidden, its span draws the box.
+    .fwmc-dbdialog-ack {
+        display: block; cursor: pointer;
+        span { color: inherit; font-size: 14px; font-weight: 600; line-height: 1.4; }
+    }
+    .fwmc-dbdialog-actions {
+        display: flex; gap: 12px; flex-wrap: wrap; padding: 12px 20px 18px;
+        .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    }
+}
+
+// Feedback question in one compact line under the tabs (FeedbackBar.vue; Peter, 2026-11-11, reference PageFilterReport
+// b628e33 stylesheets/feedback.css): question, thumbs, support link; after a vote the thanks takes their place. Small
+// muted type; Matomo's CSS custom properties with light fallbacks (no Matomo LESS variables: Matomo 5.0 floor).
+.fwmc {
+  .fwmc-feedback {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+    margin: 12px 0 2px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: ~"var(--theme-color-text-lighter, #646464)";
+  }
+
+  .fwmc-feedback-thumb {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    padding: 1px 4px;
+    border: 1px solid ~"var(--theme-color-border-alternative, var(--theme-color-border, #ccc))";
+    border-radius: 3px;
+    background: transparent;
+    color: ~"var(--theme-color-text-lighter, #646464)";
+    line-height: 1;
+    cursor: pointer;
+
+    svg {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    &:hover,
+    &:focus-visible {
+      border-color: ~"var(--theme-color-brand, #43a047)";
+      color: ~"var(--theme-color-brand, #43a047)";
+    }
+  }
+
+  .fwmc-feedback-thumb:focus-visible,
+  .fwmc-feedback-support:focus-visible {
+    outline: 2px solid ~"var(--theme-color-focus-ring, #0969da)";
+    outline-offset: 2px;
+  }
+
+  .fwmc-feedback-icon-down {
+    transform: rotate(180deg);
+  }
+
+  .fwmc-feedback.is-voted .fwmc-feedback-question,
+  .fwmc-feedback.is-voted .fwmc-feedback-thumb {
+    display: none;
+  }
+
+  .fwmc-feedback-thanks {
+    color: ~"var(--theme-color-text-light, #444)";
+  }
+
+  // stays in the document while empty (screen readers announce the thanks) but takes no room
+  .fwmc-feedback-thanks:empty {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .fwmc-feedback-support {
+    margin-left: auto;
+    color: ~"var(--theme-color-link, #1976d2)";
+    text-decoration: underline;
+  }
+}
+
+// "Aufgaben" and "Lizenzen" tabs (5.1.0, TaskList.vue and LicenseTable.vue).
+.fwmc {
+  .fwmc-task-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid @line;
+    border-radius: 4px;
+    background: @surface;
+  }
+
+  .fwmc-task {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 12px 16px;
+    border-left: 4px solid transparent;
+
+    & + .fwmc-task { border-top: 1px solid @line; }
+  }
+
+  .fwmc-task--warning { border-left-color: #d97706; .fwmc-dark({ border-left-color: #fbbf24; }); }
+  .fwmc-task--info { border-left-color: @accent; }
+
+  .fwmc-task-text {
+    flex: 1 1 360px;
+    color: @text;
+    font-size: 14px;
+  }
+
+  .fwmc-task-code {
+    display: block;
+    margin-top: 6px;
+    padding: 6px 10px;
+    border-radius: 3px;
+    background: @subtle;
+    color: @text;
+    font-size: 12.5px;
+    word-break: break-all;
+  }
+
+  .fwmc-task-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+
+    form { margin: 0; }
+  }
+
+  .fwmc-licenses-intro {
+    margin: 0 0 14px;
+    color: @text-body;
+
+    a { margin-left: 6px; white-space: nowrap; }
+  }
+
+  .fwmc-link-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    color: @accent;
+    cursor: pointer;
+    text-align: left;
+
+    &:hover, &:focus-visible { text-decoration: underline; }
+  }
+}
+
+// "Update several at once" (5.1.0, BatchUpdate.vue) and the selection column of the Manage tab.
+.fwmc {
+  .fwmc-select {
+    width: 36px;
+    padding-right: 0;
+
+    label { margin: 0; }
+  }
+
+  .fwmc-batch { margin: 0 0 12px; }
+
+  .fwmc-batch-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .fwmc-batch-finish { display: none; }
+
+  .fwmc-batch-progress {
+    padding: 12px 16px;
+    border: 1px solid @line;
+    border-radius: 4px;
+    background: @surface;
+
+    ul { margin: 8px 0 0; padding: 0; list-style: none; }
+    li { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 4px 0; }
+  }
+
+  .fwmc-batch-head { margin: 0; font-weight: 600; color: @text; }
+  .fwmc-batch-name { color: @text; min-width: 220px; }
+  .fwmc-batch-state { color: @muted; }
+  .fwmc-batch-ok .fwmc-batch-state { color: #15803d; .fwmc-dark({ color: #86efac; }); }
+  .fwmc-batch-fail .fwmc-batch-state,
+  .fwmc-batch-message { color: #b91c1c; .fwmc-dark({ color: #fca5a5; }); }
+  .fwmc-batch-held .fwmc-batch-state,
+  .fwmc-batch-noanswer .fwmc-batch-state { color: #b45309; .fwmc-dark({ color: #fcd34d; }); }
+  .fwmc-batch-message { flex-basis: 100%; font-size: 12.5px; }
+}
+
+// Recommendation banner (5.1.0, PromoBanner.vue): a designed card, not a Matomo notification
+// (Peter: "schön, ähnlich dem von Openmost"). Feinwerk orange as the accent, a soft glow and a fine
+// grid on the theme's surface, so it works in light and dark.
+@fwmc-orange: #e95b10;
+
+.fwmc.fwmc-promo-host { margin: 0 0 20px; }
+
+.fwmc {
+  .fwmc-promo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin: 0 0 18px;
+    padding: 20px 52px 20px 20px;
+    border: 1px solid @line;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: @surface;
+    background-image:
+      radial-gradient(110% 140% at 0% 0%, fade(@fwmc-orange, 13%), transparent 58%),
+      radial-gradient(90% 120% at 100% 100%, rgba(25, 118, 210, .08), transparent 55%);
+    .fwmc-dark({
+      background-image:
+        radial-gradient(110% 140% at 0% 0%, fade(@fwmc-orange, 22%), transparent 60%),
+        radial-gradient(90% 120% at 100% 100%, rgba(119, 143, 212, .14), transparent 55%);
+    });
+
+    // the fine grid, faded out towards the right
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, fade(@fwmc-orange, 9%) 1px, transparent 1px),
+        linear-gradient(to bottom, fade(@fwmc-orange, 9%) 1px, transparent 1px);
+      background-size: 22px 22px;
+      -webkit-mask-image: linear-gradient(to right, #000, transparent 70%);
+      mask-image: linear-gradient(to right, #000, transparent 70%);
+    }
+
+    > * { position: relative; }
+  }
+
+  .fwmc-promo-art {
+    flex: 0 0 176px;
+    aspect-ratio: 8 / 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid @line;
+    border-radius: 6px;
+    overflow: hidden;
+    background: @subtle;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .10);
+    .fwmc-dark({ box-shadow: 0 6px 18px rgba(0, 0, 0, .45); });
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  .fwmc-promo-body { flex: 1 1 auto; min-width: 0; }
+
+  .fwmc-promo-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: @fwmc-orange;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    .fwmc-dark({ color: #ff8a4c; });
+  }
+
+  .fwmc-promo-title { margin: 0 0 6px; color: @text; font-size: 19px; font-weight: 700; line-height: 1.25; }
+
+  .fwmc-promo-text {
+    margin: 0 0 14px;
+    max-width: 760px;
+    color: @text-body;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .fwmc-promo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+  }
+
+  .fwmc-promo-cta {
+    background-color: @fwmc-orange;
+    color: #fff;
+
+    &:hover, &:focus { background-color: darken(@fwmc-orange, 6%); color: #fff; }
+  }
+
+  .fwmc-promo-price { color: @text; font-weight: 600; font-size: 13px; }
+
+  .fwmc-promo-off {
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: @muted;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    &:hover, &:focus-visible { color: @text; }
+    &[disabled] { cursor: default; text-decoration: none; }
+  }
+
+  .fwmc-promo-offnote { margin: 0 0 18px; color: @muted; font-size: 13px; }
+
+  .fwmc-promo-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: @muted;
+    font-size: 22px;
+    line-height: 30px;
+    cursor: pointer;
+
+    &:hover, &:focus-visible { background: fade(@fwmc-orange, 12%); color: @text; }
+  }
+
+  @media (max-width: 720px) {
+    .fwmc-promo { flex-direction: column; align-items: stretch; }
+    .fwmc-promo-art { flex-basis: auto; }
+  }
+}

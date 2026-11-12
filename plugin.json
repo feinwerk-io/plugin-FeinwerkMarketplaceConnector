@@ -1,0 +1,31 @@
+{
+    "name": "FeinwerkMarketplaceConnector",
+    "version": "5.3.1",
+    "description": "Install, update and license the Plugins for Matomo by Feinwerk right in your Matomo administration, next to the Matomo Marketplace.",
+    "keywords": [
+        "marketplace",
+        "plugins",
+        "updates",
+        "licenses",
+        "installer",
+        "feinwerk"
+    ],
+    "category": "integration",
+    "support": {
+        "email": "support@feinwerk.io",
+        "docs": "https://plugins.feinwerk.io/en/docs/connector"
+    },
+    "homepage": "https://feinwerk.io",
+    "authors": [
+        {
+            "name": "Peter Boehlke, Feinwerk.io",
+            "email": "support@feinwerk.io",
+            "homepage": "https://feinwerk.io"
+        }
+    ],
+    "license": "GPL v3+",
+    "require": {
+        "matomo": ">=5.0.0,<7.0.0-b1",
+        "php": ">=8.1.0"
+    }
+}

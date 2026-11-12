@@ -1,0 +1,96 @@
+{# Replaces Matomo's browser run of the database update on a large instance (B1, Controller::consoleUpdate). Same frame
+   as Matomo's update page (@CoreUpdater/layout.twig), which has no dark theme: this page brings its own, with the
+   values of core/Plugin/ThemeStyles.php. Without login only the command and the hint (superUser false). #}
+<!DOCTYPE html>
+<html data-theme-mode="{{ themeMode }}">
+<head>
+    <meta charset="utf-8">
+    <title>Matomo &rsaquo; {{ 'FeinwerkMarketplaceConnector_ConsoleUpdateTitle'|translate }}</title>
+    <meta name="viewport" content="initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="stylesheet" type="text/css" href="index.php?module=CoreUpdater&action=getUpdaterCss"/>
+    {% include "@CoreHome/_favicon.twig" %}
+    <style>
+        html {
+            --fwcu-bg: #fff; --fwcu-head: #eff0f1; --fwcu-text: #212121; --fwcu-muted: #444; --fwcu-border: #ccc;
+            --fwcu-link: #1976D2; --fwcu-code: #f3f3f3; --fwcu-code-bg: #4d4d4d; --fwcu-danger: #c62828;
+        }
+        html[data-theme-mode="dark"] {
+            color-scheme: dark;
+            --fwcu-bg: #151819; --fwcu-head: #202329; --fwcu-text: #ccc; --fwcu-muted: #aaa; --fwcu-border: #555;
+            --fwcu-link: #778fd4; --fwcu-danger: #d84a4a;
+        }
+        @media (prefers-color-scheme: dark) {
+            html[data-theme-mode="auto"] {
+                color-scheme: dark;
+                --fwcu-bg: #151819; --fwcu-head: #202329; --fwcu-text: #ccc; --fwcu-muted: #aaa; --fwcu-border: #555;
+                --fwcu-link: #778fd4; --fwcu-danger: #d84a4a;
+            }
+        }
+        body#simple.fwmc-cu { background: var(--fwcu-bg); color: var(--fwcu-text); }
+        #simple.fwmc-cu .logo { background-color: var(--fwcu-bg) !important; }
+        #simple.fwmc-cu .box { border-color: var(--fwcu-border); background: var(--fwcu-bg); }
+        #simple.fwmc-cu .box .header { background-color: var(--fwcu-head); color: var(--fwcu-text); }
+        #simple.fwmc-cu .box .content { text-align: left; color: var(--fwcu-text); }
+        #simple.fwmc-cu .box .content p { margin: 0 0 14px; }
+        #simple.fwmc-cu .fwmc-cu-command {
+            margin: 0 0 18px; padding: 12px 16px; border-radius: 3px; text-align: left;
+            background: var(--fwcu-code-bg); color: var(--fwcu-code);
+            font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace; font-size: 13px;
+            white-space: pre-wrap; word-break: break-all;
+        }
+        #simple.fwmc-cu .fwmc-cu-note { color: var(--fwcu-muted); font-size: 13px; }
+        #simple.fwmc-cu .fwmc-cu-note code { background: var(--fwcu-head); color: var(--fwcu-text); padding: 1px 4px; border-radius: 2px; }
+        #simple.fwmc-cu a:not(.btn) { color: var(--fwcu-link); }
+        #simple.fwmc-cu .fwmc-cu-refused { margin: 18px 0 0; padding: 10px 14px; border-left: 4px solid var(--fwcu-danger); font-weight: bold; }
+        #simple.fwmc-cu .fwmc-cu-anyway { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--fwcu-border); }
+        #simple.fwmc-cu .fwmc-cu-anyway input[type=checkbox] {
+            position: static; opacity: 1; pointer-events: auto; width: auto; height: auto; margin: 0 6px 0 0; vertical-align: middle;
+        }
+        #simple.fwmc-cu .fwmc-cu-anyway label { color: var(--fwcu-text); font-size: 14px; vertical-align: middle; }
+        #simple.fwmc-cu .fwmc-cu-anyway .fwmc-cu-danger { display: block; margin-top: 14px; background-color: var(--fwcu-danger); color: #fff; }
+        /* Active only after the tick (the checkbox is required as well, also for the keyboard). */
+        #simple.fwmc-cu .fwmc-cu-anyway input[type=checkbox]:not(:checked) ~ .fwmc-cu-danger { opacity: .45; pointer-events: none; }
+        /* Matomo's logo (also a custom one) is made for a light ground: keep it on a light field in dark mode. */
+        html[data-theme-mode="dark"] #simple.fwmc-cu .logo img { background: #fff; padding: 6px 12px; border-radius: 4px; }
+        html[data-theme-mode="dark"] #simple.fwmc-cu .box { box-shadow: none; }
+        @media (prefers-color-scheme: dark) {
+            html[data-theme-mode="auto"] #simple.fwmc-cu .logo img { background: #fff; padding: 6px 12px; border-radius: 4px; }
+            html[data-theme-mode="auto"] #simple.fwmc-cu .box { box-shadow: none; }
+        }
+    </style>
+</head>
+<body id="simple" class="fwmc-cu">
+
+{% include "@CoreHome/_logo.twig" with { 'logoLink': false } %}
+
+<div class="box">
+    <div class="header">
+        <h1>{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateTitle'|translate }}</h1>
+    </div>
+    <div class="content">
+        <p>{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateIntro'|translate }}</p>
+        <pre class="fwmc-cu-command">{{ command }}</pre>
+        <p>{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateThen'|translate }}</p>
+        {% if superUser %}
+            <p class="fwmc-cu-note">{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateOverride'|translate('<code>' ~ override|e ~ '</code>')|raw }}</p>
+        {% endif %}
+        <p><a class="btn" href="index.php">{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateRecheck'|translate }}</a></p>
+        {% if browserRunNote %}
+            <p class="fwmc-cu-refused">{{ browserRunNote }}</p>
+        {% endif %}
+        {% if browserRunNonce %}
+            {# Peter, 2026-10-23: without SSH access the admin was locked out. Matomo's own run, once, after the tick. #}
+            <form class="fwmc-cu-anyway" method="post" action="{{ browserRunUrl }}">
+                <input type="hidden" name="fwmc_browser_nonce" value="{{ browserRunNonce }}">
+                <p class="fwmc-cu-note">{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateAnywayHint'|translate }}</p>
+                <input type="checkbox" id="fwmc-cu-confirm" name="fwmc_browser_confirm" value="1" required>
+                <label for="fwmc-cu-confirm">{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateAnywayConfirm'|translate }}</label>
+                <button type="submit" class="btn fwmc-cu-danger">{{ 'FeinwerkMarketplaceConnector_ConsoleUpdateAnywayButton'|translate }}</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
