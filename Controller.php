@@ -310,28 +310,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         if (Nonce::verifyNonce('FeinwerkMarketplaceConnector.action', $nonce)) {
             Nonce::discardNonce('FeinwerkMarketplaceConnector.action');
 
-            $settings = $this->settings();
-            if ($settings['url'] !== '' && $settings['token'] !== '') {
-                $refreshed = $this->marketplaceCache($settings)->refresh(); // never throws
-
-                // Only report when the marketplace answered — otherwise a dead upstream would
-                // make the admin wait out a second timeout here.
-                if ($refreshed->error === null) {
-                    // A new release changes the plugin window too: its cached answers are outdated now.
-                    (new PluginDetailCache($this->client($settings), new OptionCacheStore()))->invalidateAll(); // never throws
-                    ReadinessCache::refresh($this->client($settings)); // never throws
-                    try {
-                        $env = [
-                            'matomo_version' => \Piwik\Version::VERSION,
-                            'php_version' => PHP_VERSION,
-                        ];
-                        $model = new \Piwik\Plugins\UsersManager\Model();
-                        $env['user_count'] = count($model->getUsersLogin());
-                        $this->client($settings)->checkUpdates($env, []);
-                    } catch (\Throwable $e) {
-                        // Reporting is best-effort; refresh must stay resilient.
-                    }
-                }
+            if (PluginOperations::connected()) {
+                PluginOperations::refresh(); // never throws: list, plugin windows, readiness, update report
             }
         }
 
@@ -453,7 +433,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             }
 
             $settings = $this->settings();
-            $version = $this->installedVersionOf($slug);
+            $version = PluginOperations::installedVersionOf($slug);
             $data = $this->client($settings)->reportBug($slug, [
                 'title' => mb_substr($title, 0, 120),
                 'description' => mb_substr($description, 0, 5000),
@@ -568,14 +548,6 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             .urlencode(Nonce::getNonce(self::MATOMO_ACTIVATE_NONCE, 3600));
     }
 
-    private function installedVersionOf(string $slug): ?string
-    {
-        try {
-            return InstalledMarketplacePlugins::versionOf($slug);
-        } catch (\Throwable $e) {
-            return null;
-        }
-    }
 
     public function install(): string
     {
@@ -944,46 +916,10 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
     }
 
-    /**
-     * Downloads and installs one plugin (one click, or one step of "update several at once"). Never throws.
-     *
-     * @param  bool|null  $activate  true: activate; false: leave it for plugin:activate on the console; null: an update
-     *     keeps the plugin switched on or off as it was (review 5.1.0: an update switched on what the admin had turned off)
-     * @return array{kind: string, installed: string, message: string} kind: done, db (a database update is pending now),
-     *     activate (left for plugin:activate on the console), dev (development checkout, refused), refused (403), failed
-     */
+    /** Downloads and installs one plugin, the shared core of a click and a batch step (PluginOperations). Never throws. */
     private function installOne(string $slug, string $version, ?bool $activate): array
     {
-        if (InstalledMarketplacePlugins::isDevCheckout($slug)) {
-            return ['kind' => 'dev', 'installed' => $slug, 'message' => Piwik::translate('FeinwerkMarketplaceConnector_DevCheckoutRefused', [$this->displayName($slug)])];
-        }
-        $current = $this->alreadyInstalled($slug, $version);
-        if ($current !== null) {
-            return $current;
-        }
-
-        try {
-            $client = $this->client($this->settings());
-            $artifact = $client->download($slug, $version);
-            $alreadyActive = Manager::getInstance()->isPluginActivated($slug);
-            $installed = (new PluginInstallerBridge())->install($artifact, $activate === null ? $alreadyActive : ($activate || $alreadyActive));
-            HeldDbUpdates::release($slug);   // a held automatic update the admin has now installed
-            $done = Piwik::translate('FeinwerkMarketplaceConnector_InstallDone', [$this->displayName($slug), $version]);
-
-            if ($activate === false && ! $alreadyActive) {
-                return ['kind' => 'activate', 'installed' => $installed, 'message' => $done];
-            }
-            // Active before the Matomo update, but the swap had to give up on it (license, failed installs): on again (RC-F1).
-            ActivateLater::afterInstall($slug);
-
-            return ['kind' => $this->hasPendingDbUpdates() ? 'db' : 'done', 'installed' => $installed, 'message' => $done];
-        } catch (MarketplaceLicenseException $e) {
-            // A 403 on the download: no license for this instance, or a revoked instance token (also 403, no stable
-            // signal tells them apart), so the translated sentence names both. The marketplace's English one is not shown.
-            return ['kind' => 'refused', 'installed' => $slug, 'message' => Piwik::translate('FeinwerkMarketplaceConnector_InstallRefused', [$this->displayName($slug)])];
-        } catch (\Throwable $e) {
-            return ['kind' => 'failed', 'installed' => $slug, 'message' => Piwik::translate('FeinwerkMarketplaceConnector_InstallFailed', [$this->displayName($slug), $e->getMessage()])];
-        }
+        return (new PluginOperations())->installOne($slug, $version, $activate);
     }
 
     /**
@@ -1055,21 +991,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         return '';
     }
 
-    /**
-     * The plugin is installed at $version or newer already (a page that still showed the update, backlog 16): a result
-     * of kind done that says so, without a download. Null when it still needs the install.
-     *
-     * @return array{kind: string, installed: string, message: string}|null
-     */
     private function alreadyInstalled(string $slug, string $version): ?array
     {
-        $installed = $this->installedVersionOf($slug);   // guarded: installOne never throws (review 5.2.2)
-        if ($installed === null || $version === '' || version_compare($installed, $version, '<')) {
-            return null;
-        }
-
-        return ['kind' => 'done', 'installed' => $slug,
-            'message' => Piwik::translate('FeinwerkMarketplaceConnector_AlreadyInstalled', [$this->displayName($slug), $installed])];
+        return PluginOperations::alreadyInstalled($slug, $version);
     }
 
     /**
@@ -1094,11 +1018,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     /** @return list<string> the components Matomo has a database update pending for; empty on any error */
     private function pendingComponents(): array
     {
-        try {
-            return array_map('strval', array_keys((new Updater())->getComponentUpdates() ?? []));
-        } catch (\Throwable $e) {
-            return [];
-        }
+        return PluginOperations::pendingComponents();
     }
 
     /** @return list<string> the plugin names of a comma list (anything else is dropped) */
@@ -1166,31 +1086,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
     }
 
-    /** The plugin's name as the marketplace shows it (cached list), else its technical name as words. */
     private function displayName(string $slug): string
     {
-        foreach (PendingUpdates::cachedPlugins() as $plugin) {
-            if (($plugin['slug'] ?? null) === $slug) {
-                return PluginName::of($plugin);
-            }
-        }
-
-        return PluginName::spaced($slug);
+        return PluginOperations::displayName($slug);
     }
 
-    /**
-     * Does the just-installed plugin (or anything else) leave Matomo with a
-     * pending database migration? If so, CoreUpdater will intercept the next
-     * request and detour the user through its upgrade wizard — which ends on
-     * the dashboard, not on our screen.
-     */
     private function hasPendingDbUpdates(): bool
     {
-        try {
-            return !empty((new Updater())->getComponentUpdates());
-        } catch (\Throwable $e) {
-            return false;
-        }
+        return PluginOperations::hasPendingDbUpdates();
     }
 
     /**

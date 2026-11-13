@@ -14,6 +14,7 @@ working as before.
   automatically, and on large Matomo instances the connector shows the console command for the database update.
 - **Matomo major updates:** after Matomo moves to a new major version, the connector switches your Feinwerk plugins
   to their builds for that version.
+- **Console commands** for status, install, update and connect, for administrators with shell access and for scripts.
 
 Available in English, German, French, Spanish and Italian.
 
@@ -33,8 +34,8 @@ Once connected, the connector talks to plugins.feinwerk.io:
 
 - **Once a day**, to check for updates and licenses: the instance token, the Matomo and PHP version, the address of this
   Matomo, the number of Matomo users (for license seats) and the installed Feinwerk plugins with their versions.
-- **When you use the Feinwerk Plugins screen** (open it, refresh the list, open a plugin, install, update, use or buy a
-  license): the instance token, the Matomo and PHP version and the plugin concerned.
+- **When you use the Feinwerk Plugins screen or its console commands** (open it, refresh the list, open a plugin,
+  install, update, use or buy a license): the instance token, the Matomo and PHP version and the plugin concerned.
 - **After a Matomo major update**: the installed Feinwerk plugins, to find their builds for the new version.
 - **When you answer the feedback question or send a bug report**: only what the form shows. A feedback vote carries
   no instance token.
@@ -61,6 +62,21 @@ Matomo and send nothing.
 2. Open **Administration › Feinwerk Plugins** and click **Connect with Feinwerk account**.
 
 Details: [the connector guide](https://plugins.feinwerk.io/en/docs/connector).
+
+## Console commands
+
+Run them like Matomo's own commands, for example `./console feinwerkmarketplaceconnector:status`:
+
+- `feinwerkmarketplaceconnector:status [--json]`: installed and latest version, status and license of each Feinwerk plugin.
+- `feinwerkmarketplaceconnector:refresh`: loads the plugin list from plugins.feinwerk.io again.
+- `feinwerkmarketplaceconnector:update <plugin>... | --all`: updates plugins with the same checks as the Update button.
+  `--all` leaves out the connector itself; name it to update it. `--core-update` also runs Matomo's database update.
+- `feinwerkmarketplaceconnector:install <plugin>... [--no-activate]`: installs and activates plugins.
+- `feinwerkmarketplaceconnector:connect --token-file=<file>`: connects this Matomo with the instance token from your
+  account (`--token-file=-` reads it from standard input). The token is never shown.
+
+Plugins are named by their technical name, for example `FeinwerkSearchReport`. The commands end with exit code 1 when
+something needs your attention.
 
 ## Support
 

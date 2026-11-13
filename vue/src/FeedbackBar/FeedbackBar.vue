@@ -5,15 +5,17 @@
   inside the plugin window: Matomo's dialog turns [role] elements there into empty buttons.
 -->
 <template>
-  <!-- One compact line (Peter, 2026-11-11; reference PageFilterReport b628e33): question, thumbs,
-       support link; after a vote the thanks takes the place of question and thumbs. -->
+  <!-- Footer variant A (Peter, 2026-11-13; PageFilterReport docs/footer.md): one row after a
+       hairline that never wraps: the question (cut with an ellipsis, whole in its title),
+       borderless thumbs, a quiet grey "Support" with a help icon at the end. After a vote the
+       thanks takes the place of question and thumbs. -->
   <div
     v-if="feedback.enabled || feedback.supportUrl"
     class="fwmc-feedback"
     :class="{ 'is-voted': vote !== '' }"
   >
     <template v-if="feedback.enabled">
-      <span class="fwmc-feedback-question">{{ question }}</span>
+      <span class="fwmc-feedback-question" :title="question">{{ question }}</span>
       <button
         v-for="choice in choices"
         :key="choice"
@@ -44,7 +46,12 @@
       target="_blank"
       rel="noopener noreferrer"
       :title="tr('SupportTitle')"
-    >{{ tr('Support') }}</a>
+    >
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01" />
+      </svg>{{ tr('Support') }}
+    </a>
   </div>
 </template>
 

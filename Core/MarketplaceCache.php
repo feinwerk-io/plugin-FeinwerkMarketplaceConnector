@@ -15,7 +15,7 @@ use Throwable;
  */
 final class MarketplaceCache
 {
-    private const KEY = 'plugins';
+    public const KEY = 'plugins';
 
     public function __construct(
         private readonly MarketplaceApiClient $client,

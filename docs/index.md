@@ -30,6 +30,18 @@ Under **Administration › System › General settings › Feinwerk Connector**:
 In config.ini.php, section `[FeinwerkMarketplaceConnector]`: `feedback = 0` hides the feedback question,
 `promotions = 0` hides all notes on other Feinwerk offers.
 
+## Console
+
+The same on the command line, for example on a large Matomo or in a script:
+
+- `./console feinwerkmarketplaceconnector:status` lists the Feinwerk plugins (`--json` for scripts).
+- `./console feinwerkmarketplaceconnector:update --all` updates every Feinwerk plugin with an update;
+  `--core-update` runs Matomo's database update right after, when one is needed.
+- `./console feinwerkmarketplaceconnector:install FeinwerkSearchReport` installs and activates a plugin.
+- `./console feinwerkmarketplaceconnector:refresh` loads the plugin list again.
+- `./console feinwerkmarketplaceconnector:connect --token-file=token.txt` connects this Matomo with the instance token
+  from your account.
+
 ## Data
 
 Before you connect, the connector sends nothing. What it sends afterwards, and when, is listed in the plugin

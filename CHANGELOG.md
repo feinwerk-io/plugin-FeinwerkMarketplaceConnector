@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.4.0
+
+- Console commands: `feinwerkmarketplaceconnector:status`, `refresh`, `update`, `install` and `connect`. They update and
+  install Feinwerk plugins with the same checks as the buttons on the Feinwerk Plugins screen, for example on large
+  Matomo instances or in scripts.
+- The feedback question at the end of the screen is one quiet row under a fine line, with the support link at its end.
+
 ## 5.3.1
 
 - A plugin category without a text in this connector shows its name instead of a technical message on the card

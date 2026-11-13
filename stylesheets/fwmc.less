@@ -440,46 +440,58 @@
     }
 }
 
-// Feedback question in one compact line under the tabs (FeedbackBar.vue; Peter, 2026-11-11, reference PageFilterReport
-// b628e33 stylesheets/feedback.css): question, thumbs, support link; after a vote the thanks takes their place. Small
-// muted type; Matomo's CSS custom properties with light fallbacks (no Matomo LESS variables: Matomo 5.0 floor).
+// Feedback row at the end of the page, footer variant A (Peter, 2026-11-13; reference PageFilterReport docs/footer.md and
+// stylesheets/feedback.css): after one hairline a row that never wraps: question (ellipsis), borderless thumbs, a quiet
+// grey support link with a help icon at the end; after a vote the thanks takes the place of question and thumbs. Matomo's
+// CSS custom properties with light fallbacks (no Matomo LESS variables: Matomo 5.0 floor).
 .fwmc {
   .fwmc-feedback {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 4px 6px;
-    margin: 12px 0 2px;
+    gap: 6px;
+    margin: 16px 0 2px;
+    padding: 8px 0 2px;
+    border-top: 1px solid ~"var(--theme-color-border-alternative, var(--theme-color-border, #e3e3e3))";
     font-size: 12px;
     line-height: 1.4;
     color: ~"var(--theme-color-text-lighter, #646464)";
   }
 
+  .fwmc-feedback-question,
+  .fwmc-feedback-thanks {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .fwmc-feedback-thumb {
+    flex: none;
     display: inline-flex;
     align-items: center;
     margin: 0;
-    padding: 1px 4px;
-    border: 1px solid ~"var(--theme-color-border-alternative, var(--theme-color-border, #ccc))";
+    padding: 1px 2px;
+    border: 1px solid transparent;
     border-radius: 3px;
     background: transparent;
     color: ~"var(--theme-color-text-lighter, #646464)";
     line-height: 1;
     cursor: pointer;
 
-    svg {
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linejoin: round;
-      stroke-linecap: round;
-    }
-
     &:hover,
     &:focus-visible {
-      border-color: ~"var(--theme-color-brand, #43a047)";
       color: ~"var(--theme-color-brand, #43a047)";
     }
+  }
+
+  .fwmc-feedback-thumb svg,
+  .fwmc-feedback-support svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linejoin: round;
+    stroke-linecap: round;
   }
 
   .fwmc-feedback-thumb:focus-visible,
@@ -511,9 +523,19 @@
   }
 
   .fwmc-feedback-support {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
     margin-left: auto;
-    color: ~"var(--theme-color-link, #1976d2)";
-    text-decoration: underline;
+    color: ~"var(--theme-color-text-lighter, #646464)";
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover,
+    &:focus-visible {
+      color: ~"var(--theme-color-link, #1976d2)";
+    }
   }
 }
 

@@ -37,6 +37,13 @@ The browsers of your administrators open `plugins.feinwerk.io` too, to connect t
 the server cannot reach it at all, see "Without internet access" in the
 [connector guide](https://plugins.feinwerk.io/en/docs/connector#without-internet-access).
 
+__Can I install and update the plugins on the command line?__
+
+Yes. `./console feinwerkmarketplaceconnector:update --all` updates every Feinwerk plugin with an update,
+`./console feinwerkmarketplaceconnector:install <plugin>` installs one, `./console feinwerkmarketplaceconnector:status`
+shows the state. On large Matomo instances this is the recommended way, together with `./console core:update` for
+database updates (or `--core-update`).
+
 __Do I need a license?__
 
 Free Feinwerk plugins need none. Paid plugins need a license for this Matomo instance; the **Licenses** tab shows it,

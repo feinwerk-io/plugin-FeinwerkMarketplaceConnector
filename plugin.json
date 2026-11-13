@@ -1,6 +1,6 @@
 {
     "name": "FeinwerkMarketplaceConnector",
-    "version": "5.3.1",
+    "version": "5.4.0",
     "description": "Install, update and license the Plugins for Matomo by Feinwerk right in your Matomo administration, next to the Matomo Marketplace.",
     "keywords": [
         "marketplace",
