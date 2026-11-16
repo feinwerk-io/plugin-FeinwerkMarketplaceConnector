@@ -44,6 +44,9 @@
           @click="switchOff"
         >{{ switching ? tr('Working') : tr('PromoSettings') }}</button>
         <a v-else class="fwmc-promo-off" :href="settingsUrl">{{ tr('PromoSettings') }}</a>
+        <!-- Peter, 2026-11-13: "in die banner, wo möglich bitte generell noch das feinwerk-logo
+             unterbringen" (promo kit logo, docs/promotions.md). -->
+        <FeinwerkLogo class="fwmc-promo-logo" />
       </div>
     </div>
     <button
@@ -61,6 +64,7 @@ import { defineComponent, PropType } from 'vue';
 import { translate } from 'CoreHome';
 import intervalLabel from '../intervals';
 import amount from '../amount';
+import FeinwerkLogo from '../FeinwerkLogo/FeinwerkLogo.vue';
 import proxied from '../proxied';
 
 interface Promo {
@@ -82,6 +86,7 @@ function storageKey(slug: string): string {
 }
 
 export default defineComponent({
+  components: { FeinwerkLogo },
   emits: ['open'],
   props: {
     promo: { type: Object as PropType<Promo|null>, default: null },

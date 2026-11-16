@@ -27,7 +27,8 @@ final class Recommendation
             if ($plugins === []) {
                 return null;
             }
-            $promo = Promotion::pick($plugins, InstalledMarketplacePlugins::versions($plugins), 'FeinwerkMarketplaceConnector', intdiv(time(), 86400));
+            $promo = Promotion::pick($plugins, InstalledMarketplacePlugins::versions($plugins), 'FeinwerkMarketplaceConnector', intdiv(time(), 86400), Promotions::demo(),
+                str_starts_with((string) \Piwik\Plugins\LanguagesManager\LanguagesManager::getLanguageCodeForCurrentUser(), 'de') ? 'de' : 'en');
             if ($promo === null) {
                 return null;
             }

@@ -29,6 +29,9 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
     /** Set on activation: the welcome notice is still due (Peter, 2026-11-11, Matomo Marketplace listing). */
     private const WELCOME_OPTION = 'fwmc.welcome';
 
+    /** The promo kit's claim of the admin home's top banner (PromoPlacements::CLAIM_KEY + placement). */
+    public const ADMIN_HOME_CLAIM = 'fwpromo.claimed.adminHome';
+
     public function registerEvents(): array
     {
         return [
@@ -39,7 +42,8 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
             'Request.dispatch' => 'onRequestDispatch',
             'TwoFactorAuth.requiresTwoFactorAuthentication' => 'onRequiresTwoFactorAuth',
             'UsersManager.deleteUser' => 'onDeleteUser',
-            'Template.beforeContent' => 'onBeforeContent',
+            // Before the plugins' kit banners: the recommendation card goes first and claims the admin home (one banner).
+            'Template.beforeContent' => ['function' => 'onBeforeContent', 'before' => true],
         ];
     }
 
@@ -47,8 +51,31 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
     public function onBeforeContent(&$out, $type = null, $module = null, $action = null): void
     {
         if ($type === 'admin' && $module === 'CoreAdminHome' && $action === 'home') {
-            $out .= Recommendation::adminHomeMarkup();
+            $card = Recommendation::adminHomeMarkup();
+            if ($card !== '' && self::claimAdminHome()) {
+                $out .= $card;
+            }
         }
+    }
+
+    /**
+     * Only one Feinwerk banner at the top of the admin home (Peter, 2026-11-13, relayed by PluginLead: "nur ein Banner,
+     * Connector-Empfehlung zuerst"; house doc promotions.md). The promo kit's banners check the same claim in Matomo's
+     * per-request transient cache (key `fwpromo.claimed.adminHome`, value the plugin name) and step back. Claimed only
+     * when a card is shown; a placement another plugin claimed first is left to it. Without the cache the card shows.
+     */
+    private static function claimAdminHome(): bool
+    {
+        try {
+            $cache = \Piwik\Cache::getTransientCache();
+            if ($cache->contains(self::ADMIN_HOME_CLAIM)) {
+                return $cache->fetch(self::ADMIN_HOME_CLAIM) === 'FeinwerkMarketplaceConnector';
+            }
+            $cache->save(self::ADMIN_HOME_CLAIM, 'FeinwerkMarketplaceConnector');
+        } catch (\Throwable $e) {
+        }
+
+        return true;
     }
 
     /** The feedback throttle of a deleted user (Feedback::allowed). */
@@ -538,6 +565,8 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
     public function getStylesheetFiles(array &$files): void
     {
         $files[] = 'plugins/FeinwerkMarketplaceConnector/stylesheets/fwmc.less';
+        // The promo kit's Feinwerk logo, copied byte-identical (own `fwlogo` prefix, shared by the Feinwerk plugins).
+        $files[] = 'plugins/FeinwerkMarketplaceConnector/stylesheets/feinwerklogo.css';
     }
 
     /**

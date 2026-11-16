@@ -3,7 +3,9 @@
 namespace Piwik\Plugins\FeinwerkMarketplaceConnector;
 
 use Piwik\Container\StaticContainer;
+use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\PluginName;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\PromotionSwitch;
+use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\UpdateMapper;
 
 /**
  * Shared interface for the other Feinwerk plugins (house rule docs/promotions.md, Peter 2026-11-10): may they show
@@ -17,6 +19,9 @@ final class Promotions
     /** This request's answer, null until the first call (each web request is a new process; tests reset it). */
     private static ?bool $enabled = null;
 
+    /** This request's demo switch, null until the first call. */
+    private static ?bool $demo = null;
+
     /**
      * False when `promotions = 0` (or off, no, false, empty) stands in [FeinwerkMarketplaceConnector] of config.ini.php
      * or the setting "Show notes on other Feinwerk offers" is off. True otherwise, also when either cannot be read.
@@ -29,6 +34,144 @@ final class Promotions
         }
 
         return self::$enabled;
+    }
+
+    /**
+     * Shared interface (2026-11-13) for the promotion placements Peter defines per plugin (PageFilterReport, CampaignScore):
+     * up to $max paid Feinwerk plugins this Matomo does not have, in the store's order, from the cached plugin list only
+     * (no request). Each entry: slug, name (the store's display name), description and price ("from 59,00 € / month") in
+     * the admin's language ('' without), image (the connector's image proxy for the artwork, '' without one), url (the
+     * plugin's window on the Feinwerk Plugins screen). Both links need a super user, so the list is empty for anyone
+     * else, when promotions are off (areEnabled) or before the connector is connected. Never throws; released plugins
+     * call it: never rename it or change its meaning. For admins as well: paidPluginRecommendations().
+     *
+     * @return list<array{slug: string, name: string, description: string, price: string, image: string, url: string}>
+     */
+    public static function paidPluginsNotInstalled(int $max = 3): array
+    {
+        try {
+            if (! \Piwik\Piwik::hasUserSuperUserAccess()) {
+                return [];
+            }
+
+            return array_map(fn ($c) => [
+                'slug' => $c['slug'],
+                'name' => $c['name'],
+                'description' => $c['description'],
+                'price' => $c['price'],
+                'image' => $c['image'],
+                'url' => $c['installUrl'],
+            ], self::candidates($max, true));
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Shared interface (2026-11-16, Peter: admins see the recommendations too, "Oft ist es so, dass der Superuser der IT
+     * Admin / Verwalter ist, der nicht mit den Zahlen arbeitet"): the same plugins as paidPluginsNotInstalled() for every
+     * user with admin access to at least one site. Each entry: slug, name, description, price, image (the image proxy,
+     * super users only, else ''), storeUrl (the plugin's public store page in the user's language), installUrl (the
+     * plugin's window on the Feinwerk Plugins screen, super users only, else ''). Empty for users without admin access,
+     * when promotions are off or before the connector is connected. From the cached list only, never throws; released
+     * plugins will call it: never rename it or change its meaning.
+     *
+     * @return list<array{slug: string, name: string, description: string, price: string, image: string, storeUrl: string, installUrl: string}>
+     */
+    public static function paidPluginRecommendations(int $max = 3): array
+    {
+        try {
+            if (! \Piwik\Piwik::isUserHasSomeAdminAccess()) {
+                return [];
+            }
+
+            return self::candidates($max, \Piwik\Piwik::hasUserSuperUserAccess());
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Paid Feinwerk plugins this Matomo lacks (has a build, not installed, not the connector), store order, cached list.
+     *
+     * @return list<array{slug: string, name: string, description: string, price: string, image: string, storeUrl: string, installUrl: string}>
+     */
+    private static function candidates(int $max, bool $superUser): array
+    {
+        if (! self::areEnabled()) {
+            return [];
+        }
+        $plugins = PendingUpdates::cachedPlugins();   // empty without an instance token
+        $installed = InstalledMarketplacePlugins::versions($plugins);
+        $lang = str_starts_with((string) \Piwik\Plugins\LanguagesManager\LanguagesManager::getLanguageCodeForCurrentUser(), 'de') ? 'de' : 'en';
+        $mapper = new UpdateMapper($lang);
+        $store = rtrim(MarketplaceClientFactory::url(), '/');
+        $demo = self::demo();
+        $out = [];
+        foreach ($plugins as $plugin) {
+            $slug = is_array($plugin) ? (string) ($plugin['slug'] ?? '') : '';
+            if (! preg_match('/^Feinwerk[A-Za-z0-9]+$/', $slug) || $slug === 'FeinwerkMarketplaceConnector'
+                || ($plugin['tier'] ?? '') !== 'paid'
+                || (! $demo && (empty($plugin['latest']['version']) || isset($installed[$slug])))) {
+                continue;
+            }
+            $artwork = (string) ($plugin['artwork_url'] ?? '');
+            $out[] = [
+                'slug' => $slug,
+                'name' => PluginName::of($plugin),
+                'description' => (string) $mapper->describe($plugin),
+                'price' => self::priceFrom($plugin['price_from'] ?? null),
+                'image' => $superUser && preg_match('#^https?://#i', $artwork)
+                    ? 'index.php?module=FeinwerkMarketplaceConnector&action=image&src='.rawurlencode($artwork) : '',
+                'storeUrl' => $store.'/'.$lang.'/plugins/'.rawurlencode($slug),
+                'installUrl' => $superUser ? 'index.php?module=FeinwerkMarketplaceConnector&action=index&fwmc_open='.rawurlencode($slug) : '',
+            ];
+            if (count($out) >= max(1, $max)) {
+                break;
+            }
+        }
+
+        return $out;
+    }
+
+    /** "from 59,00 € / month" in the admin's language (the connector's own texts), '' without a price. */
+    private static function priceFrom($price): string
+    {
+        if (! is_array($price) || ! is_numeric($price['amount_eur'] ?? null)) {
+            return '';
+        }
+        $intervals = ['monthly' => 'IntervalMonthly', 'yearly' => 'IntervalYearly', 'two_years' => 'IntervalTwoYears', 'once' => 'IntervalOnce'];
+        try {
+            $amount = \Piwik\NumberFormatter::getInstance()->formatNumber((float) $price['amount_eur'], 2, 2);
+        } catch (\Throwable $e) {
+            $amount = number_format((float) $price['amount_eur'], 2);
+        }
+
+        return \Piwik\Piwik::translate('FeinwerkMarketplaceConnector_PriceFrom', [
+            $amount,
+            \Piwik\Piwik::translate('FeinwerkMarketplaceConnector_'.($intervals[$price['interval'] ?? ''] ?? 'IntervalMonthly')),
+        ]);
+    }
+
+    /**
+     * Demo mode for the test instances (Peter, 2026-11-16: "kannst du einen demo modus einführen, damit stats6 auch wieder
+     * die werbung zeigt?"; docs/promotions.md): `promotions_demo = 1` in [FeinwerkMarketplaceConnector] of config.ini.php.
+     * Config only, default off, never at customers. Then the recommendations show the whole paid catalog (installed
+     * plugins and ones without a build too) and the admin-home banner shows even when everything is installed. Every off
+     * switch still wins, the audience stays the same. Read once per request, never throws.
+     */
+    public static function demo(): bool
+    {
+        if (self::$demo === null) {
+            try {
+                $section = \Piwik\Config::getInstance()->FeinwerkMarketplaceConnector;
+                self::$demo = PromotionSwitch::demoIn(is_array($section) ? $section : []);
+            } catch (\Throwable $e) {
+                self::$demo = false;
+            }
+        }
+
+        return self::$demo;
     }
 
     /** `promotions = 0` in [FeinwerkMarketplaceConnector]: wins over the setting, whose help then says so. */

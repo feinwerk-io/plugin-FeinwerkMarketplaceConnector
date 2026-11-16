@@ -102,7 +102,7 @@ final class UpdateMapper
                 $status,
                 (bool) ($plugin['needs_license'] ?? false),
                 is_array($license) ? $license : null,
-                isset($plugin['description']) ? (string) $plugin['description'] : null,
+                $this->describe($plugin),
                 // Bound as a link on the screen: only an http(s) address (security review 5.1.0).
                 isset($plugin['url']) && is_string($plugin['url']) && preg_match('#^https?://#i', $plugin['url']) === 1 ? $plugin['url'] : null,
                 isset($plugin['category']) && is_scalar($plugin['category']) ? (string) $plugin['category'] : null,
@@ -119,6 +119,20 @@ final class UpdateMapper
         }
 
         return $rows;
+    }
+
+    /**
+     * The plugin's description in the admin's language: the store's `description_de` (since store 3414ac2, the listing's
+     * German tagline) in a German Matomo, else the English `description`. Null when there is none.
+     */
+    public function describe(array $plugin): ?string
+    {
+        $german = $plugin['description_de'] ?? null;
+        if ($this->language === 'de' && is_string($german) && trim($german) !== '') {
+            return $german;
+        }
+
+        return isset($plugin['description']) ? (string) $plugin['description'] : null;
     }
 
     /**

@@ -15,13 +15,14 @@ final class Promotion
      * @param  int  $day  days since the epoch, so the pick changes once a day
      * @return array{slug: string, name: string, description: string, artworkUrl: ?string, tier: string, priceFrom: ?array}|null
      */
-    public static function pick(array $plugins, array $installed, string $selfSlug, int $day): ?array
+    public static function pick(array $plugins, array $installed, string $selfSlug, int $day, bool $demo = false, string $language = 'en'): ?array
     {
         $paid = [];
         $free = [];
         foreach ($plugins as $plugin) {
             $slug = is_string($plugin['slug'] ?? null) ? $plugin['slug'] : '';
-            if ($slug === '' || $slug === $selfSlug || isset($installed[$slug]) || empty($plugin['latest']['version'])) {
+            // Demo mode (test instances): installed plugins and ones without a build for this Matomo count too.
+            if ($slug === '' || $slug === $selfSlug || (! $demo && (isset($installed[$slug]) || empty($plugin['latest']['version'])))) {
                 continue;
             }
             if (($plugin['tier'] ?? 'free') === 'paid') {
@@ -41,7 +42,7 @@ final class Promotion
         return [
             'slug' => (string) $plugin['slug'],
             'name' => PluginName::of($plugin),
-            'description' => is_string($plugin['description'] ?? null) ? $plugin['description'] : '',
+            'description' => (string) (new UpdateMapper($language))->describe($plugin),
             'artworkUrl' => $artwork,
             'tier' => (string) ($plugin['tier'] ?? 'free'),
             'priceFrom' => is_array($plugin['price_from'] ?? null) ? $plugin['price_from'] : null,

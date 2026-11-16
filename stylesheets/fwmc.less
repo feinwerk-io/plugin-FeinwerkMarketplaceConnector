@@ -656,6 +656,11 @@
 // (Peter: "schön, ähnlich dem von Openmost"). Feinwerk orange as the accent, a soft glow and a fine
 // grid on the theme's surface, so it works in light and dark.
 @fwmc-orange: #e95b10;
+// Feinwerk petrol (Peter, 2026-11-13: recommendation banner "auf Petrol umstellen"; values of Campaign Score's approved
+// banner, its stylesheets/lab.css .fwlab-banner): petrol #0e7c7b, in dark mode mint #9fd8d2 with dark text #0a1514.
+@fwmc-petrol: #0e7c7b;
+@fwmc-mint: #9fd8d2;
+@fwmc-mint-ink: #0a1514;
 
 .fwmc.fwmc-promo-host { margin: 0 0 20px; }
 
@@ -670,28 +675,25 @@
     border: 1px solid @line;
     border-radius: 10px;
     overflow: hidden;
+    // a soft petrol wash from the left (no line grid, no warm glows: too close to other vendors' promo cards)
     background-color: @surface;
-    background-image:
-      radial-gradient(110% 140% at 0% 0%, fade(@fwmc-orange, 13%), transparent 58%),
-      radial-gradient(90% 120% at 100% 100%, rgba(25, 118, 210, .08), transparent 55%);
-    .fwmc-dark({
-      background-image:
-        radial-gradient(110% 140% at 0% 0%, fade(@fwmc-orange, 22%), transparent 60%),
-        radial-gradient(90% 120% at 100% 100%, rgba(119, 143, 212, .14), transparent 55%);
-    });
+    background-image: linear-gradient(110deg, rgba(14, 124, 123, .10), transparent 62%);
+    .fwmc-dark({ background-image: linear-gradient(110deg, rgba(159, 216, 210, .08), transparent 62%); });
 
-    // the fine grid, faded out towards the right
+    // a calm field of fine dots in the top right corner only, like the dots of the Feinwerk mark
     &::before {
       content: "";
       position: absolute;
-      inset: 0;
+      top: 0;
+      right: 0;
+      width: 220px;
+      height: 160px;
       pointer-events: none;
-      background-image:
-        linear-gradient(to right, fade(@fwmc-orange, 9%) 1px, transparent 1px),
-        linear-gradient(to bottom, fade(@fwmc-orange, 9%) 1px, transparent 1px);
-      background-size: 22px 22px;
-      -webkit-mask-image: linear-gradient(to right, #000, transparent 70%);
-      mask-image: linear-gradient(to right, #000, transparent 70%);
+      background-image: radial-gradient(rgba(14, 124, 123, .22) 1.3px, transparent 1.3px);
+      background-size: 13px 13px;
+      -webkit-mask-image: radial-gradient(ellipse at top right, #000, transparent 70%);
+      mask-image: radial-gradient(ellipse at top right, #000, transparent 70%);
+      .fwmc-dark({ background-image: radial-gradient(rgba(159, 216, 210, .24) 1.3px, transparent 1.3px); });
     }
 
     > * { position: relative; }
@@ -718,12 +720,12 @@
   .fwmc-promo-label {
     display: inline-block;
     margin-bottom: 6px;
-    color: @fwmc-orange;
+    color: @fwmc-petrol;
     font-size: 11.5px;
     font-weight: 700;
     letter-spacing: .06em;
     text-transform: uppercase;
-    .fwmc-dark({ color: #ff8a4c; });
+    .fwmc-dark({ color: @fwmc-mint; });
   }
 
   .fwmc-promo-title { margin: 0 0 6px; color: @text; font-size: 19px; font-weight: 700; line-height: 1.25; }
@@ -743,17 +745,24 @@
     gap: 10px 16px;
   }
 
-  .fwmc-promo-cta {
-    background-color: @fwmc-orange;
-    color: #fff;
+  // Matomo's .btn sets its own text colour with !important: the dark mode ink on mint needs the same weight.
+  .fwmc-promo .btn.fwmc-promo-cta {
+    background-color: @fwmc-petrol;
+    color: #fff !important;
 
-    &:hover, &:focus { background-color: darken(@fwmc-orange, 6%); color: #fff; }
+    &:hover, &:focus { background-color: darken(@fwmc-petrol, 6%); }
+    .fwmc-dark({
+      background-color: @fwmc-mint;
+      color: @fwmc-mint-ink !important;
+      &:hover, &:focus { background-color: lighten(@fwmc-mint, 6%); }
+    });
   }
+
+  .fwmc-promo-logo { margin-left: auto; }
 
   .fwmc-promo-price { color: @text; font-weight: 600; font-size: 13px; }
 
   .fwmc-promo-off {
-    margin-left: auto;
     padding: 0;
     border: 0;
     background: none;

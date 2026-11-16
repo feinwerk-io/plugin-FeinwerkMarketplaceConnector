@@ -42,7 +42,8 @@ __Can I install and update the plugins on the command line?__
 Yes. `./console feinwerkmarketplaceconnector:update --all` updates every Feinwerk plugin with an update,
 `./console feinwerkmarketplaceconnector:install <plugin>` installs one, `./console feinwerkmarketplaceconnector:status`
 shows the state. On large Matomo instances this is the recommended way, together with `./console core:update` for
-database updates (or `--core-update`).
+database updates (or `--core-update`). All commands and options: the
+[connector guide](https://plugins.feinwerk.io/en/docs/connector#console).
 
 __Do I need a license?__
 

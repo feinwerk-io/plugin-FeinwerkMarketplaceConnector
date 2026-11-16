@@ -2255,100 +2255,202 @@ function LicenseTablevue_type_template_id_0ab62fba_render(_ctx, _cache, $props, 
 LicenseTablevue_type_script_lang_ts.render = LicenseTablevue_type_template_id_0ab62fba_render
 
 /* harmony default export */ var LicenseTable = (LicenseTablevue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PromoBanner/PromoBanner.vue?vue&type=template&id=4150a562
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PromoBanner/PromoBanner.vue?vue&type=template&id=375b9b9c
 
-const PromoBannervue_type_template_id_4150a562_hoisted_1 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_1 = {
   key: 0,
   class: "fwmc-promo-offnote",
   "aria-live": "polite"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_2 = ["href"];
-const PromoBannervue_type_template_id_4150a562_hoisted_3 = ["aria-label"];
-const PromoBannervue_type_template_id_4150a562_hoisted_4 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_2 = ["href"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_3 = ["aria-label"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_4 = {
   class: "fwmc-promo-art"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_5 = ["src"];
-const PromoBannervue_type_template_id_4150a562_hoisted_6 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_5 = ["src"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_6 = {
   key: 1,
   class: "fwmc-avatar fwmc-avatar--lg",
   "aria-hidden": "true"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_7 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_7 = {
   class: "fwmc-promo-body"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_8 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_8 = {
   class: "fwmc-promo-label"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_9 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_9 = {
   class: "fwmc-promo-title"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_10 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_10 = {
   key: 0,
   class: "fwmc-promo-text"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_11 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_11 = {
   class: "fwmc-promo-actions"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_12 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_12 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
   "aria-hidden": "true"
 }, "→", -1);
-const PromoBannervue_type_template_id_4150a562_hoisted_13 = ["href"];
-const PromoBannervue_type_template_id_4150a562_hoisted_14 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_13 = ["href"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_14 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
   "aria-hidden": "true"
 }, "→", -1);
-const PromoBannervue_type_template_id_4150a562_hoisted_15 = {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_15 = {
   key: 2,
   class: "fwmc-promo-price"
 };
-const PromoBannervue_type_template_id_4150a562_hoisted_16 = ["disabled"];
-const PromoBannervue_type_template_id_4150a562_hoisted_17 = ["href"];
-const PromoBannervue_type_template_id_4150a562_hoisted_18 = ["aria-label", "title"];
-const PromoBannervue_type_template_id_4150a562_hoisted_19 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_16 = ["disabled"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_17 = ["href"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_18 = ["aria-label", "title"];
+const PromoBannervue_type_template_id_375b9b9c_hoisted_19 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
   "aria-hidden": "true"
 }, "×", -1);
-const PromoBannervue_type_template_id_4150a562_hoisted_20 = [PromoBannervue_type_template_id_4150a562_hoisted_19];
-function PromoBannervue_type_template_id_4150a562_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return _ctx.switchedOff ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", PromoBannervue_type_template_id_4150a562_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoOffDone')) + " ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
+const PromoBannervue_type_template_id_375b9b9c_hoisted_20 = [PromoBannervue_type_template_id_375b9b9c_hoisted_19];
+function PromoBannervue_type_template_id_375b9b9c_render(_ctx, _cache, $props, $setup, $data, $options) {
+  const _component_FeinwerkLogo = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("FeinwerkLogo");
+  return _ctx.switchedOff ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", PromoBannervue_type_template_id_375b9b9c_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoOffDone')) + " ", 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("a", {
     href: _ctx.settingsUrl
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoOffUndo')), 9, PromoBannervue_type_template_id_4150a562_hoisted_2)])) : _ctx.promo && _ctx.promo.slug && !_ctx.hidden ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("aside", {
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoOffUndo')), 9, PromoBannervue_type_template_id_375b9b9c_hoisted_2)])) : _ctx.promo && _ctx.promo.slug && !_ctx.hidden ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("aside", {
     key: 1,
     class: "fwmc-promo",
     "aria-label": _ctx.tr('PromoLabel')
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PromoBannervue_type_template_id_4150a562_hoisted_4, [_ctx.promo.artworkUrl && !_ctx.artworkFailed ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("img", {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PromoBannervue_type_template_id_375b9b9c_hoisted_4, [_ctx.promo.artworkUrl && !_ctx.artworkFailed ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("img", {
     key: 0,
     src: _ctx.proxied(_ctx.promo.artworkUrl),
     alt: "",
     onError: _cache[0] || (_cache[0] = $event => _ctx.artworkFailed = true)
-  }, null, 40, PromoBannervue_type_template_id_4150a562_hoisted_5)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PromoBannervue_type_template_id_4150a562_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.monogram), 1))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PromoBannervue_type_template_id_4150a562_hoisted_7, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", PromoBannervue_type_template_id_4150a562_hoisted_8, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoLabel')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", PromoBannervue_type_template_id_4150a562_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.promo.name), 1), _ctx.promo.description ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", PromoBannervue_type_template_id_4150a562_hoisted_10, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.promo.description), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PromoBannervue_type_template_id_4150a562_hoisted_11, [_ctx.inline ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+  }, null, 40, PromoBannervue_type_template_id_375b9b9c_hoisted_5)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PromoBannervue_type_template_id_375b9b9c_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.monogram), 1))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PromoBannervue_type_template_id_375b9b9c_hoisted_7, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", PromoBannervue_type_template_id_375b9b9c_hoisted_8, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoLabel')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", PromoBannervue_type_template_id_375b9b9c_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.promo.name), 1), _ctx.promo.description ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", PromoBannervue_type_template_id_375b9b9c_hoisted_10, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.promo.description), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", PromoBannervue_type_template_id_375b9b9c_hoisted_11, [_ctx.inline ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
     key: 0,
     type: "button",
     class: "btn fwmc-promo-cta",
     onClick: _cache[1] || (_cache[1] = $event => _ctx.$emit('open', _ctx.promo.slug))
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoCta')) + " ", 1), PromoBannervue_type_template_id_4150a562_hoisted_12])) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoCta')) + " ", 1), PromoBannervue_type_template_id_375b9b9c_hoisted_12])) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
     key: 1,
     class: "btn fwmc-promo-cta",
     href: _ctx.screenUrl
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoCta')) + " ", 1), PromoBannervue_type_template_id_4150a562_hoisted_14], 8, PromoBannervue_type_template_id_4150a562_hoisted_13)), _ctx.price ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PromoBannervue_type_template_id_4150a562_hoisted_15, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.price), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.promo.offUrl && _ctx.promo.offNonce ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoCta')) + " ", 1), PromoBannervue_type_template_id_375b9b9c_hoisted_14], 8, PromoBannervue_type_template_id_375b9b9c_hoisted_13)), _ctx.price ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PromoBannervue_type_template_id_375b9b9c_hoisted_15, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.price), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.promo.offUrl && _ctx.promo.offNonce ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
     key: 3,
     type: "button",
     class: "fwmc-promo-off",
     disabled: _ctx.switching,
     onClick: _cache[2] || (_cache[2] = (...args) => _ctx.switchOff && _ctx.switchOff(...args))
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.switching ? _ctx.tr('Working') : _ctx.tr('PromoSettings')), 9, PromoBannervue_type_template_id_4150a562_hoisted_16)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.switching ? _ctx.tr('Working') : _ctx.tr('PromoSettings')), 9, PromoBannervue_type_template_id_375b9b9c_hoisted_16)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
     key: 4,
     class: "fwmc-promo-off",
     href: _ctx.settingsUrl
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoSettings')), 9, PromoBannervue_type_template_id_4150a562_hoisted_17))])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tr('PromoSettings')), 9, PromoBannervue_type_template_id_375b9b9c_hoisted_17)), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_FeinwerkLogo, {
+    class: "fwmc-promo-logo"
+  })])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
     type: "button",
     class: "fwmc-promo-close",
     "aria-label": _ctx.tr('PromoClose'),
     title: _ctx.tr('PromoClose'),
     onClick: _cache[3] || (_cache[3] = (...args) => _ctx.dismiss && _ctx.dismiss(...args))
-  }, PromoBannervue_type_template_id_4150a562_hoisted_20, 8, PromoBannervue_type_template_id_4150a562_hoisted_18)], 8, PromoBannervue_type_template_id_4150a562_hoisted_3)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true);
+  }, PromoBannervue_type_template_id_375b9b9c_hoisted_20, 8, PromoBannervue_type_template_id_375b9b9c_hoisted_18)], 8, PromoBannervue_type_template_id_375b9b9c_hoisted_3)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/PromoBanner/PromoBanner.vue?vue&type=template&id=4150a562
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/PromoBanner/PromoBanner.vue?vue&type=template&id=375b9b9c
 
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/FeinwerkLogo/FeinwerkLogo.vue?vue&type=template&id=08b04454
+
+const FeinwerkLogovue_type_template_id_08b04454_hoisted_1 = {
+  class: "fwlogo",
+  "aria-hidden": "true"
+};
+const FeinwerkLogovue_type_template_id_08b04454_hoisted_2 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("svg", {
+  class: "fwlogo__mark",
+  viewBox: "0 0 48 48",
+  width: "18",
+  height: "18",
+  focusable: "false"
+}, [/*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  class: "fwlogo__core",
+  cx: "24",
+  cy: "24",
+  r: "5.4"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("g", {
+  class: "fwlogo__dots",
+  opacity: "0.9"
+}, [/*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "16",
+  cy: "24",
+  r: "2.9"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "32",
+  cy: "24",
+  r: "2.9"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "24",
+  cy: "16",
+  r: "2.9"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "24",
+  cy: "32",
+  r: "2.9"
+})]), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("g", {
+  class: "fwlogo__dots",
+  opacity: "0.55"
+}, [/*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "16",
+  cy: "16",
+  r: "2.5"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "32",
+  cy: "16",
+  r: "2.5"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "16",
+  cy: "32",
+  r: "2.5"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "32",
+  cy: "32",
+  r: "2.5"
+})]), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("g", {
+  class: "fwlogo__dots",
+  opacity: "0.35"
+}, [/*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "8",
+  cy: "24",
+  r: "2.1"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "40",
+  cy: "24",
+  r: "2.1"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "24",
+  cy: "8",
+  r: "2.1"
+}), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("circle", {
+  cx: "24",
+  cy: "40",
+  r: "2.1"
+})])], -1);
+const FeinwerkLogovue_type_template_id_08b04454_hoisted_3 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+  class: "fwlogo__word"
+}, [/*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])("feinwerk"), /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+  class: "fwlogo__sub"
+}, " plugins")], -1);
+const FeinwerkLogovue_type_template_id_08b04454_hoisted_4 = [FeinwerkLogovue_type_template_id_08b04454_hoisted_2, FeinwerkLogovue_type_template_id_08b04454_hoisted_3];
+function FeinwerkLogovue_type_template_id_08b04454_render(_ctx, _cache, $props, $setup, $data, $options) {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", FeinwerkLogovue_type_template_id_08b04454_hoisted_1, FeinwerkLogovue_type_template_id_08b04454_hoisted_4);
+}
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/FeinwerkLogo/FeinwerkLogo.vue?vue&type=template&id=08b04454
+
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/FeinwerkLogo/FeinwerkLogo.vue?vue&type=script&lang=ts
+
+/* harmony default export */ var FeinwerkLogovue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({}));
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/FeinwerkLogo/FeinwerkLogo.vue?vue&type=script&lang=ts
+ 
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/FeinwerkLogo/FeinwerkLogo.vue
+
+
+
+FeinwerkLogovue_type_script_lang_ts.render = FeinwerkLogovue_type_template_id_08b04454_render
+
+/* harmony default export */ var FeinwerkLogo = (FeinwerkLogovue_type_script_lang_ts);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PromoBanner/PromoBanner.vue?vue&type=script&lang=ts
+
 
 
 
@@ -2359,6 +2461,9 @@ function storageKey(slug) {
   return `fwmc.promo.hidden.${slug}`;
 }
 /* harmony default export */ var PromoBannervue_type_script_lang_ts = (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineComponent"])({
+  components: {
+    FeinwerkLogo: FeinwerkLogo
+  },
   emits: ['open'],
   props: {
     promo: {
@@ -2460,7 +2565,7 @@ function storageKey(slug) {
 
 
 
-PromoBannervue_type_script_lang_ts.render = PromoBannervue_type_template_id_4150a562_render
+PromoBannervue_type_script_lang_ts.render = PromoBannervue_type_template_id_375b9b9c_render
 
 /* harmony default export */ var PromoBanner = (PromoBannervue_type_script_lang_ts);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/DetailModal/DetailModal.vue?vue&type=template&id=5eacd6f9

@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.5.0
+
+- The recommendation banner shows the Feinwerk logo and comes in Feinwerk's petrol colours.
+- In a German Matomo the plugin descriptions on the Feinwerk Plugins screen and in the recommendation are in German.
+- On the Administration home only one Feinwerk banner shows at the top: the connector's recommendation comes first,
+  a plugin's banner only when there is none.
+
 ## 5.4.0
 
 - Console commands: `feinwerkmarketplaceconnector:status`, `refresh`, `update`, `install` and `connect`. They update and
