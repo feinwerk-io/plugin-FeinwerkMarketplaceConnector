@@ -68,6 +68,9 @@ final class PluginOperations
             // A new release changes the plugin window too: its cached answers are outdated now.
             (new PluginDetailCache($client, new OptionCacheStore()))->invalidateAll(); // never throws
             Licensing::sync($refreshed->plugins); // never throws; trial ends and the event for the paid plugins
+            if (MatomoForWordPress::detected()) {
+                WordPressMode::refreshUpdates($client); // never throws; WordPress's update list
+            }
             ReadinessCache::refresh($client); // never throws
             try {
                 $env = [
@@ -116,6 +119,11 @@ final class PluginOperations
     public function installOne(string $slug, string $version, ?bool $activate): array
     {
         if (MatomoForWordPress::detected()) {
+            // WordPress mode: the plugins the store offers as WordPress plugins go through WordPress's installer.
+            if (WordPressMode::isAvailable($slug)) {
+                return WordPressMode::install($slug, $version, $activate);
+            }
+
             return ['kind' => 'wordpress', 'installed' => $slug, 'message' => Piwik::translate('FeinwerkMarketplaceConnector_WordPressRefused', [self::displayName($slug)])];
         }
         if (InstalledMarketplacePlugins::isDevCheckout($slug)) {

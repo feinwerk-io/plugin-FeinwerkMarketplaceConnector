@@ -22,7 +22,12 @@
     <!-- Matomo for WordPress (MatomoForWordPress): plugins are installed and updated in
          WordPress there. -->
     <div v-if="wordpress && wordpress.detected" class="fwmc-wp-note" role="note">
-      <p>{{ translate('FeinwerkMarketplaceConnector_WordPressNote') }}</p>
+      <!-- WordPress mode: once plugins install through WordPress here, the note says so instead
+           of "paid plugins are not yet available". -->
+      <p v-if="wordpress.available && wordpress.available.length">
+        {{ translate('FeinwerkMarketplaceConnector_WordPressMode') }}
+      </p>
+      <p v-else>{{ translate('FeinwerkMarketplaceConnector_WordPressNote') }}</p>
       <a v-if="wordpressMarketplaceUrl" :href="wordpressMarketplaceUrl">
         {{ translate('FeinwerkMarketplaceConnector_WordPressMarketplace') }}
       </a>
@@ -336,6 +341,12 @@ export default defineComponent({
     return {
       fwmcInstance: this.instance,
       fwmcWordPress: !!(this.wordpress && (this.wordpress as { detected?: boolean }).detected),
+      // WordPress mode: the plugins that install and update through WordPress here (WordPressMode).
+      fwmcWordPressAvailable:
+        ((this.wordpress as { available?: string[] } | null)?.available) || [],
+      // Labels for the others: Auth SAML never runs there, paid ones have no WordPress version yet.
+      fwmcWordPressNever: ((this.wordpress as { never?: string[] } | null)?.never) || [],
+      fwmcWordPressNotYet: ((this.wordpress as { notYet?: string[] } | null)?.notYet) || [],
     };
   },
   data() {

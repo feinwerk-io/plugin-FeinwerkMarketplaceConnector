@@ -44,6 +44,8 @@ class Tasks extends \Piwik\Plugin\Tasks
         $token = (string) $settings->instanceToken->getValue();
 
         if ($url === '' || $token === '') {
+            WordPressMode::forget();   // no contact before connect: nothing of ours stays in WordPress's update list
+
             return;
         }
 
@@ -56,6 +58,10 @@ class Tasks extends \Piwik\Plugin\Tasks
             $available = (new MarketplaceCache($client, new OptionCacheStore()))->refresh()->plugins;
             // Trial ends the paid plugins ask about (Licensing): remembered while the list still shows them.
             Licensing::sync($available);
+            // Matomo for WordPress: the updates of the plugins installed in WordPress go into WordPress's own list.
+            if (MatomoForWordPress::detected()) {
+                WordPressMode::refreshUpdates($client);
+            }
             // After the list refresh: readiness asks about the Feinwerk plugins of the list just fetched.
             ReadinessCache::refresh($client);
             $installed = [];

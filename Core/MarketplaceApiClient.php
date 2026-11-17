@@ -234,6 +234,57 @@ final class MarketplaceApiClient
         return ['valid_until' => $validUntil];
     }
 
+    /**
+     * WordPress mode: the updates of the Feinwerk plugins installed as WordPress plugins (store 1acee2b), raw `data`.
+     *
+     * @param  array<string, string>  $env  wordpress_version, mfw_version, matomo_version, php_version
+     * @param  list<array{slug: string, version: string}>  $installed
+     * @return list<array<mixed>>
+     */
+    public function wordpressUpdates(array $env, array $installed): array
+    {
+        $response = $this->transport->postJson($this->baseUrl.'/api/v1/wordpress/updates', $this->authHeaders(), $env + ['installed' => $installed]);
+        $this->ensureOk($response);
+        $data = $response->jsonBody()['data'] ?? null;
+        if (! is_array($data) || ! array_is_list($data)) {
+            // A proxy or maintenance page must not empty WordPress's update list (review 2026-11-17).
+            throw new MarketplaceException('The marketplace sent no WordPress update list (HTTP '.$response->status.').');
+        }
+
+        return $data;
+    }
+
+    /**
+     * WordPress mode: the WordPress variant of a plugin for this Matomo, with a fresh signed `package` URL (about 10
+     * minutes). 403: no licence (MarketplaceLicenseException); 404: no variant (MarketplaceFeatureMissingException).
+     *
+     * @param  array<string, string>  $env  matomo_version, php_version
+     * @return array<string, mixed>
+     */
+    public function wordpressPlugin(string $slug, string $lang, array $env): array
+    {
+        $query = http_build_query(['locale' => $lang === 'de' ? 'de' : 'en'] + array_intersect_key($env, ['matomo_version' => 1, 'php_version' => 1]));
+        $response = $this->transport->get($this->baseUrl.'/api/v1/wordpress/plugins/'.rawurlencode($slug).'?'.$query, $this->authHeaders());
+        if ($response->status === 403) {
+            throw new MarketplaceLicenseException('No licence for this plugin on this instance (HTTP 403).');
+        }
+        if ($response->status === 404) {
+            throw new MarketplaceFeatureMissingException('The store has no WordPress variant of this plugin (HTTP 404).');
+        }
+        $this->ensureOk($response);
+        $body = $response->jsonBody();
+        // The store sends the details inside `data` (WordPressController::show, E2E 2026-11-17); a bare object is read too.
+        if (is_array($body) && is_array($body['data'] ?? null)) {
+            $body = $body['data'];
+        }
+        $package = $body['package'] ?? null;
+        if (! is_array($body) || ! is_string($package) || preg_match('#^https://#i', $package) !== 1 || ! is_string($body['version'] ?? null)) {
+            throw new MarketplaceException('The marketplace sent no usable WordPress package.');
+        }
+
+        return $body;
+    }
+
     /** Asks the store for a buy page of this plugin that returns to $returnUrl; returns its URL. */
     public function createPurchaseIntent(string $slug, string $returnUrl, string $lang): string
     {

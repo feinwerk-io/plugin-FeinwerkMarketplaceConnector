@@ -285,6 +285,20 @@
         "WordPressInstall": "Installa in WordPress",
         "WordPressUpdateTo": "Aggiorna a %s in WordPress",
         "WordPressDelay": "L’aggiornamento può comparire in WordPress un po’ più tardi che qui.",
-        "BrowseIntroWordPress": "I plugin Feinwerk (elenco del %s)."
+        "BrowseIntroWordPress": "I plugin Feinwerk (elenco del %s).",
+        "WordPressNoCapability": "%s: il suo utente WordPress non può installare plugin. Lo chieda a un amministratore di WordPress.",
+        "WordPressNoFilesystem": "%s: qui WordPress non può scrivere nella sua cartella dei plugin senza credenziali FTP. Scarichi il pacchetto WordPress dal suo account cliente e lo carichi in Plugin › Aggiungi nuovo plugin.",
+        "WordPressCopy": "%s: una copia di questo plugin si trova nella cartella dei plugin di Matomo (matomo/app/plugins). Rimuova prima quella copia, poi lo installi qui.",
+        "WordPressMode": "Questo Matomo funziona in Matomo for WordPress. I plugin Feinwerk con versione per WordPress si installano e si aggiornano direttamente qui, tramite WordPress, e i loro aggiornamenti compaiono anche in WordPress. I plugin gratuiti del Matomo Marketplace si installano in WordPress da Matomo Analytics › Marketplace.",
+        "WordPressVersionMoved": "%1$s: lo store Feinwerk offre ora la versione %2$s. L’elenco è stato aggiornato: ricarichi la pagina (in WordPress: Bacheca › Aggiornamenti) e riprovi.",
+        "WordPressNotConnected": "Questo Matomo non è collegato allo store Feinwerk. Lo colleghi nella pagina Feinwerk Plugins di Matomo, poi aggiorni di nuovo.",
+        "UpdateDone": "%1$s è aggiornato alla versione %2$s.",
+        "WordPressNever": "Non disponibile in WordPress",
+        "WordPressNeverHint": "In Matomo for WordPress è WordPress a gestire l’accesso, quindi questo plugin lì non funziona.",
+        "WordPressNotYet": "Non ancora disponibile in WordPress",
+        "WordPressNotYetHint": "Di questo plugin non esiste ancora una versione per WordPress. I plugin Feinwerk con versione per WordPress si installano direttamente qui.",
+        "WordPressNotActivated": "%1$s %2$s è installato, ma WordPress non è riuscito ad attivarlo: %3$s Lo attivi in WordPress in Plugin, oppure clicchi di nuovo su Installa qui.",
+        "WordPressActivated": "%1$s %2$s è attivato.",
+        "WordPressDetailsFailed": "Lo store Feinwerk non ha inviato i dettagli di %1$s: %2$s"
     }
 }

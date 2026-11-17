@@ -285,6 +285,20 @@
         "WordPressInstall": "Install in WordPress",
         "WordPressUpdateTo": "Update to %s in WordPress",
         "WordPressDelay": "The update can appear in WordPress a little later than here.",
-        "BrowseIntroWordPress": "The Feinwerk plugins (list of %s)."
+        "BrowseIntroWordPress": "The Feinwerk plugins (list of %s).",
+        "WordPressNoCapability": "%s: your WordPress user may not install plugins. Ask a WordPress administrator.",
+        "WordPressNoFilesystem": "%s: WordPress cannot write to its plugin folder without FTP credentials here. Download the WordPress package in your customer account and upload it under Plugins › Add New Plugin.",
+        "WordPressCopy": "%s: a copy of this plugin is in Matomo’s own plugin folder (matomo/app/plugins). Remove that copy first, then install it here.",
+        "WordPressMode": "This Matomo runs in Matomo for WordPress. Feinwerk plugins with a WordPress version install and update right here, through WordPress, and their updates also appear in WordPress. Free plugins from the Matomo Marketplace come from Matomo Analytics › Marketplace in WordPress.",
+        "WordPressVersionMoved": "%1$s: the Feinwerk store now offers version %2$s. The list has been fetched again: reload the page (in WordPress: Dashboard › Updates) and try again.",
+        "WordPressNotConnected": "This Matomo is not connected to the Feinwerk store. Connect it on the Feinwerk Plugins screen in Matomo, then update again.",
+        "UpdateDone": "%1$s is updated to %2$s.",
+        "WordPressNever": "Not available in WordPress",
+        "WordPressNeverHint": "In Matomo for WordPress, WordPress handles the login, so this plugin does not run there.",
+        "WordPressNotYet": "Not yet available in WordPress",
+        "WordPressNotYetHint": "There is no WordPress version of this plugin yet. Feinwerk plugins with a WordPress version install right here.",
+        "WordPressNotActivated": "%1$s %2$s is installed, but WordPress could not switch it on: %3$s Switch it on under Plugins in WordPress, or click Install here again.",
+        "WordPressActivated": "%1$s %2$s is switched on.",
+        "WordPressDetailsFailed": "The Feinwerk store did not send the details of %1$s: %2$s"
     }
 }

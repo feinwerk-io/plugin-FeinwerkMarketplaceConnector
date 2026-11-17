@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.7.0
+
+- Matomo for WordPress: Feinwerk plugins that the Feinwerk store offers with a WordPress version now install and update
+  from the Feinwerk Plugins screen through WordPress itself, and their updates also appear in WordPress's own list of
+  updates. Updates that change the database are not installed by WordPress's automatic updates. Free trials and
+  licenses work for these plugins as in Matomo, and "View details" in WordPress shows the plugin's description and
+  changes. WordPress's automatic updates can be switched on for them as for any WordPress plugin. After an install you
+  come back to the Feinwerk Plugins screen, and plugins without a WordPress version say so ("Not yet available in
+  WordPress", for Auth SAML "Not available in WordPress"). Not on WordPress multisite networks yet.
+- Plugins that unlock features only for a bought license, not during a free trial, now treat a license as bought only
+  when the Feinwerk store says it is not a trial. Before, a license without that information could count as bought.
+
 ## 5.6.0
 
 - A plugin that is installed but switched off no longer causes the notice "Matomo has a database update pending". Its

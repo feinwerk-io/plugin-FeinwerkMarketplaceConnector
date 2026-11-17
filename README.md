@@ -77,6 +77,10 @@ Once connected, the connector talks to plugins.feinwerk.io:
   install, update, use or buy a license, start a free trial): the instance token, the Matomo and PHP version and the
   plugin concerned.
 - **After a Matomo major update**: the installed Feinwerk plugins, to find their builds for the new version.
+- **In Matomo for WordPress**, once a day and when you refresh the list: the WordPress and Matomo for WordPress
+  versions and the Feinwerk plugins installed as WordPress plugins with their versions, for WordPress's list of
+  updates. When WordPress shows a plugin's details or downloads its update: the instance token, the Matomo and PHP
+  version and the plugin concerned.
 - **When you answer the feedback question or send a bug report**: only what the form shows. A feedback vote carries
   no instance token.
 
@@ -107,6 +111,23 @@ Updates of the connector arrive both ways: in the Matomo Marketplace like any ot
 Plugins screen with one click. Both install the same version, so use whichever comes first.
 
 Details: [the connector guide](https://plugins.feinwerk.io/en/docs/connector).
+
+## Matomo for WordPress
+
+In Matomo for WordPress every Matomo plugin is a WordPress plugin, so WordPress installs and updates it. The Feinwerk
+Plugins screen works there too:
+
+- Feinwerk plugins that the Feinwerk store offers with a WordPress version install and update right on the Feinwerk
+  Plugins screen, through WordPress's own installer; free trials and licenses work for them as in Matomo. Their updates
+  also appear in WordPress's list of updates (update several at once there), and updates that change the database are
+  left out of WordPress's automatic updates.
+- Free Feinwerk plugins listed on the Matomo Marketplace come from Matomo Analytics › Marketplace in WordPress.
+- Everything else shows "Install in WordPress" or "Update in WordPress": the connector never puts a second copy of a
+  plugin into Matomo's own plugin folder there.
+
+Your WordPress user needs the right to install plugins, and WordPress must be able to write to its plugin folder
+without FTP credentials. WordPress multisite networks are not supported yet: there every plugin is installed and
+updated in WordPress itself.
 
 ## Console commands
 

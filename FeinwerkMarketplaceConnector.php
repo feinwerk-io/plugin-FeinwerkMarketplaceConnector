@@ -588,3 +588,10 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
         }
     }
 }
+
+// Matomo for WordPress (WordPress mode, docs/dev/wordpress-mode-plan.md): WordPress's update list and downloads for the
+// Feinwerk plugins installed as WordPress plugins. Only when WordPress loads this file; nothing in plain Matomo.
+if (defined('ABSPATH') && function_exists('add_filter') && is_file(__DIR__.'/WordPress/Hooks.php')) {
+    require_once __DIR__.'/WordPress/Hooks.php';
+    \Piwik\Plugins\FeinwerkMarketplaceConnector\WordPress\Hooks::register();
+}

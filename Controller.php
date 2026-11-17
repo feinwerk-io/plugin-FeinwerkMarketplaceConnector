@@ -142,16 +142,18 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $browseFetchedAt = date('Y-m-d H:i', $public['fetchedAt']);
         }
 
+        $wordpressLists = $this->wordpressLists($wordpress && $connected ? PendingUpdates::cachedPlugins() : []);
+
         return $this->renderTemplate('index', [
             // Vue consumes plain objects, not PluginStatusRow instances. availableHere: the store has a build of it for
             // this Matomo (browse without an account; connected, the list already answers for this Matomo).
             'rows' => array_map(fn ($r) => array_merge(get_object_vars($r), [
                 'availableHere' => $major === null || ! isset($linesBySlug[$r->slug]) || in_array($major, $linesBySlug[$r->slug], true),
-                // A trial installs the plugin: not in Matomo for WordPress.
-                'trialAvailable' => $r->trialAvailable && ! $wordpress,
+                // A trial installs the plugin: in Matomo for WordPress only where WordPress installs it (WordPress mode).
+                'trialAvailable' => $r->trialAvailable && (! $wordpress || in_array($r->slug, $wordpressLists['available'], true)),
             ]), $rows),
             // Matomo for WordPress: install and update there, not here (MatomoForWordPress).
-            'wordpress' => ['detected' => $wordpress, 'marketplaceUrl' => MatomoForWordPress::marketplaceUrl()],
+            'wordpress' => ['detected' => $wordpress, 'marketplaceUrl' => MatomoForWordPress::marketplaceUrl()] + $wordpressLists,
             // Browse without an account: loaded by the admin's click on the screen of a Matomo that is not connected.
             'browse' => [
                 'loaded' => $browseFetchedAt !== null,
@@ -709,12 +711,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
                 $done = Piwik::translate('FeinwerkMarketplaceConnector_ConnectDone', $result['label'] ?? '?');
                 $then = $pending['then'] ?? null;
-                if (is_array($then) && ($then['intent'] ?? null) === 'trial' && $this->isSlug((string) ($then['plugin'] ?? ''))
-                    && ! MatomoForWordPress::detected()) {
+                $thenSlug = is_array($then) ? (string) ($then['plugin'] ?? '') : '';
+                if (is_array($then) && ($then['intent'] ?? null) === 'trial' && $this->isSlug($thenSlug)
+                    && (! MatomoForWordPress::detected() || WordPressMode::isAvailable($thenSlug))) {
                     // The trial starts now; its window opens with the install button: an install keeps its nonce
-                    // (HARD RULE 3), and this return has none.
-                    $slug = (string) $then['plugin'];
-                    [$sentence, $context] = $this->beginTrial($settings, $slug, true);
+                    // (HARD RULE 3), and this return has none. In WordPress only when WordPress could install it.
+                    $slug = $thenSlug;
+                    $refusal = MatomoForWordPress::detected() ? WordPressMode::refusal($slug) : null;
+                    [$sentence, $context] = $refusal !== null ? [$refusal, Notification::CONTEXT_WARNING] : $this->beginTrial($settings, $slug, true);
                     $this->notify($done.' '.$sentence, $context === Notification::CONTEXT_SUCCESS ? Notification::CONTEXT_SUCCESS : Notification::CONTEXT_WARNING);
                     $open = ['fwmc_open' => $slug];
                 } else {
@@ -748,7 +752,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $slug = \Piwik\Common::getRequestVar('slug', '', 'string', $_POST);
         $settings = $this->settings();
         $row = null;
-        $rows = $this->isSlug($slug) && $settings['token'] !== '' && ! MatomoForWordPress::detected()
+        // In Matomo for WordPress only for the plugins that install through WordPress (WordPress mode).
+        $rows = $this->isSlug($slug) && $settings['token'] !== '' && (! MatomoForWordPress::detected() || WordPressMode::isAvailable($slug))
             ? PluginOperations::rows($this->marketplaceCache($settings)->cached(), $this->adminLang())
             : [];
         foreach ($rows as $candidate) {
@@ -762,6 +767,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             return '';
         }
 
+        // WordPress mode: what would stop WordPress's installer is said before the one-time trial is spent.
+        $refusal = MatomoForWordPress::detected() && $row->installedVersion === null ? WordPressMode::refusal($slug) : null;
+        if ($refusal !== null) {
+            $this->notify($refusal, Notification::CONTEXT_WARNING);
+            $this->backToScreen($slug);
+
+            return '';
+        }
         // A beta is installed only by its own labelled click (5.6.0): the trial starts, the window offers the install.
         [$sentence, $context] = $this->beginTrial($settings, $slug, $row->beta);
         if ($context !== Notification::CONTEXT_SUCCESS || $row->installedVersion !== null || $row->latestVersion === null || $row->beta) {
@@ -772,6 +785,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
 
         $result = $this->installOne($slug, $row->latestVersion, true);
+        $this->noteWordPressInstall($result);
         switch ($result['kind']) {
             case 'activate':
                 $this->notify($sentence, Notification::CONTEXT_SUCCESS);
@@ -952,6 +966,15 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         // Back to the menu entry of the tab the form was sent from (5.1.0: one action per tab).
         $action = self::TABS[\Piwik\Common::getRequestVar('fwmc_tab', '', 'string', $_POST)] ?? 'index';
 
+        if ($this->throughWordPress) {
+            // Matomo for WordPress installs the new plugin's tables on a wp-admin page only (WordPressMode::backUrl).
+            $target = \Piwik\Url::getCurrentUrlWithoutQueryString().'?'.http_build_query(['module' => 'FeinwerkMarketplaceConnector', 'action' => $action,
+                'idSite' => max(1, (int) \Piwik\Common::getRequestVar('idSite', 1, 'int')), 'period' => 'day', 'date' => 'yesterday'] + $parameters);
+            \Piwik\Url::redirectToUrl(WordPressMode::backUrl($target));
+
+            return;
+        }
+
         $this->redirectToIndex('FeinwerkMarketplaceConnector', $action, null, null, null, $parameters);
     }
 
@@ -1062,6 +1085,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     private function runInstall(string $slug, string $version, ?bool $activate = true): void
     {
         $result = $this->installOne($slug, $version, $activate);
+        $this->noteWordPressInstall($result);
         switch ($result['kind']) {
             case 'activate':
                 $this->notifyActivateOnConsole($result['installed']);
@@ -1073,6 +1097,49 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 $contexts = ['done' => Notification::CONTEXT_SUCCESS, 'dev' => Notification::CONTEXT_WARNING, 'wordpress' => Notification::CONTEXT_WARNING];
                 $this->notify($result['message'], $contexts[$result['kind']] ?? Notification::CONTEXT_ERROR);
         }
+    }
+
+    /**
+     * Which plugins install through WordPress here (`available`), which never run there (`never`: Auth SAML, the login
+     * belongs to WordPress) and which have no way into WordPress yet (`notYet`: paid ones, and free ones the store's
+     * `matomo_marketplace` says are not listed there): the labels on the screen (E2E 2026-11-17: they all said "Install
+     * in WordPress").
+     *
+     * @param  list<array<mixed>>  $plugins
+     * @return array{available: list<string>, never: list<string>, notYet: list<string>}
+     */
+    private function wordpressLists(array $plugins): array
+    {
+        $available = WordPressMode::availableSlugs($plugins);
+        $never = [];
+        $notYet = [];
+        foreach ($plugins as $plugin) {
+            $slug = is_array($plugin) && is_string($plugin['slug'] ?? null) ? $plugin['slug'] : null;
+            if ($slug === null || in_array($slug, $available, true)) {
+                continue;
+            }
+            if ($slug === 'FeinwerkAuthSaml') {
+                $never[] = $slug;
+            } elseif (is_bool($plugin['matomo_marketplace'] ?? null) && ($plugin['tier'] ?? 'free') === 'free') {
+                // Store field (2026-11-17): a free plugin listed there comes from Matomo Marketplace for WordPress.
+                if (! $plugin['matomo_marketplace']) {
+                    $notYet[] = $slug;
+                }
+            } elseif (($plugin['tier'] ?? 'free') !== 'free') {
+                $notYet[] = $slug;   // paid: never on the Matomo Marketplace; also the fallback for stores without the field
+            }
+        }
+
+        return ['available' => $available, 'never' => $never, 'notYet' => $notYet];
+    }
+
+    /** Set after an install through WordPress: the way back leads through wp-admin (backToScreen). */
+    private bool $throughWordPress = false;
+
+    /** @param array{kind: string} $result */
+    private function noteWordPressInstall(array $result): void
+    {
+        $this->throughWordPress = $this->throughWordPress || ($result['kind'] === 'done' && MatomoForWordPress::detected());
     }
 
     /** Downloads and installs one plugin, the shared core of a click and a batch step (PluginOperations). Never throws. */

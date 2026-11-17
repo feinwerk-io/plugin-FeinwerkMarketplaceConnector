@@ -142,7 +142,7 @@ final class Licensing
         $paid = [];
         foreach ($plugins as $plugin) {
             $license = is_array($plugin) && is_string($plugin['slug'] ?? null) ? ($plugin['license'] ?? null) : null;
-            if (is_array($license) && ($license['trial'] ?? false) !== true && ($license['status'] ?? 'active') === 'active') {
+            if (is_array($license) && ($license['trial'] ?? null) === false && ($license['status'] ?? 'active') === 'active') {
                 $paid[$plugin['slug']] = true;
             }
         }
@@ -181,13 +181,15 @@ final class Licensing
             if (! is_array($license)) {
                 continue;   // no licence listed: keep what was seen (an ended trial leaves the list)
             }
-            $trial = ($license['trial'] ?? false) === true;
-            if (! $trial && ($license['status'] ?? 'active') === 'active') {
-                unset($ends[$slug]);   // an active licence that is no trial wins for good
+            $trial = ($license['trial'] ?? null) === true;
+            // Only an explicit `trial: false` on an active licence proves a bought one and wins for good (Conversions
+            // API, 2026-11-17: a store without the field says nothing); an expired one proves nothing either.
+            if (($license['trial'] ?? null) === false && ($license['status'] ?? 'active') === 'active') {
+                unset($ends[$slug]);
                 continue;
             }
             if (! $trial) {
-                continue;   // an expired licence that is no trial proves nothing
+                continue;
             }
             $end = TrialClock::endsAt($license['valid_until'] ?? null);
             if ($end !== null) {

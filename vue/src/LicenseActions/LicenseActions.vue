@@ -1,6 +1,6 @@
 <template>
   <form
-    v-if="!(wordpress && kind !== 'claim')"
+    v-if="!hiddenInWordPress"
     method="post"
     :action="url"
     class="fwmc-license-action"
@@ -12,6 +12,17 @@
       {{ busy ? translate('FeinwerkMarketplaceConnector_Working') : label }}
     </button>
   </form>
+  <!-- Matomo for WordPress, no WordPress version: say why instead of an empty cell (E2E run 3,
+       2026-11-17). Once per row, in place of the buy button. -->
+  <span
+    v-else-if="kind === 'buy'"
+    class="fwmc-badge fwmc-status--not_installed fwmc-wp-action"
+    :title="translate(never
+      ? 'FeinwerkMarketplaceConnector_WordPressNeverHint'
+      : 'FeinwerkMarketplaceConnector_WordPressNotYetHint')"
+  >{{ translate(never
+    ? 'FeinwerkMarketplaceConnector_WordPressNever'
+    : 'FeinwerkMarketplaceConnector_WordPressNotYet') }}</span>
 </template>
 
 <script lang="ts">
@@ -31,8 +42,11 @@ export default defineComponent({
   },
   inject: {
     inWindow: { from: 'fwmcInWindow', default: false },
-    // Matomo for WordPress: a plugin bought or tried here could not be installed there yet.
+    // Matomo for WordPress: buy and trial only for the plugins that install through WordPress
+    // here (WordPress mode); the others could not be installed there.
     wordpress: { from: 'fwmcWordPress', default: false },
+    wordpressAvailable: { from: 'fwmcWordPressAvailable', default: () => [] },
+    wordpressNever: { from: 'fwmcWordPressNever', default: () => [] },
   },
   data() {
     return { busy: false };
@@ -52,6 +66,13 @@ export default defineComponent({
     },
   },
   computed: {
+    hiddenInWordPress(): boolean {
+      return !!this.wordpress && this.kind !== 'claim'
+        && !(this.wordpressAvailable as string[]).includes(this.slug);
+    },
+    never(): boolean {
+      return (this.wordpressNever as string[]).includes(this.slug);
+    },
     label(): string {
       return translate({
         claim: 'FeinwerkMarketplaceConnector_ClaimLicense',

@@ -2,14 +2,10 @@
   <!-- Matomo for WordPress: WordPress installs and updates the plugins there
        (MatomoForWordPress). -->
   <span
-    v-if="wordpress"
+    v-if="wordpress && !wordpressAvailable.includes(slug)"
     class="fwmc-badge fwmc-status--not_installed fwmc-wp-action"
-    :title="translate(isUpdate
-      ? 'FeinwerkMarketplaceConnector_WordPressDelay'
-      : 'FeinwerkMarketplaceConnector_WordPressNote')"
-  >{{ isUpdate
-    ? translate('FeinwerkMarketplaceConnector_WordPressUpdateTo', version)
-    : translate('FeinwerkMarketplaceConnector_WordPressInstall') }}</span>
+    :title="wordpressHint"
+  >{{ wordpressLabel }}</span>
   <form v-else method="post" :action="actionUrl" class="fwmc-install" ref="form" @submit="onSubmit">
     <input type="hidden" name="nonce" :value="nonce" />
     <input type="hidden" name="slug" :value="slug" />
@@ -135,6 +131,10 @@ export default defineComponent({
     // Inside a plugin window: the server reopens it after the action.
     inWindow: { from: 'fwmcInWindow', default: false },
     wordpress: { from: 'fwmcWordPress', default: false },
+    // WordPress mode: these install and update through WordPress from this screen (WordPressMode).
+    wordpressAvailable: { from: 'fwmcWordPressAvailable', default: () => [] },
+    wordpressNever: { from: 'fwmcWordPressNever', default: () => [] },
+    wordpressNotYet: { from: 'fwmcWordPressNotYet', default: () => [] },
   },
   data() {
     // busy: sent once, the button stays off so a double click cannot spend the nonce twice.
@@ -143,6 +143,35 @@ export default defineComponent({
     };
   },
   computed: {
+    // Matomo for WordPress, a plugin that does not install from this screen: why not
+    // (E2E 2026-11-17).
+    wordpressKind(): 'update'|'never'|'notYet'|'install' {
+      if (this.isUpdate) {
+        return 'update';
+      }
+      if ((this.wordpressNever as string[]).includes(this.slug)) {
+        return 'never';
+      }
+      return (this.wordpressNotYet as string[]).includes(this.slug) ? 'notYet' : 'install';
+    },
+    wordpressLabel(): string {
+      const labels = {
+        update: translate('FeinwerkMarketplaceConnector_WordPressUpdateTo', this.version),
+        never: translate('FeinwerkMarketplaceConnector_WordPressNever'),
+        notYet: translate('FeinwerkMarketplaceConnector_WordPressNotYet'),
+        install: translate('FeinwerkMarketplaceConnector_WordPressInstall'),
+      };
+      return labels[this.wordpressKind];
+    },
+    wordpressHint(): string {
+      const hints = {
+        update: 'FeinwerkMarketplaceConnector_WordPressDelay',
+        never: 'FeinwerkMarketplaceConnector_WordPressNeverHint',
+        notYet: 'FeinwerkMarketplaceConnector_WordPressNotYetHint',
+        install: 'FeinwerkMarketplaceConnector_WordPressNote',
+      };
+      return translate(hints[this.wordpressKind]);
+    },
     info(): InstanceInfo|null {
       return (this as any).instance as InstanceInfo|null;
     },
