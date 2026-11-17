@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.8.0
+
+- Paid Feinwerk plugins whose license ended more than 7 days ago now show super users and admins a warning on Matomo's
+  pages, with the end date and a link to renew. You can close it for the day; it comes back the next day until the
+  license is renewed. The plugins keep working.
+- During a free trial you can buy the license right away: "Buy a license" now also shows in the plugin window and on the
+  Manage and Licenses tabs while the trial runs. The purchase replaces the trial.
+- A plugin window you closed no longer opens again when you go to another entry of the Feinwerk Plugins menu, also
+  after a detour through other administration pages.
+- Plugins you remove from this Matomo no longer count as installed in your Feinwerk account and its recommendations:
+  the daily check now tells the Feinwerk store that its list of installed plugins is complete.
+
 ## 5.7.0
 
 - Matomo for WordPress: Feinwerk plugins that the Feinwerk store offers with a WordPress version now install and update

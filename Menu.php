@@ -26,11 +26,18 @@ class Menu extends \Piwik\Plugin\Menu
         if (method_exists($menu, 'registerMenuIcon')) {
             $menu->registerMenuIcon(self::SECTION, 'icon-marketplace');
         }
-        $menu->addItem(self::SECTION, $this->tasksTitle(), $this->urlForAction('tasks'), 3);
-        $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabDiscover'), $this->urlForAction('index'), 4);
-        $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabManage'), $this->urlForAction('manage'), 5);
-        $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabLicenses'), $this->urlForAction('licenses'), 6);
+        $menu->addItem(self::SECTION, $this->tasksTitle(), $this->urlForAction('tasks', self::CLEAN), 3);
+        $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabDiscover'), $this->urlForAction('index', self::CLEAN), 4);
+        $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabManage'), $this->urlForAction('manage', self::CLEAN), 5);
+        $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabLicenses'), $this->urlForAction('licenses', self::CLEAN), 6);
     }
+
+    /**
+     * Matomo builds every menu link from the current address and keeps all its parameters (urlRewriteWithParameters):
+     * a window opened with fwmc_open would open again from every Feinwerk menu entry, even after a detour through other
+     * admin pages (Peter, 2026-11-17). Null removes a parameter there.
+     */
+    private const CLEAN = ['fwmc_open' => null, 'fwmc_tab' => null];
 
     /** "Aufgaben (N)" while something needs the admin, like Matomo's "Plugins (N)". Cache-only, never throws. */
     private function tasksTitle(): string

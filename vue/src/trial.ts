@@ -25,3 +25,9 @@ export default function trialLabel(
     ? translate('FeinwerkMarketplaceConnector_TrialLastDay', formatDate(day))
     : translate('FeinwerkMarketplaceConnector_TrialUntil', formatDate(day), String(days));
 }
+
+// A free trial runs (Peter, 2026-11-17: "3. ja"): "Buy a license" is offered during it too,
+// never for a bought licence.
+export function trialRunning(license: TrialLicense|null|undefined): boolean {
+  return !!license && license.trial === true;
+}

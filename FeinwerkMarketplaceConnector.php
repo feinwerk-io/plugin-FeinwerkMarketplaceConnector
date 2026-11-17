@@ -40,6 +40,7 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
             'Controller.triggerAdminNotifications' => 'onTriggerAdminNotifications',
             'CoreUpdater.update.end' => 'onCoreUpdated',
             'Request.dispatch' => 'onRequestDispatch',
+            'Controller.CoreHome.markNotificationAsRead.end' => 'onNotificationRead',
             'TwoFactorAuth.requiresTwoFactorAuthentication' => 'onRequiresTwoFactorAuth',
             'UsersManager.deleteUser' => 'onDeleteUser',
             // Before the plugins' kit banners: the recommendation card goes first and claims the admin home (one banner).
@@ -79,10 +80,17 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
     }
 
     /** The feedback throttle of a deleted user (Feedback::allowed). */
+    /** The × on a Matomo notification, after Matomo's own token check: the lapsed-licence warning is closed for the day. */
+    public function onNotificationRead(): void
+    {
+        LicenseEndNotice::closed();   // never throws
+    }
+
     public function onDeleteUser($userLogin): void
     {
         try {
             \Piwik\Option::deleteLike(Feedback::userPrefix((string) $userLogin).'%');
+            \Piwik\Option::delete(LicenseEndNotice::optionKey((string) $userLogin));
         } catch (\Throwable $e) {
         }
     }
@@ -143,6 +151,7 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
     {
         $this->keepUpdatesOutOfTheBrowser($module, $action, $parameters);
         $this->clearDoneConsoleNotices($module);
+        LicenseEndNotice::maybeRaise(is_string($module) ? $module : null, is_string($action) ? $action : null);   // never throws
 
         try {
             if ($module === 'API' || Common::isPhpCliMode() || UpgradeWatcher::pending() === null) {

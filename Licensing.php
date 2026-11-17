@@ -70,6 +70,7 @@ final class Licensing
      */
     public static function sync(array $plugins): void
     {
+        self::$rows = null;   // a new list: read it again
         try {
             $before = self::stored();
             $after = self::merge($before, $plugins);
@@ -120,6 +121,32 @@ final class Licensing
     {
         self::$ends = null;
         self::$paid = null;
+        self::$rows = null;
+    }
+
+    /** @var array<string, array<mixed>>|null this request's store list by slug (one read, also for the plugins' calls) */
+    private static ?array $rows = null;
+
+    /**
+     * The cached store list, read once per request (the helpers below are called on every page by the plugins).
+     *
+     * @return array<string, array<mixed>> slug => row
+     */
+    public static function cachedRows(): array
+    {
+        if (self::$rows === null) {
+            self::$rows = [];
+            try {
+                foreach (PendingUpdates::cachedPlugins() as $row) {
+                    if (is_array($row) && is_string($row['slug'] ?? null)) {
+                        self::$rows[$row['slug']] = $row;
+                    }
+                }
+            } catch (\Throwable $e) {
+            }
+        }
+
+        return self::$rows;
     }
 
     /** @return array<string, int> */
@@ -199,5 +226,36 @@ final class Licensing
         ksort($ends);
 
         return $ends;
+    }
+
+    /**
+     * Shared interface (2026-11-17, docs/dev/license-end.md): when the bought licence of $plugin ended, as a Unix time;
+     * null when a licence covers this Matomo, there never was one, it was a trial or the store does not say. From the
+     * cached list only; never throws.
+     */
+    public static function licenseEndedAt(string $plugin): ?int
+    {
+        $row = self::cachedRows()[$plugin] ?? null;
+
+        return $row === null ? null : \Piwik\Plugins\FeinwerkMarketplaceConnector\Core\LicenseEnd::endedAt($row);
+    }
+
+    /**
+     * Shared interface (2026-11-17): true when this connector shows the central lapsed-licence notice for $plugin
+     * (connected, and the store's answer carries license_ended_at); a plugin then drops its own lapsed notice. Never throws.
+     */
+    public static function handlesLicenseEnd(string $plugin): bool
+    {
+        try {
+            // Switched off, the connector raises nothing (review 2026-11-17): then the plugin keeps its own notice.
+            if (! \Piwik\Plugin\Manager::getInstance()->isPluginActivated('FeinwerkMarketplaceConnector')) {
+                return false;
+            }
+            $row = self::cachedRows()[$plugin] ?? null;
+
+            return $row !== null && \Piwik\Plugins\FeinwerkMarketplaceConnector\Core\LicenseEnd::covers($row);
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 }

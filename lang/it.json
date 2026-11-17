@@ -299,6 +299,9 @@
         "WordPressNotYetHint": "Di questo plugin non esiste ancora una versione per WordPress. I plugin Feinwerk con versione per WordPress si installano direttamente qui.",
         "WordPressNotActivated": "%1$s %2$s è installato, ma WordPress non è riuscito ad attivarlo: %3$s Lo attivi in WordPress in Plugin, oppure clicchi di nuovo su Installa qui.",
         "WordPressActivated": "%1$s %2$s è attivato.",
-        "WordPressDetailsFailed": "Lo store Feinwerk non ha inviato i dettagli di %1$s: %2$s"
+        "WordPressDetailsFailed": "Lo store Feinwerk non ha inviato i dettagli di %1$s: %2$s",
+        "LicenseEnded": "La licenza di questi plugin Feinwerk è scaduta da più di 7 giorni: %s. I plugin continuano a funzionare, ma gli aggiornamenti sono disponibili solo con una licenza valida. Rinnovi la licenza.",
+        "LicenseEndedItem": "%1$s (scaduta il %2$s, %3$srinnovare%4$s)",
+        "LicenseEndedAdminNote": "Il suo super utente può rinnovarla."
     }
 }

@@ -181,7 +181,7 @@ import LicenseActions from '../LicenseActions/LicenseActions.vue';
 import BatchUpdate from '../BatchUpdate/BatchUpdate.vue';
 import canBatch from '../batch';
 import activateLink from '../activate';
-import trialLabel from '../trial';
+import trialLabel, { trialRunning } from '../trial';
 
 interface Row {
   slug: string; displayName: string; tier: string; status: string;
@@ -257,7 +257,9 @@ export default defineComponent({
     },
     // A paid plugin without a license that the account cannot claim: buy it from the store.
     canBuy(row: Row): boolean {
-      return this.licensingAvailable && row.needsLicense && !row.license && !row.licenseClaimable
+      // Without a licence, or during a free trial (Peter, 2026-11-17: "3. ja").
+      return this.licensingAvailable && !row.licenseClaimable
+        && ((row.needsLicense && !row.license) || trialRunning(row.license))
         && !!row.latestVersion && !row.devCheckout;
     },
     actionFor(row: Row): string|null {

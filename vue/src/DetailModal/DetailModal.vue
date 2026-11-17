@@ -106,6 +106,13 @@
               <span v-else class="fwmc-meta">
                 {{ translate('FeinwerkMarketplaceConnector_NoVersionYet') }}
               </span>
+              <LicenseActions
+                v-if="buyDuringTrial"
+                kind="buy"
+                :url="buyUrl"
+                :nonce="nonce"
+                :slug="slug"
+              />
             </div>
           </div>
         </div>
@@ -283,6 +290,13 @@
             <span v-else class="fwmc-meta">
               {{ translate('FeinwerkMarketplaceConnector_NoVersionYet') }}
             </span>
+            <LicenseActions
+              v-if="buyDuringTrial"
+              kind="buy"
+              :url="buyUrl"
+              :nonce="nonce"
+              :slug="slug"
+            />
           </div>
 
           <BugReportForm v-if="slug" :slug="slug" :nonce="nonce" />
@@ -317,7 +331,7 @@ import activateLink from '../activate';
 import BugReportForm from '../BugReportForm/BugReportForm.vue';
 import InstallForm from '../InstallForm/InstallForm.vue';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
-import trialLabel from '../trial';
+import trialLabel, { trialRunning } from '../trial';
 
 export default defineComponent({
   components: {
@@ -394,6 +408,12 @@ export default defineComponent({
     },
     trialText(): string {
       return trialLabel(this.row ? this.row.license : null, (day) => day);
+    },
+    // Peter, 2026-11-17 ("3. ja"): during a free trial "Buy a license" stands next to the action.
+    buyDuringTrial(): boolean {
+      const { row } = this;
+      return !!this.licensingAvailable && !!row && trialRunning(row.license)
+        && !row.licenseClaimable;
     },
     cta(): string {
       const { row } = this;

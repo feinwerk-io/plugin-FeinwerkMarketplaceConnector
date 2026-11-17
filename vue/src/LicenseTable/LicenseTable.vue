@@ -62,7 +62,9 @@
                 :nonce="nonce"
                 :slug="row.slug"
               />
-              <template v-else-if="licensingAvailable && row.needsLicense">
+              <template
+                v-else-if="licensingAvailable && (row.needsLicense || trialRunning(row.license))"
+              >
                 <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="row.slug" />
                 <LicenseActions
                   v-if="row.trialAvailable && trialUrl"
@@ -85,7 +87,7 @@ import { defineComponent, PropType } from 'vue';
 import { translate, Matomo } from 'CoreHome';
 import { PluginRow } from '../types';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
-import trialLabel from '../trial';
+import trialLabel, { trialRunning } from '../trial';
 
 export default defineComponent({
   components: { LicenseActions },
@@ -108,6 +110,7 @@ export default defineComponent({
     },
   },
   methods: {
+    trialRunning,
     translate,
     trialText(row: PluginRow): string {
       return trialLabel(row.license, (day) => this.date(day));

@@ -55,7 +55,8 @@ class Tasks extends \Piwik\Plugin\Tasks
             $client = MarketplaceClientFactory::make($url, $token);
 
             // Warm the persistent cache so the admin screen stays instant and current.
-            $available = (new MarketplaceCache($client, new OptionCacheStore()))->refresh()->plugins;
+            $refreshed = (new MarketplaceCache($client, new OptionCacheStore()))->refresh();
+            $available = $refreshed->plugins;
             // Trial ends the paid plugins ask about (Licensing): remembered while the list still shows them.
             Licensing::sync($available);
             // Matomo for WordPress: the updates of the plugins installed in WordPress go into WordPress's own list.
@@ -78,6 +79,12 @@ class Tasks extends \Piwik\Plugin\Tasks
             ];
             if (($users = $this->countUsers()) !== null) {
                 $env['user_count'] = $users;
+            }
+            // Store contract 2026-11-17: `installed` names every plugin of the list just fetched that is here (switched
+            // off, development checkouts and the connector included), so the store may forget the others. Not from a
+            // cached list: it may be older than the store's answer.
+            if ($refreshed->error === null) {
+                $env['installed_complete'] = true;
             }
 
             $updates = $client->checkUpdates($env, $installed);

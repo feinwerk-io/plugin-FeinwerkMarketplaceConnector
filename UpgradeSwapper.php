@@ -64,8 +64,11 @@ final class UpgradeSwapper
         }
 
         $client = MarketplaceClientFactory::make($url, $token);
-        $available = (new MarketplaceCache($client, new OptionCacheStore()))->refresh()->plugins;
+        $refreshed = (new MarketplaceCache($client, new OptionCacheStore()))->refresh();
+        $available = $refreshed->plugins;
         $installed = InstalledMarketplacePlugins::versions($available);
+        // The report names the connector too (store contract 2026-11-17: the list is complete); the swap never switches it.
+        $reported = $installed;
         unset($installed[UpgradeWatcher::SELF]);
         $manager = Manager::getInstance();
         $devCheckouts = InstalledMarketplacePlugins::devCheckouts($available);
@@ -74,7 +77,10 @@ final class UpgradeSwapper
 
         $offered = [];
         $env = ['matomo_version' => Version::VERSION, 'php_version' => PHP_VERSION, 'site_url' => SettingsPiwik::getPiwikUrl()];
-        $list = array_map(fn ($slug, $version) => ['slug' => $slug, 'version' => $version], array_keys($installed), $installed);
+        if ($refreshed->error === null) {
+            $env['installed_complete'] = true;
+        }
+        $list = array_map(fn ($slug, $version) => ['slug' => $slug, 'version' => $version], array_keys($reported), $reported);
         foreach ($client->checkUpdates($env, $list) as $update) {
             // Never a beta (Peter, 2026-11-16: "2. nein"): the plugin waits, and the screen offers the beta to a click.
             if (isset($update['slug'], $update['latest']) && ($update['channel'] ?? null) !== 'beta') {
