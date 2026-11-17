@@ -5,6 +5,7 @@ namespace Piwik\Plugins\FeinwerkMarketplaceConnector\Commands;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\ConsoleDatabaseStep;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\ConsoleSupport;
+use Piwik\Plugins\FeinwerkMarketplaceConnector\MatomoForWordPress;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\PluginOperations;
 
 /** Installs Feinwerk plugins like a click on Install: the build for this Matomo version, activated unless --no-activate. */
@@ -26,6 +27,12 @@ class Install extends ConsoleCommand
     {
         $out = $this->getOutput();
         $input = $this->getInput();
+        // Matomo for WordPress first: there nothing is installed from here, connected or not (guard check 2026-11-17).
+        if (MatomoForWordPress::detected()) {
+            $out->writeln('<error>'.ConsoleSupport::wordpress().'</error>');
+
+            return 1;
+        }
         if (! PluginOperations::connected()) {
             $out->writeln('<error>'.ConsoleSupport::notConnected().'</error>');
 

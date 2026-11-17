@@ -24,6 +24,9 @@ class Tasks extends \Piwik\Plugin\Tasks
     /** Finish a Matomo major change: retry hourly for a day, then daily, until every plugin is switched. */
     public function runPendingSwap(): void
     {
+        if (MatomoForWordPress::detected()) {
+            return;   // WordPress updates the plugins after a Matomo update there
+        }
         try {
             $pending = UpgradeWatcher::pending();
             if ($pending !== null && SwapSchedule::shouldRun($pending, time())) {
@@ -51,6 +54,8 @@ class Tasks extends \Piwik\Plugin\Tasks
 
             // Warm the persistent cache so the admin screen stays instant and current.
             $available = (new MarketplaceCache($client, new OptionCacheStore()))->refresh()->plugins;
+            // Trial ends the paid plugins ask about (Licensing): remembered while the list still shows them.
+            Licensing::sync($available);
             // After the list refresh: readiness asks about the Feinwerk plugins of the list just fetched.
             ReadinessCache::refresh($client);
             $installed = [];
@@ -94,7 +99,10 @@ class Tasks extends \Piwik\Plugin\Tasks
                 // Unknown which plugins the swap owns: no automatic update this time (fail closed).
                 $autoApply = $swapSlugs === null ? [] : array_values(array_diff($autoApply, $swapSlugs));
             }
-            $this->applyAutoUpdates($client, $updates, $autoApply, array_column($installed, 'version', 'slug'));
+            // Matomo for WordPress: WordPress updates the plugins there, never the connector (MatomoForWordPress).
+            if (! MatomoForWordPress::detected()) {
+                $this->applyAutoUpdates($client, $updates, $autoApply, array_column($installed, 'version', 'slug'));
+            }
         } catch (\Throwable $e) {
             // Any failure (unreachable, auth, rejected request): logged, never thrown. A scheduled task must never throw.
             MarketplaceLog::failure('the daily update check', $e);
@@ -114,6 +122,11 @@ class Tasks extends \Piwik\Plugin\Tasks
         foreach ($updates as $update) {
             $slug = (string) ($update['slug'] ?? '');
             if ($slug === '' || ! in_array($slug, $autoApply, true)) {
+                continue;
+            }
+            // A beta is installed only by a click (Peter, 2026-11-16: Matomo 6 betas, never by the daily auto-update).
+            // Without a licence (an ended trial, a lapsed licence) the store refuses the download: no daily refusal.
+            if (($update['channel'] ?? null) === 'beta' || ! empty($update['needs_license'])) {
                 continue;
             }
 

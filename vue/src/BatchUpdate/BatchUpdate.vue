@@ -1,7 +1,7 @@
 <template>
   <!-- "Update several at once" (backlog 4): one request per plugin to batchUpdate, a failed one
        does not stop the rest (Peter, 2026-10-27), then batchFinish shows one summary. -->
-  <div class="fwmc-batch">
+  <div v-if="!wordpress" class="fwmc-batch">
     <div v-if="!running" class="fwmc-batch-buttons">
       <button
         v-if="selected.length"
@@ -132,6 +132,7 @@ export default defineComponent({
   },
   inject: {
     instance: { from: 'fwmcInstance', default: null },
+    wordpress: { from: 'fwmcWordPress', default: false },
   },
   data() {
     return {

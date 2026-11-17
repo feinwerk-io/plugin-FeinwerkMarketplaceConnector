@@ -181,6 +181,9 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
      */
     private function keepUpdatesOutOfTheBrowser(&$module, &$action, &$parameters): void
     {
+        if (MatomoForWordPress::detected()) {
+            return;   // Matomo for WordPress runs its database updates itself
+        }
         try {
             $flag = Common::getRequestVar('updateCorePlugins', '');
             // After its own redirect (action=) Matomo passes the action as false.
@@ -188,7 +191,7 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
                 || ! \Piwik\SettingsPiwik::isAutoUpdateEnabled() || ! InstanceSizeProbe::measure()['large']) {
                 return;
             }
-            $pending = (new \Piwik\Updater())->getComponentUpdates() ?? [];
+            $pending = PluginOperations::componentUpdates();
             if (BrowserUpdateGuard::feinwerkComponents($pending, self::feinwerkLogColumns()) === [] || self::confirmedBrowserRun()) {
                 return;
             }
@@ -219,7 +222,7 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
     public static function pendingFeinwerkComponents(): array
     {
         try {
-            return BrowserUpdateGuard::feinwerkComponents((new \Piwik\Updater())->getComponentUpdates() ?? [], self::feinwerkLogColumns());
+            return BrowserUpdateGuard::feinwerkComponents(PluginOperations::componentUpdates(), self::feinwerkLogColumns());
         } catch (\Throwable $e) {
             return [];
         }
@@ -291,7 +294,7 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
             // Done once no Feinwerk component is pending: a core update or another vendor's plugin update has Matomo's
             // own notice and used to keep this one alive (backlog 13). A failing check throws and keeps it.
             if (isset($shown[self::NOTICE_DB_UPDATE])
-                && BrowserUpdateGuard::feinwerkComponents((new \Piwik\Updater())->getComponentUpdates() ?? [], self::feinwerkLogColumns()) === []) {
+                && BrowserUpdateGuard::feinwerkComponents(PluginOperations::componentUpdates(), self::feinwerkLogColumns()) === []) {
                 NotificationManager::cancel(self::NOTICE_DB_UPDATE);
                 $this->notifyRaw(
                     self::NOTICE_DB_UPDATE_DONE,

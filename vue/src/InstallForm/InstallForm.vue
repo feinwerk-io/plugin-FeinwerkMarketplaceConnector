@@ -1,9 +1,21 @@
 <template>
-  <form method="post" :action="actionUrl" class="fwmc-install" ref="form" @submit="onSubmit">
+  <!-- Matomo for WordPress: WordPress installs and updates the plugins there
+       (MatomoForWordPress). -->
+  <span
+    v-if="wordpress"
+    class="fwmc-badge fwmc-status--not_installed fwmc-wp-action"
+    :title="translate(isUpdate
+      ? 'FeinwerkMarketplaceConnector_WordPressDelay'
+      : 'FeinwerkMarketplaceConnector_WordPressNote')"
+  >{{ isUpdate
+    ? translate('FeinwerkMarketplaceConnector_WordPressUpdateTo', version)
+    : translate('FeinwerkMarketplaceConnector_WordPressInstall') }}</span>
+  <form v-else method="post" :action="actionUrl" class="fwmc-install" ref="form" @submit="onSubmit">
     <input type="hidden" name="nonce" :value="nonce" />
     <input type="hidden" name="slug" :value="slug" />
     <input type="hidden" name="version" :value="version" />
     <input v-if="activateOnConsole" type="hidden" name="activate" value="0" />
+    <input v-if="then" type="hidden" name="fwmc_then" :value="then" />
     <button type="submit" class="btn" :disabled="busy" :aria-busy="busy" @click="onClick">
       {{ busy ? translate('FeinwerkMarketplaceConnector_Working') : label }}
     </button>
@@ -115,11 +127,14 @@ export default defineComponent({
     // Held back by the automatic updates for database changes (older marketplace answers
     // without db_changes).
     held: { type: Boolean, default: false },
+    // "starter": sent from the first-step card; the server then opens the plugin's own first page.
+    then: { type: String, default: '' },
   },
   inject: {
     instance: { from: 'fwmcInstance', default: null },
     // Inside a plugin window: the server reopens it after the action.
     inWindow: { from: 'fwmcInWindow', default: false },
+    wordpress: { from: 'fwmcWordPress', default: false },
   },
   data() {
     // busy: sent once, the button stays off so a double click cannot spend the nonce twice.

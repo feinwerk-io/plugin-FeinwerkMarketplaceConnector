@@ -64,13 +64,16 @@
                 :nonce="nonce"
                 :slug="slug"
               />
-              <LicenseActions
-                v-else-if="cta === 'buyhere'"
-                kind="buy"
-                :url="buyUrl"
-                :nonce="nonce"
-                :slug="slug"
-              />
+              <template v-else-if="cta === 'buyhere'">
+                <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="slug" />
+                <LicenseActions
+                  v-if="row && row.trialAvailable && trialUrl"
+                  kind="trial"
+                  :url="trialUrl"
+                  :nonce="nonce"
+                  :slug="slug"
+                />
+              </template>
               <a
                 v-else-if="cta === 'buy' && safeStorefrontUrl"
                 :href="safeStorefrontUrl"
@@ -163,7 +166,10 @@
             </template>
 
             <div class="fwmc-license-state">
-              <span v-if="row && row.license" class="fwmc-badge fwmc-badge--license-ok">
+              <span v-if="row && row.license && trialText" class="fwmc-badge fwmc-badge--trial">
+                {{ trialText }}
+              </span>
+              <span v-else-if="row && row.license" class="fwmc-badge fwmc-badge--license-ok">
                 {{ translate('FeinwerkMarketplaceConnector_LicenseActive') }}
                 <template v-if="row.license.valid_until">
                   · {{ translate(
@@ -171,6 +177,12 @@
                     row.license.valid_until,
                   ) }}
                 </template>
+              </span>
+              <span
+                v-else-if="row && row.needsLicense && row.trialEndedOn"
+                class="fwmc-badge fwmc-badge--license-missing"
+              >
+                {{ translate('FeinwerkMarketplaceConnector_TrialEnded', row.trialEndedOn) }}
               </span>
               <span
                 v-else-if="row && row.needsLicense"
@@ -229,13 +241,16 @@
               :nonce="nonce"
               :slug="slug"
             />
-            <LicenseActions
-              v-else-if="cta === 'buyhere'"
-              kind="buy"
-              :url="buyUrl"
-              :nonce="nonce"
-              :slug="slug"
-            />
+            <template v-else-if="cta === 'buyhere'">
+              <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="slug" />
+              <LicenseActions
+                v-if="row && row.trialAvailable && trialUrl"
+                kind="trial"
+                :url="trialUrl"
+                :nonce="nonce"
+                :slug="slug"
+              />
+            </template>
             <a
               v-else-if="cta === 'buy' && safeStorefrontUrl"
               :href="safeStorefrontUrl"
@@ -302,6 +317,7 @@ import activateLink from '../activate';
 import BugReportForm from '../BugReportForm/BugReportForm.vue';
 import InstallForm from '../InstallForm/InstallForm.vue';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
+import trialLabel from '../trial';
 
 export default defineComponent({
   components: {
@@ -323,6 +339,7 @@ export default defineComponent({
     activateUrl: { type: String, default: '' },
     claimUrl: { type: String, default: '' },
     buyUrl: { type: String, default: '' },
+    trialUrl: { type: String, default: '' },
     licensingAvailable: { type: Boolean, default: false },
   },
   data() {
@@ -374,6 +391,9 @@ export default defineComponent({
       const target = (this.detail?.versions || [])
         .find((v: any) => v.version === this.row?.latestVersion);
       return !!target?.db_warning;
+    },
+    trialText(): string {
+      return trialLabel(this.row ? this.row.license : null, (day) => day);
     },
     cta(): string {
       const { row } = this;

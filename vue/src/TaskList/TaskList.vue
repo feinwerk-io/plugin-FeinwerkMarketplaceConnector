@@ -18,6 +18,11 @@
       >
         <div class="fwmc-task-text">
           <span>{{ text(item) }}</span>
+          <span
+            v-if="item.kind === 'update' && row(item) && row(item).beta"
+            class="fwmc-badge fwmc-badge--beta"
+            :title="tr('BetaHint')"
+          >{{ tr('Beta') }}</span>
           <code v-if="item.kind === 'db_update'" class="fwmc-task-code">{{ consoleCommand }}</code>
         </div>
         <div class="fwmc-task-action">
@@ -79,6 +84,12 @@
             target="_blank"
             rel="noreferrer noopener"
           >{{ tr('Task_renew') }} ↗</a>
+          <button
+            v-else-if="item.kind === 'trial_ending'"
+            type="button"
+            class="btn btn-flat"
+            @click="$emit('open', item.slug)"
+          >{{ tr('Task_view') }}</button>
           <button
             v-else-if="item.kind === 'license_claimable'"
             type="button"
@@ -169,6 +180,8 @@ export default defineComponent({
           return this.tr('Task_db_held', this.name(item), row?.latestVersion || '');
         case 'license_expiring':
           return this.tr('Task_license_expiring', this.name(item), this.date(item.date || ''));
+        case 'trial_ending':
+          return this.tr('Task_trial_ending', this.name(item), this.date(item.date || ''));
         default:
           return this.tr(`Task_${item.kind}`, this.name(item));
       }

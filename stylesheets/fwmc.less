@@ -224,6 +224,13 @@
     .fwmc-badge--license-missing { .fwmc-tone-gray(); }
 
     .fwmc-badge--dbwarn { .fwmc-tone-amber(); }
+
+    // A beta build (Matomo 6 betas for Matomo 6 instances): installed only by its own click.
+    .fwmc-badge--beta { .fwmc-tone-blue(); margin-left: 6px; text-transform: none; }
+
+    // A trial licence ("Trial until ...") and the card's "Free trial" (store fields license.trial, trial_available).
+    .fwmc-badge--trial { .fwmc-tone-green(); text-transform: none; }
+    .fwmc-card .fwmc-badge--trial { margin-left: 6px; }
     .fwmc-table form .fwmc-badge, .fwmc-cta form .fwmc-badge { margin-left: 8px; }
 
     // Install-status pills (built as `fwmc-status--${status}`).
@@ -760,7 +767,24 @@
 
   .fwmc-promo-logo { margin-left: auto; }
 
+  // The first-step card uses the banner's look; its install form sits where the banner's button does.
+  .fwmc-starter .fwmc-promo-actions form { margin: 0; }
+
   .fwmc-promo-price { color: @text; font-weight: 600; font-size: 13px; }
+
+  // For an admin: the super user installs (Recommendation::current on the Administration home).
+  .fwmc-promo-note { color: @muted; font-size: 13px; }
+
+  // Matomo for WordPress (MatomoForWordPress): the note at the top and the label in place of a button.
+  .fwmc-wp-note {
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    border: 1px solid @line;
+    border-radius: 8px;
+    .fwmc-tone-amber();
+    p { margin: 0 0 6px; }
+  }
+  .fwmc-wp-action { text-transform: none; }
 
   .fwmc-promo-off {
     padding: 0;

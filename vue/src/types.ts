@@ -9,11 +9,14 @@ export interface PluginRow {
   latestVersion: string|null;
   status: string;
   needsLicense: boolean;
-  license: { status: string, valid_until: string|null }|null;
+  license: { status: string, valid_until: string|null, trial?: boolean }|null;
   licenseClaimable: boolean;
   url?: string|null;
   dbChange?: Record<string, unknown>|null;
   inactive?: boolean;
+  beta?: boolean;
+  trialAvailable?: boolean;
+  trialEndedOn?: string|null;
 }
 
 export interface ActionItem {

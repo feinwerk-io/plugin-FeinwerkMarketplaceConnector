@@ -56,7 +56,8 @@ class SystemSettings extends BaseSystemSettings
         $this->autoApplyPlugins = $this->makeSetting('autoApplyPlugins', [], FieldConfig::TYPE_ARRAY, function (FieldConfig $field) {
             $field->title = Piwik::translate('FeinwerkMarketplaceConnector_SettingAutoApply');
             $field->description = Piwik::translate('FeinwerkMarketplaceConnector_SettingAutoApplyHelp');
-            $field->uiControl = FieldConfig::UI_CONTROL_MULTI_SELECT;
+            // Matomo for WordPress: no automatic updates there (WordPress updates the plugins), so not offered.
+            $field->uiControl = MatomoForWordPress::detected() ? FieldConfig::UI_CONTROL_HIDDEN : FieldConfig::UI_CONTROL_MULTI_SELECT;
             $field->availableValues = $this->autoApplyChoices();
             $field->validate = function ($value) {
                 if (in_array(self::SELF_SLUG, (array) $value, true)) {

@@ -48,6 +48,20 @@
         >
           {{ translate('FeinwerkMarketplaceConnector_StatusUpdate') }}
         </span>
+        <span
+          class="fwmc-badge fwmc-badge--trial"
+          v-if="row.trialAvailable && row.status === 'not_installed'"
+          :title="translate('FeinwerkMarketplaceConnector_TrialStartHint')"
+        >
+          {{ translate('FeinwerkMarketplaceConnector_CardTrial') }}
+        </span>
+        <span
+          class="fwmc-badge fwmc-badge--beta"
+          v-if="row.beta && row.status !== 'installed'"
+          :title="translate('FeinwerkMarketplaceConnector_BetaHint')"
+        >
+          {{ translate('FeinwerkMarketplaceConnector_Beta') }}
+        </span>
       </div>
     </div>
   </div>

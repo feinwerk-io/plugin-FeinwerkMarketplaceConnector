@@ -10,6 +10,7 @@ use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceExcept
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceFeatureMissingException;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceLicenseException;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceRefusedException;
+use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceTrialRefusedException;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceUnreachableException;
 
 final class MarketplaceApiClient
@@ -38,15 +39,26 @@ final class MarketplaceApiClient
     /** @return list<array<mixed>> */
     public function listPlugins(): array
     {
+        return $this->catalog()['plugins'];
+    }
+
+    /**
+     * The plugin list and what the store sends next to it: `starter`, the first-step suggestion (store 2026-11-16).
+     *
+     * @return array{plugins: list<array<mixed>>, starter: mixed}
+     */
+    public function catalog(): array
+    {
         $response = $this->transport->get($this->baseUrl.'/api/v1/plugins', $this->authHeaders());
         $this->ensureOk($response);
-        $data = $response->jsonBody()['data'] ?? null;
+        $body = $response->jsonBody();
+        $data = $body['data'] ?? null;
         // A 200 without a list (a proxy's HTML page, an empty object) must not replace the cached list with nothing.
         if (! is_array($data) || ! array_is_list($data)) {
             throw new MarketplaceException("Marketplace answered without a plugin list (HTTP {$response->status}).");
         }
 
-        return $data;
+        return ['plugins' => $data, 'starter' => $body['starter'] ?? null];
     }
 
     /**
@@ -188,6 +200,38 @@ final class MarketplaceApiClient
         $license = $body['license'] ?? null;
 
         return ['result' => $result, 'license' => is_array($license) ? $license : null];
+    }
+
+    /**
+     * Starts a free trial of a paid plugin for this instance (store contract 2026-11-16). The store answers in the admin's
+     * language ($lang de or en). A refusal throws MarketplaceTrialRefusedException with the store's own sentence.
+     *
+     * @return array{valid_until: string}
+     */
+    public function startTrial(string $slug, string $lang): array
+    {
+        $headers = array_merge($this->authHeaders(), ['Accept-Language: '.($lang === 'de' ? 'de' : 'en')]);
+        $response = $this->transport->postJson($this->baseUrl.'/api/v1/instances/trials', $headers, ['plugin' => $slug]);
+        if ($response->status === 409 || $response->status === 422) {
+            $body = $response->jsonBody();
+            $code = $body['code'] ?? null;
+            $message = $body['message'] ?? null;
+            throw new MarketplaceTrialRefusedException(
+                is_string($code) && preg_match('/^[a-z_]{1,40}\z/', $code) === 1 ? $code : 'refused',
+                is_string($message) ? mb_substr(trim($message), 0, 300) : ''
+            );
+        }
+        if ($response->status === 404) {
+            throw new MarketplaceFeatureMissingException('The marketplace does not offer trials yet (HTTP 404).');
+        }
+        $this->ensureOk($response);
+
+        $validUntil = $response->jsonBody()['valid_until'] ?? null;
+        if (! is_string($validUntil) || TrialClock::endsAt($validUntil) === null) {
+            throw new MarketplaceException('The marketplace sent no end date for the trial.');
+        }
+
+        return ['valid_until' => $validUntil];
     }
 
     /** Asks the store for a buy page of this plugin that returns to $returnUrl; returns its URL. */

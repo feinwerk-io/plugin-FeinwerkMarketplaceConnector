@@ -98,7 +98,8 @@ final class Promotions
      */
     private static function candidates(int $max, bool $superUser): array
     {
-        if (! self::areEnabled()) {
+        // Matomo for WordPress: paid Feinwerk plugins cannot be installed there yet (MatomoForWordPress).
+        if (! self::areEnabled() || MatomoForWordPress::detected()) {
             return [];
         }
         $plugins = PendingUpdates::cachedPlugins();   // empty without an instance token

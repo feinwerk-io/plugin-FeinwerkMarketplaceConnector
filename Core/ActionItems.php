@@ -14,6 +14,9 @@ final class ActionItems
     /** A license that ends within this many days is announced. */
     public const EXPIRY_DAYS = 30;
 
+    /** A trial warns only in its last days (store field license.trial): a 30-day trial would warn from day one. */
+    public const TRIAL_DAYS = 7;
+
     public const WARNING = 'warning';
     public const INFO = 'info';
 
@@ -64,9 +67,10 @@ final class ActionItems
             }
 
             $until = is_array($row->license) && is_string($row->license['valid_until'] ?? null) ? substr($row->license['valid_until'], 0, 10) : null;
+            $trial = is_array($row->license) && ($row->license['trial'] ?? false) === true;
             if ($until !== null && preg_match('/^\d{4}-\d{2}-\d{2}$/', $until) === 1 && $until >= $today
-                && $until <= date('Y-m-d', strtotime($today.' +'.self::EXPIRY_DAYS.' days'))) {
-                $hints[] = self::item('license_expiring', self::INFO, $row->slug, $until);
+                && $until <= date('Y-m-d', strtotime($today.' +'.($trial ? self::TRIAL_DAYS : self::EXPIRY_DAYS).' days'))) {
+                $hints[] = self::item($trial ? 'trial_ending' : 'license_expiring', self::INFO, $row->slug, $until);
             }
             if (! $installed && $row->licenseClaimable && $row->needsLicense) {
                 $hints[] = self::item('license_claimable', self::INFO, $row->slug);

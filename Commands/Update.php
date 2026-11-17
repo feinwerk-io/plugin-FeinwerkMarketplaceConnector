@@ -5,6 +5,7 @@ namespace Piwik\Plugins\FeinwerkMarketplaceConnector\Commands;
 use Piwik\Plugin\ConsoleCommand;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\ConsoleDatabaseStep;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\ConsoleSupport;
+use Piwik\Plugins\FeinwerkMarketplaceConnector\MatomoForWordPress;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\PluginOperations;
 
 /**
@@ -30,6 +31,12 @@ class Update extends ConsoleCommand
     {
         $out = $this->getOutput();
         $input = $this->getInput();
+        // Matomo for WordPress first: there nothing is installed from here, connected or not (guard check 2026-11-17).
+        if (MatomoForWordPress::detected()) {
+            $out->writeln('<error>'.ConsoleSupport::wordpress().'</error>');
+
+            return 1;
+        }
         if (! PluginOperations::connected()) {
             $out->writeln('<error>'.ConsoleSupport::notConnected().'</error>');
 
@@ -56,7 +63,8 @@ class Update extends ConsoleCommand
         $problems = 0;
         if ($all) {
             foreach ($rows as $row) {
-                if ($row->slug !== ConsoleSupport::SELF && ConsoleSupport::whyNotUpdatable($row) === null) {
+                // --all never takes a beta: name the plugin to install its beta.
+                if ($row->slug !== ConsoleSupport::SELF && ! $row->beta && ConsoleSupport::whyNotUpdatable($row) === null) {
                     $targets[$row->slug] = $row;
                 }
             }

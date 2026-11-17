@@ -28,7 +28,10 @@
               </button>
             </td>
             <td>
-              <span v-if="row.license" class="fwmc-badge fwmc-badge--license-ok">
+              <span v-if="row.license && trialText(row)" class="fwmc-badge fwmc-badge--trial">
+                {{ trialText(row) }}
+              </span>
+              <span v-else-if="row.license" class="fwmc-badge fwmc-badge--license-ok">
                 {{ translate('FeinwerkMarketplaceConnector_LicenseActive') }}
                 <template v-if="row.license.valid_until">
                   · {{ translate(
@@ -36,6 +39,12 @@
                     date(row.license.valid_until),
                   ) }}
                 </template>
+              </span>
+              <span
+                v-else-if="row.needsLicense && row.trialEndedOn"
+                class="fwmc-badge fwmc-badge--license-missing"
+              >
+                {{ translate('FeinwerkMarketplaceConnector_TrialEnded', date(row.trialEndedOn)) }}
               </span>
               <span v-else-if="row.needsLicense" class="fwmc-badge fwmc-badge--license-missing">
                 {{ translate('FeinwerkMarketplaceConnector_NoLicense') }}
@@ -53,13 +62,16 @@
                 :nonce="nonce"
                 :slug="row.slug"
               />
-              <LicenseActions
-                v-else-if="licensingAvailable && row.needsLicense"
-                kind="buy"
-                :url="buyUrl"
-                :nonce="nonce"
-                :slug="row.slug"
-              />
+              <template v-else-if="licensingAvailable && row.needsLicense">
+                <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="row.slug" />
+                <LicenseActions
+                  v-if="row.trialAvailable && trialUrl"
+                  kind="trial"
+                  :url="trialUrl"
+                  :nonce="nonce"
+                  :slug="row.slug"
+                />
+              </template>
             </td>
           </tr>
         </tbody>
@@ -73,6 +85,7 @@ import { defineComponent, PropType } from 'vue';
 import { translate, Matomo } from 'CoreHome';
 import { PluginRow } from '../types';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
+import trialLabel from '../trial';
 
 export default defineComponent({
   components: { LicenseActions },
@@ -82,6 +95,7 @@ export default defineComponent({
     nonce: { type: String, required: true },
     claimUrl: { type: String, default: '' },
     buyUrl: { type: String, default: '' },
+    trialUrl: { type: String, default: '' },
     accountUrl: { type: String, default: '' },
     licensingAvailable: { type: Boolean, default: false },
   },
@@ -95,6 +109,9 @@ export default defineComponent({
   },
   methods: {
     translate,
+    trialText(row: PluginRow): string {
+      return trialLabel(row.license, (day) => this.date(day));
+    },
     date(value: string): string {
       const day = String(value || '').slice(0, 10);
       try {

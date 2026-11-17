@@ -26,8 +26,16 @@
       <h3 class="fwmc-promo-title">{{ promo.name }}</h3>
       <p v-if="promo.description" class="fwmc-promo-text">{{ promo.description }}</p>
       <div class="fwmc-promo-actions">
+        <!-- An admin (not a super user): the store page in a new tab; the super user installs. -->
+        <a
+          v-if="promo.forAdmin && safeStoreUrl"
+          class="btn fwmc-promo-cta"
+          :href="safeStoreUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ tr('PromoStoreCta') }} <span aria-hidden="true">↗</span></a>
         <button
-          v-if="inline"
+          v-else-if="inline"
           type="button"
           class="btn fwmc-promo-cta"
           @click="$emit('open', promo.slug)"
@@ -36,14 +44,17 @@
           {{ tr('PromoCta') }} <span aria-hidden="true">→</span>
         </a>
         <span v-if="price" class="fwmc-promo-price">{{ price }}</span>
+        <span v-if="promo.forAdmin" class="fwmc-promo-note">{{ tr('PromoAdminNote') }}</span>
         <button
-          v-if="promo.offUrl && promo.offNonce"
+          v-if="!promo.forAdmin && promo.offUrl && promo.offNonce"
           type="button"
           class="fwmc-promo-off"
           :disabled="switching"
           @click="switchOff"
         >{{ switching ? tr('Working') : tr('PromoSettings') }}</button>
-        <a v-else class="fwmc-promo-off" :href="settingsUrl">{{ tr('PromoSettings') }}</a>
+        <a v-else-if="!promo.forAdmin" class="fwmc-promo-off" :href="settingsUrl">
+          {{ tr('PromoSettings') }}
+        </a>
         <!-- Peter, 2026-11-13: "in die banner, wo möglich bitte generell noch das feinwerk-logo
              unterbringen" (promo kit logo, docs/promotions.md). -->
         <FeinwerkLogo class="fwmc-promo-logo" />
@@ -77,6 +88,9 @@ interface Promo {
   // "Switch recommendations off" right here (Recommendation::current, backlog 12).
   offUrl?: string;
   offNonce?: string;
+  // An admin who is no super user (admin home): the public store page instead of the plugin window.
+  forAdmin?: boolean;
+  storeUrl?: string;
 }
 
 const HIDE_DAYS = 30;
@@ -118,6 +132,11 @@ export default defineComponent({
           intervalLabel(from.interval),
         )
         : '';
+    },
+    // Store-controlled URL: bound as an href only when it is http(s).
+    safeStoreUrl(): string {
+      const url = this.promo?.storeUrl || '';
+      return /^https?:\/\//i.test(url) ? url : '';
     },
     screenUrl(): string {
       const slug = encodeURIComponent(this.promo?.slug || '');

@@ -41,5 +41,14 @@ final class PluginStatusRow
         public readonly ?string $releasedAt = null,
         // Installed, but Matomo has not switched it on (never activated, or switched off by an admin).
         public readonly bool $inactive = false,
+        // The offered build is a beta (the store's latest.channel; Matomo 6 betas for Matomo 6 instances, Peter
+        // 2026-11-16): labelled on the screen, installed only by its own click, never automatically or with several.
+        public readonly bool $beta = false,
+        // The store offers a free trial of this paid plugin to this instance (store field trial_available; false while
+        // the store's switch is off and wherever the instance has a licence).
+        public readonly bool $trialAvailable = false,
+        // The day a trial of this plugin ended, when the store lists it as {status: expired, trial: true} (store
+        // 2026-11-17); $license is null then: only an active licence counts.
+        public readonly ?string $trialEndedOn = null,
     ) {}
 }

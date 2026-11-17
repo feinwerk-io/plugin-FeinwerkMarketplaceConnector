@@ -42,7 +42,8 @@ final class PendingUpdates
             $rows = (new UpdateMapper())->map($cached->plugins, $installed, $devCheckouts, UpgradeWatcher::switching(array_keys($installed)));
             // Left out of the notice: what the daily task updates by itself. While a swap is pending it skips the swap's
             // plugins (given-up ones too), so those stay in the notice (re-review 0.8.2 N2).
-            $exclude = $excludeAutoApplied
+            // In Matomo for WordPress nothing updates by itself: every update stays in the notice.
+            $exclude = $excludeAutoApplied && ! MatomoForWordPress::detected()
                 ? array_values(array_diff(
                     AutoApplyPolicy::effective($settings->autoApplyPlugins->getValue(), 'FeinwerkMarketplaceConnector', $devCheckouts),
                     UpgradeWatcher::skippedByAutoUpdate(array_keys($installed)) ?? []

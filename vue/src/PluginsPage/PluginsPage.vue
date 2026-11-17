@@ -19,6 +19,15 @@
       </div>
     </div>
 
+    <!-- Matomo for WordPress (MatomoForWordPress): plugins are installed and updated in
+         WordPress there. -->
+    <div v-if="wordpress && wordpress.detected" class="fwmc-wp-note" role="note">
+      <p>{{ translate('FeinwerkMarketplaceConnector_WordPressNote') }}</p>
+      <a v-if="wordpressMarketplaceUrl" :href="wordpressMarketplaceUrl">
+        {{ translate('FeinwerkMarketplaceConnector_WordPressMarketplace') }}
+      </a>
+    </div>
+
     <template v-if="!isConnected">
     <div class="fwmc-connect">
       <h3>{{ translate('FeinwerkMarketplaceConnector_ConnectTitle') }}</h3>
@@ -57,7 +66,9 @@
     </div>
     <div class="fwmc-public" v-if="browseInfo.loaded">
       <div class="fwmc-meta fwmc-browse-intro">
-        {{ translate('FeinwerkMarketplaceConnector_BrowseIntro', browseInfo.fetchedAt || '') }}
+        {{ translate(isWordPress
+          ? 'FeinwerkMarketplaceConnector_BrowseIntroWordPress'
+          : 'FeinwerkMarketplaceConnector_BrowseIntro', browseInfo.fetchedAt || '') }}
         <form
           method="post"
           :action="browseInfo.url"
@@ -88,7 +99,15 @@
           selfUpdate.installedVersion,
           selfUpdate.latestVersion,
         ) }}</span>
-        <form method="post" :action="updateUrl" @submit="onFormSubmit($event, 'self')">
+        <span
+          v-if="isWordPress"
+          class="fwmc-badge fwmc-status--not_installed fwmc-wp-action"
+          :title="translate('FeinwerkMarketplaceConnector_WordPressDelay')"
+        >{{ translate(
+          'FeinwerkMarketplaceConnector_WordPressUpdateTo',
+          selfUpdate.latestVersion,
+        ) }}</span>
+        <form v-else method="post" :action="updateUrl" @submit="onFormSubmit($event, 'self')">
           <input type="hidden" name="nonce" :value="formNonce" />
           <input type="hidden" name="slug" :value="selfUpdate.slug" />
           <input type="hidden" name="version" :value="selfUpdate.latestVersion" />
@@ -160,6 +179,12 @@
         :batch-finish-url="batchFinishUrl"
         @open="openDetail"
       />
+      <StarterCard
+        v-if="tab === 'entdecken' && starter"
+        :starter="starter"
+        :install-url="installUrl"
+        :nonce="formNonce"
+      />
       <PromoBanner v-if="tab === 'entdecken' && promo" :promo="promo" inline @open="openDetail" />
       <BrowseGrid v-if="tab === 'entdecken'" :rows="browseRows" @open="openDetail" />
       <LicenseTable
@@ -168,6 +193,7 @@
         :nonce="formNonce"
         :claim-url="claimUrl"
         :buy-url="buyUrl"
+        :trial-url="trialUrl"
         :account-url="accountUrl"
         :licensing-available="licensingOn"
         @open="openDetail"
@@ -182,6 +208,7 @@
         :db-held="dbHeld"
         :claim-url="claimUrl"
         :buy-url="buyUrl"
+        :trial-url="trialUrl"
         :licensing-available="licensingOn"
         :self-slug="selfSlug"
         :batch-nonce="batchNonce"
@@ -206,6 +233,7 @@
       :activate-url="activateUrl"
       :claim-url="claimUrl"
       :buy-url="buyUrl"
+      :trial-url="trialUrl"
       :licensing-available="licensingOn"
       @close="closeDetail"
     />
@@ -223,12 +251,20 @@ import BrowseGrid from '../BrowseGrid/BrowseGrid.vue';
 import TaskList from '../TaskList/TaskList.vue';
 import LicenseTable from '../LicenseTable/LicenseTable.vue';
 import PromoBanner from '../PromoBanner/PromoBanner.vue';
+import StarterCard from '../StarterCard/StarterCard.vue';
 import DetailModal from '../DetailModal/DetailModal.vue';
 import FeedbackBar from '../FeedbackBar/FeedbackBar.vue';
 
 export default defineComponent({
   components: {
-    ManageTable, BrowseGrid, DetailModal, FeedbackBar, TaskList, LicenseTable, PromoBanner,
+    ManageTable,
+    BrowseGrid,
+    DetailModal,
+    FeedbackBar,
+    TaskList,
+    LicenseTable,
+    PromoBanner,
+    StarterCard,
   },
   props: {
     rows: { type: Array, required: true },
@@ -250,6 +286,10 @@ export default defineComponent({
     switchNowUrl: { type: String, default: '' },
     // The recommendation banner of the Discover tab (Recommendation, null when switched off).
     promo: { type: Object, default: null },
+    // The first-step card right after Connect (StarterCard; in place of the recommendation).
+    starter: { type: Object, default: null },
+    // Matomo for WordPress: {detected, marketplaceUrl} (MatomoForWordPress).
+    wordpress: { type: Object, default: () => ({ detected: false, marketplaceUrl: null }) },
     // "Update several at once" (BatchUpdate): its own nonce and the two actions.
     batchNonce: { type: String, default: '' },
     batchUpdateUrl: { type: String, default: '' },
@@ -286,12 +326,17 @@ export default defineComponent({
     initialTab: { type: String, default: '' },
     claimUrl: { type: String, default: '' },
     buyUrl: { type: String, default: '' },
+    // "Try it free" (Controller::startTrial): shown only where the store offers a trial.
+    trialUrl: { type: String, default: '' },
     // What the page shows and where to ask for the current state (ScreenState, backlog 13).
     screenState: { type: String, default: '' },
     stateUrl: { type: String, default: '' },
   },
   provide() {
-    return { fwmcInstance: this.instance };
+    return {
+      fwmcInstance: this.instance,
+      fwmcWordPress: !!(this.wordpress && (this.wordpress as { detected?: boolean }).detected),
+    };
   },
   data() {
     return {
@@ -329,6 +374,14 @@ export default defineComponent({
     document.removeEventListener('visibilitychange', this.checkState);
   },
   computed: {
+    isWordPress(): boolean {
+      return !!(this.wordpress && (this.wordpress as { detected?: boolean }).detected);
+    },
+    // WordPress admin URL from the server: bound as an href only when it is http(s).
+    wordpressMarketplaceUrl(): string {
+      const url = (this.wordpress as { marketplaceUrl?: string|null } | null)?.marketplaceUrl || '';
+      return /^https?:\/\//i.test(url) ? url : '';
+    },
     // One question per tab (Core/FeedbackVote::TOPICS).
     feedbackTopic(): string {
       const topics: Record<string, string> = {

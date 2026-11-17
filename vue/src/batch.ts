@@ -1,7 +1,7 @@
 // Which rows "update several at once" may take (BatchUpdate): an update the admin could also
 // install with a click, never the connector itself (its update replaces the code that runs the
-// batch), a development checkout, a plugin a Matomo switch is still handling or one without a
-// license.
+// batch), a development checkout, a plugin a Matomo switch is still handling, one without a
+// license, or a beta (installed only by its own click).
 
 interface BatchRow {
   slug: string;
@@ -11,9 +11,10 @@ interface BatchRow {
   license: unknown;
   devCheckout?: boolean;
   switching?: boolean;
+  beta?: boolean;
 }
 
 export default function canBatch(row: BatchRow, selfSlug: string): boolean {
   return row.status === 'update_available' && !!row.latestVersion && row.slug !== selfSlug
-    && !row.devCheckout && !row.switching && !(row.needsLicense && !row.license);
+    && !row.devCheckout && !row.switching && !row.beta && !(row.needsLicense && !row.license);
 }

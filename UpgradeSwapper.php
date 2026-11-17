@@ -76,7 +76,8 @@ final class UpgradeSwapper
         $env = ['matomo_version' => Version::VERSION, 'php_version' => PHP_VERSION, 'site_url' => SettingsPiwik::getPiwikUrl()];
         $list = array_map(fn ($slug, $version) => ['slug' => $slug, 'version' => $version], array_keys($installed), $installed);
         foreach ($client->checkUpdates($env, $list) as $update) {
-            if (isset($update['slug'], $update['latest'])) {
+            // Never a beta (Peter, 2026-11-16: "2. nein"): the plugin waits, and the screen offers the beta to a click.
+            if (isset($update['slug'], $update['latest']) && ($update['channel'] ?? null) !== 'beta') {
                 $offered[(string) $update['slug']] = (string) $update['latest'];
             }
         }

@@ -1,5 +1,23 @@
 # Changelog
 
+## 5.6.0
+
+- A plugin that is installed but switched off no longer causes the notice "Matomo has a database update pending". Its
+  update runs when you switch it on, as in Matomo itself.
+- Matomo for WordPress: the connector no longer installs or updates plugins there. An update through the connector could
+  leave a second copy of a plugin and stop Matomo's reports and tracking. In Matomo for WordPress the screen says
+  "Update in WordPress" and "Install in WordPress" instead, and free plugins come from Matomo Analytics › Marketplace.
+- The recommendation on the Administration home now also shows to admins of a website, with a link to the plugin's page
+  in the Feinwerk store and the note that the super user can install it. Super users keep the install button.
+- Free trials: where the Feinwerk store offers a free trial of a paid plugin, the plugin window, Manage and Licenses
+  show "Try it free". One click starts the trial and installs the plugin. Licenses and Manage show "Trial until <date>,
+  N days left", and Tasks reminds you in the last 7 days.
+- Right after you connect this Matomo, the Discover tab can suggest a first plugin, installed with one click. Only
+  super users see it, it follows the switches for recommendations, and once closed it does not come back.
+- Betas: when a plugin has no stable build for your Matomo version yet, the Feinwerk Plugins screen can offer its
+  newest beta, marked "Beta". A beta is installed only by your click: never by the automatic updates, never with
+  "update several at once" and never by the switch after a Matomo major update.
+
 ## 5.5.0
 
 - The recommendation banner shows the Feinwerk logo and comes in Feinwerk's petrol colours.

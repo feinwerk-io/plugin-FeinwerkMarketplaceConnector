@@ -25,6 +25,9 @@ final class UpgradeWatcher
 
     public static function observe(): void
     {
+        if (MatomoForWordPress::detected()) {
+            return;   // no swap in Matomo for WordPress: WordPress installs the plugins' builds there
+        }
         try {
             $current = MatomoMajor::of(Version::VERSION);
             $installed = self::installedFeinwerkPlugins();

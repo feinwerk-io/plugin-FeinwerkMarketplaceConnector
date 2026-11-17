@@ -20,6 +20,9 @@ class PluginInstallerBridge
      */
     public function install(DownloadedArtifact $artifact, bool $activate = true): string
     {
+        if (MatomoForWordPress::detected()) {
+            throw new MarketplaceException('This Matomo runs in Matomo for WordPress: plugins are installed and updated in WordPress.');
+        }
         $this->verifier->verify($artifact->bytes, $artifact->sha256);
 
         $zipPath = tempnam(sys_get_temp_dir(), 'fwmc_').'.zip';

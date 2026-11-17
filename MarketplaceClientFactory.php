@@ -28,9 +28,43 @@ final class MarketplaceClientFactory
 
     public static function make(string $url, string $token): MarketplaceApiClient
     {
-        return new MarketplaceApiClient($url, $token, new HttpTransportMatomo(), [
-            'X-Matomo-Version: '.Version::VERSION,
-            'X-PHP-Version: '.PHP_VERSION,
-        ]);
+        return new MarketplaceApiClient($url, $token, new HttpTransportMatomo(), self::headers());
+    }
+
+    /**
+     * Sent with every store request of a connected instance (the public list sends none): the Matomo and PHP version,
+     * and since 5.6.0 the connector's own version. The store offers Matomo 6 betas to Matomo 6 instances automatically
+     * only to connectors that label them and never apply them on their own (store gate on X-Connector-Version).
+     *
+     * @return list<string>
+     */
+    public static function headers(): array
+    {
+        $headers = ['X-Matomo-Version: '.Version::VERSION, 'X-PHP-Version: '.PHP_VERSION];
+        $own = self::connectorVersion();
+        if ($own !== null) {
+            $headers[] = 'X-Connector-Version: '.$own;
+        }
+
+        return $headers;
+    }
+
+    /** This connector's version from its plugin.json; null when unreadable. Never throws. */
+    public static function connectorVersion(): ?string
+    {
+        static $version = false;
+        if ($version === false) {
+            $version = null;
+            try {
+                $json = json_decode((string) @file_get_contents(__DIR__.'/plugin.json'), true);
+                $value = is_array($json) ? ($json['version'] ?? null) : null;
+                if (is_string($value) && preg_match('/^\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?$/', $value) === 1) {
+                    $version = $value;
+                }
+            } catch (\Throwable $e) {
+            }
+        }
+
+        return $version;
     }
 }

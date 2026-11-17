@@ -40,11 +40,13 @@ final class MarketplaceCache
     public function refresh(): CachedPlugins
     {
         try {
-            $plugins = $this->client->listPlugins();
+            $catalog = $this->client->catalog();
+            $plugins = $catalog['plugins'];
+            $starter = Starter::parse($catalog['starter']);
             $fetchedAt = time();
-            $this->store->set(self::KEY, (string) json_encode(['fetchedAt' => $fetchedAt, 'data' => $plugins]));
+            $this->store->set(self::KEY, (string) json_encode(['fetchedAt' => $fetchedAt, 'data' => $plugins, 'starter' => $starter]));
 
-            return new CachedPlugins($plugins, $fetchedAt, null);
+            return new CachedPlugins($plugins, $fetchedAt, null, null, $starter);
         } catch (Throwable $e) {
             $previous = $this->read();
             $kind = match (true) {
@@ -59,12 +61,13 @@ final class MarketplaceCache
                 $this->store->set(self::KEY, (string) json_encode([
                     'fetchedAt' => $previous->fetchedAt,
                     'data' => $previous->plugins,
+                    'starter' => $previous->starter,
                     'error' => $e->getMessage(),
                     'errorKind' => $kind,
                 ]));
             }
 
-            return new CachedPlugins($previous->plugins, $previous->fetchedAt, $e->getMessage(), $kind);
+            return new CachedPlugins($previous->plugins, $previous->fetchedAt, $e->getMessage(), $kind, $previous->starter);
         }
     }
 
@@ -86,6 +89,6 @@ final class MarketplaceCache
             ? $decoded['errorKind']
             : ($error !== null ? CachedPlugins::ERROR_FAILED : null);
 
-        return new CachedPlugins(array_values($decoded['data']), $fetchedAt, $error, $kind);
+        return new CachedPlugins(array_values($decoded['data']), $fetchedAt, $error, $kind, Starter::parse($decoded['starter'] ?? null));
     }
 }

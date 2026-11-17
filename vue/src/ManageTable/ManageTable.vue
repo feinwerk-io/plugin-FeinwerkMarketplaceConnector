@@ -71,7 +71,10 @@
               <span class="fwmc-badge" :class="'fwmc-badge--' + row.tier">{{ row.tier }}</span>
             </td>
             <td>
-              <span v-if="row.license" class="fwmc-badge fwmc-badge--license-ok">
+              <span v-if="row.license && trialText(row)" class="fwmc-badge fwmc-badge--trial">
+                {{ trialText(row) }}
+              </span>
+              <span v-else-if="row.license" class="fwmc-badge fwmc-badge--license-ok">
                 {{ translate('FeinwerkMarketplaceConnector_LicenseActive') }}
                 <template v-if="row.license.valid_until">
                   · {{ translate(
@@ -80,13 +83,26 @@
                   ) }}
                 </template>
               </span>
+              <span
+                v-else-if="row.needsLicense && row.trialEndedOn"
+                class="fwmc-badge fwmc-badge--license-missing"
+              >
+                {{ translate('FeinwerkMarketplaceConnector_TrialEnded', row.trialEndedOn) }}
+              </span>
               <span v-else-if="row.needsLicense" class="fwmc-badge fwmc-badge--license-missing">
                 {{ translate('FeinwerkMarketplaceConnector_NoLicense') }}
               </span>
               <span v-else>-</span>
             </td>
             <td>{{ row.installedVersion || '-' }}</td>
-            <td>{{ row.latestVersion || '-' }}</td>
+            <td>
+              {{ row.latestVersion || '-' }}
+              <span
+                v-if="row.beta"
+                class="fwmc-badge fwmc-badge--beta"
+                :title="translate('FeinwerkMarketplaceConnector_BetaHint')"
+              >{{ translate('FeinwerkMarketplaceConnector_Beta') }}</span>
+            </td>
             <td>
               <!-- The status says it, not only the action cell (rc1 RC-F2). -->
               <span
@@ -123,13 +139,16 @@
                 :nonce="nonce"
                 :slug="row.slug"
               />
-              <LicenseActions
-                v-else-if="canBuy(row)"
-                kind="buy"
-                :url="buyUrl"
-                :nonce="nonce"
-                :slug="row.slug"
-              />
+              <template v-else-if="canBuy(row)">
+                <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="row.slug" />
+                <LicenseActions
+                  v-if="row.trialAvailable && trialUrl"
+                  kind="trial"
+                  :url="trialUrl"
+                  :nonce="nonce"
+                  :slug="row.slug"
+                />
+              </template>
               <a
                 v-else-if="row.inactive && activateUrl"
                 class="btn"
@@ -162,19 +181,24 @@ import LicenseActions from '../LicenseActions/LicenseActions.vue';
 import BatchUpdate from '../BatchUpdate/BatchUpdate.vue';
 import canBatch from '../batch';
 import activateLink from '../activate';
+import trialLabel from '../trial';
 
 interface Row {
   slug: string; displayName: string; tier: string; status: string;
   installedVersion: string|null; latestVersion: string|null;
-  needsLicense: boolean; license: { status: string, valid_until: string|null }|null;
+  needsLicense: boolean;
+  license: { status: string, valid_until: string|null, trial?: boolean }|null;
   description: string|null; url: string|null; devCheckout?: boolean;
   dbChange?: { migrations: string[]; columns: string[]; note: string|null }|null;
   switching?: boolean;
-  licenseClaimable?: boolean; inactive?: boolean;
+  licenseClaimable?: boolean; inactive?: boolean; beta?: boolean;
+  trialAvailable?: boolean;
+  trialEndedOn?: string|null;
 }
 
 export default defineComponent({
   components: { InstallForm, LicenseActions, BatchUpdate },
+  inject: { wordpress: { from: 'fwmcWordPress', default: false } },
   props: {
     rows: { type: Array as () => Row[], required: true },
     nonce: { type: String, required: true },
@@ -187,6 +211,7 @@ export default defineComponent({
     dbHeld: { type: Array as () => string[], default: () => [] },
     claimUrl: { type: String, default: '' },
     buyUrl: { type: String, default: '' },
+    trialUrl: { type: String, default: '' },
     licensingAvailable: { type: Boolean, default: false },
     // "Update several at once" (BatchUpdate).
     selfSlug: { type: String, default: 'FeinwerkMarketplaceConnector' },
@@ -209,8 +234,12 @@ export default defineComponent({
   methods: {
     translate,
     activateLink,
+    trialText(row: Row): string {
+      return trialLabel(row.license, (day) => day);
+    },
     canBatch(row: Row): boolean {
-      return canBatch(row, this.selfSlug);
+      // Matomo for WordPress: no "update several at once" (WordPress updates the plugins there).
+      return !(this as unknown as { wordpress: boolean }).wordpress && canBatch(row, this.selfSlug);
     },
     toggleAll() {
       this.selected = this.allSelected ? [] : this.batchCandidates.map((r) => r.slug);

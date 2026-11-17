@@ -22,6 +22,8 @@ final class CachedPlugins
         public readonly ?int $fetchedAt,
         public readonly ?string $error,
         public readonly ?string $errorKind = null,
+        // The store's first-step suggestion next to the list (Core/Starter::parse), or null.
+        public readonly ?array $starter = null,
     ) {}
 
     public function isEmpty(): bool

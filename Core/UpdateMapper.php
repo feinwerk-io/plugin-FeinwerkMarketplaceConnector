@@ -87,8 +87,17 @@ final class UpdateMapper
                 $status = PluginStatusRow::STATUS_INSTALLED;
             }
 
-            $license = $plugin['license'] ?? null;
-            $switchingRow = $status === PluginStatusRow::STATUS_UPDATE_AVAILABLE && in_array($slug, $switching, true);
+            // Only an active licence counts. The store lists an ended trial as {status: expired, trial: true} (2026-11-17).
+            $listed = $plugin['license'] ?? null;
+            $active = is_array($listed) && ($listed['status'] ?? 'active') === 'active';
+            $license = $active ? $listed : null;
+            $trialEndedOn = ! $active && is_array($listed) && ($listed['trial'] ?? false) === true && is_string($listed['valid_until'] ?? null)
+                ? substr($listed['valid_until'], 0, 10)
+                : null;
+            $beta = $latestVersion !== null && ($plugin['latest']['channel'] ?? null) === 'beta';
+            // The swap never installs a beta (Peter, 2026-11-16: "2. nein"): such a plugin is offered to a click instead
+            // of "Switch pending".
+            $switchingRow = $status === PluginStatusRow::STATUS_UPDATE_AVAILABLE && ! $beta && in_array($slug, $switching, true);
             $dbChange = $latestVersion !== null && $status !== PluginStatusRow::STATUS_INSTALLED
                 ? DbChangePlan::for($installedVersion, (string) $latestVersion, $plugin['latest']['db_changes'] ?? null, $installedColumns[$slug] ?? [], $this->dbNote($plugin['latest'] ?? null))
                 : null;
@@ -115,6 +124,9 @@ final class UpdateMapper
                 isset($plugin['latest']['released_at']) && is_string($plugin['latest']['released_at']) ? $plugin['latest']['released_at'] : null,
                 // Matomo has the plugins of a pending swap off after a major update: the swap switches them, not an admin.
                 $installedVersion !== null && ! $switchingRow && in_array($slug, $inactive, true),
+                $beta,
+                ($plugin['trial_available'] ?? false) === true,
+                $trialEndedOn,
             );
         }
 

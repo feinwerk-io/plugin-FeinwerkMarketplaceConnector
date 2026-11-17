@@ -67,6 +67,7 @@ final class PluginOperations
             $client = self::client();
             // A new release changes the plugin window too: its cached answers are outdated now.
             (new PluginDetailCache($client, new OptionCacheStore()))->invalidateAll(); // never throws
+            Licensing::sync($refreshed->plugins); // never throws; trial ends and the event for the paid plugins
             ReadinessCache::refresh($client); // never throws
             try {
                 $env = [
@@ -114,6 +115,9 @@ final class PluginOperations
      */
     public function installOne(string $slug, string $version, ?bool $activate): array
     {
+        if (MatomoForWordPress::detected()) {
+            return ['kind' => 'wordpress', 'installed' => $slug, 'message' => Piwik::translate('FeinwerkMarketplaceConnector_WordPressRefused', [self::displayName($slug)])];
+        }
         if (InstalledMarketplacePlugins::isDevCheckout($slug)) {
             return ['kind' => 'dev', 'installed' => $slug, 'message' => Piwik::translate('FeinwerkMarketplaceConnector_DevCheckoutRefused', [self::displayName($slug)])];
         }
@@ -190,17 +194,40 @@ final class PluginOperations
     public static function hasPendingDbUpdates(): bool
     {
         try {
-            return ! empty((new Updater())->getComponentUpdates());
+            return self::componentUpdates() !== [];
         } catch (\Throwable $e) {
             return false;
         }
+    }
+
+    /**
+     * Matomo's pending component updates as Matomo itself runs them: core, the activated plugins and log table columns.
+     * An installed but inactive plugin is left out (Auth SAML on demo, 2026-11-17): Matomo's browser and console updater
+     * load only activated plugins, so core:update never runs it and a notice about it could not clear; its updates run
+     * when it is activated. May throw.
+     *
+     * @return array<string, mixed>
+     */
+    public static function componentUpdates(): array
+    {
+        $manager = Manager::getInstance();
+        $pending = [];
+        foreach ((new Updater())->getComponentUpdates() ?? [] as $component => $files) {
+            $component = (string) $component;
+            if ($component !== 'core' && preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $component) === 1 && ! $manager->isPluginActivated($component)) {
+                continue;
+            }
+            $pending[$component] = $files;
+        }
+
+        return $pending;
     }
 
     /** @return list<string> the components Matomo has a database update pending for; empty on any error */
     public static function pendingComponents(): array
     {
         try {
-            return array_map('strval', array_keys((new Updater())->getComponentUpdates() ?? []));
+            return array_map('strval', array_keys(self::componentUpdates()));
         } catch (\Throwable $e) {
             return [];
         }

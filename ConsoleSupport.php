@@ -15,6 +15,13 @@ final class ConsoleSupport
     public const SELF = 'FeinwerkMarketplaceConnector';
 
     /** Not connected: nothing may go to the store (NoContactBeforeConnectTest), the command says how to connect. */
+    /** Matomo for WordPress (MatomoForWordPress): the commands never install or update there. */
+    public static function wordpress(): string
+    {
+        return 'This Matomo runs in Matomo for WordPress: install and update Feinwerk plugins in WordPress '
+            .'(Matomo Analytics > Marketplace), not with this command.';
+    }
+
     public static function notConnected(): string
     {
         return 'This Matomo is not connected with a Feinwerk account. Connect it under Administration › Feinwerk Plugins, '
@@ -123,6 +130,7 @@ final class ConsoleSupport
         $text = match (true) {
             $row->devCheckout => 'development checkout',
             $row->switching => 'switch pending',
+            $row->beta && $row->status !== PluginStatusRow::STATUS_INSTALLED => str_replace('_', ' ', $row->status).' (beta, install it by naming it)',
             default => str_replace('_', ' ', $row->status),
         };
 

@@ -26,7 +26,7 @@ final class ConnectFlow
     }
 
     /** @param array{state: string, verifier: string, created_at: int} $pending */
-    public static function authorizeUrl(string $baseUrl, array $pending, string $returnUrl, mixed $siteUrl, string $lang, ?string $source = null): string
+    public static function authorizeUrl(string $baseUrl, array $pending, string $returnUrl, mixed $siteUrl, string $lang, ?string $source = null, ?array $then = null): string
     {
         $query = [
             'state' => $pending['state'],
@@ -41,6 +41,11 @@ final class ConnectFlow
         if ($source !== null) {
             $query['mtm_campaign'] = 'connector-connect';
             $query['mtm_source'] = $source;
+        }
+        // "Try it free" before connecting: the store's page names the trial; the connector keeps the intent itself.
+        if (($then['intent'] ?? null) === 'trial' && is_string($then['plugin'] ?? null)) {
+            $query['intent'] = 'trial';
+            $query['plugin'] = $then['plugin'];
         }
 
         return rtrim($baseUrl, '/').'/connect?'.http_build_query($query);

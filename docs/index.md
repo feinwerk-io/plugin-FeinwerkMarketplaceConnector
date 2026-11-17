@@ -1,6 +1,8 @@
 ## Getting started
 
-1. Install and activate Feinwerk Connector from the Matomo Marketplace (**Administration › Plugins › Marketplace**).
+1. Install and activate Feinwerk Connector from the Matomo Marketplace (**Administration › Platform › Marketplace**,
+   search for "Feinwerk"):
+   no file upload, no FTP, no change to config files.
 2. Open **Administration › Feinwerk Plugins** and click **Connect with Feinwerk account**. Log in on
    plugins.feinwerk.io, pick or create the instance for this Matomo, and you are back in Matomo, connected.
 3. On **Discover**, open a plugin to read about it, then install it there or on **Manage**.

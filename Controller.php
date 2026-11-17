@@ -18,6 +18,7 @@ use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceFeatur
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\FeedbackVote;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceLicenseException;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceRefusedException;
+use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceTrialRefusedException;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\Exceptions\MarketplaceUnreachableException;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\MarketplaceEndpoint;
 use Piwik\Plugins\FeinwerkMarketplaceConnector\Core\PluginName;
@@ -87,6 +88,8 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $refreshErrorKind = null;
         $licensingAvailable = false;
         $openSlug = '';
+        $starter = null;
+        $wordpress = MatomoForWordPress::detected();
 
         $connected = $settings['url'] !== '' && $settings['token'] !== '';
         if ($connected) {
@@ -108,6 +111,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             $refreshErrorKind = $cached->errorKind;
             // Feature detection: only a store that sends license_claimable knows the two new endpoints.
             $licensingAvailable = UpdateMapper::storeOffersLicensing($cached->plugins);
+            // Right after Connect: the store's first-step suggestion (StarterCard), in place of the recommendation. Not in
+            // Matomo for WordPress: nothing can be installed from here there.
+            $starter = MatomoForWordPress::detected() ? null : StarterCard::current($cached->starter, $rows, $this->adminLang());
             // Back from a claim or a purchase: open the window of that plugin, if it is listed.
             $wanted = \Piwik\Common::getRequestVar('fwmc_open', '', 'string');
             foreach ($cached->plugins as $plugin) {
@@ -139,9 +145,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         return $this->renderTemplate('index', [
             // Vue consumes plain objects, not PluginStatusRow instances. availableHere: the store has a build of it for
             // this Matomo (browse without an account; connected, the list already answers for this Matomo).
-            'rows' => array_map(fn ($r) => get_object_vars($r) + [
+            'rows' => array_map(fn ($r) => array_merge(get_object_vars($r), [
                 'availableHere' => $major === null || ! isset($linesBySlug[$r->slug]) || in_array($major, $linesBySlug[$r->slug], true),
-            ], $rows),
+                // A trial installs the plugin: not in Matomo for WordPress.
+                'trialAvailable' => $r->trialAvailable && ! $wordpress,
+            ]), $rows),
+            // Matomo for WordPress: install and update there, not here (MatomoForWordPress).
+            'wordpress' => ['detected' => $wordpress, 'marketplaceUrl' => MatomoForWordPress::marketplaceUrl()],
             // Browse without an account: loaded by the admin's click on the screen of a Matomo that is not connected.
             'browse' => [
                 'loaded' => $browseFetchedAt !== null,
@@ -160,14 +170,14 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             'instance' => $connected ? self::instanceInfo() : null,
             'licensingAvailable' => $licensingAvailable,
             // "Activate" for an installed plugin Matomo has not switched on: Matomo's own action (password check included).
-            'activateUrl' => self::activateUrl(),
+            'activateUrl' => $wordpress ? '' : self::activateUrl(),
             'offlineDocsUrl' => MarketplaceEndpoint::offlineDocsUrl(MarketplaceClientFactory::url(), $this->adminLang()),
             'openSlug' => $openSlug,
             'initialTab' => $tab,
             // What the page shows, for the check when it gets the focus again (ScreenState, backlog 13).
             'screenState' => $connected ? ScreenState::fingerprint() : '',
             // The "Aufgaben" tab (Core/ActionItems) and what its buttons need.
-            'actionItems' => $connected ? self::withNames(ActionItems::from(
+            'actionItems' => $connected ? self::withoutWordPressItems($wordpress, self::withNames(ActionItems::from(
                 $rows,
                 $this->pluginName,
                 $dbHeld,
@@ -175,13 +185,15 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 UpgradeWatcher::pending() !== null,
                 $refreshErrorKind,
                 date('Y-m-d')
-            )) : [],
+            ))) : [],
             'switchNowUrl' => 'index.php?module=FeinwerkMarketplaceConnector&action=switchNow&nonce='
                 .urlencode(Nonce::getNonce('FeinwerkMarketplaceConnector.action', 3600)),
             'consoleCommand' => ConsoleCommand::of('core:update'),
             'batchNonce' => Nonce::getNonce(self::BATCH_NONCE, 3600),
-            // The recommendation banner on the Discover tab (null when switched off or nothing to show).
-            'promo' => $connected ? Recommendation::current() : null,
+            // The recommendation banner on the Discover tab (null when switched off or nothing to show); the first-step card
+            // takes its place right after Connect (one banner per page).
+            'promo' => $connected && $starter === null ? Recommendation::current() : null,
+            'starter' => $starter,
             'accountUrl' => rtrim(MarketplaceClientFactory::url(), '/').'/account',
             'selfSlug' => $this->pluginName,
             'dbHeld' => $dbHeld,
@@ -269,6 +281,37 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
 
         return (string) json_encode(['off' => Recommendation::switchOff()]);
+    }
+
+    /**
+     * Matomo for WordPress runs database updates and plugin updates itself: no task that points to Matomo's update page,
+     * the swap or a held automatic update.
+     *
+     * @param  list<array<string, mixed>>  $items
+     * @return list<array<string, mixed>>
+     */
+    private static function withoutWordPressItems(bool $wordpress, array $items): array
+    {
+        return $wordpress
+            ? array_values(array_filter($items, fn ($item) => ! in_array($item['kind'] ?? null, ['db_update', 'switch_pending', 'db_held'], true)))
+            : $items;
+    }
+
+    /**
+     * × on the first-step card (StarterCard): super user, the card's nonce (verified, kept: nothing is installed), JSON
+     * {"closed": bool}. The card does not come back.
+     */
+    public function closeStarter(): string
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        \Piwik\Common::sendHeader('Content-Type: application/json; charset=utf-8');
+
+        $nonce = \Piwik\Common::getRequestVar('nonce', '', 'string', $_POST);
+        if (! Nonce::verifyNonce(StarterCard::NONCE, $nonce)) {
+            return (string) json_encode(['closed' => false]);
+        }
+
+        return (string) json_encode(['closed' => StarterCard::close()]);
     }
 
     /** The screen's current state for an open page (ScreenState, backlog 13): JSON {"state": fingerprint}. Read only. */
@@ -565,6 +608,19 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
 
         $this->runInstall($slug, $version, $activate);
 
+        // From the first-step card: the plugin's own first page (store `starter.landing`, read from the cached list, never
+        // from the form), once the plugin is installed and switched on.
+        if (\Piwik\Common::getRequestVar('fwmc_then', '', 'string', $_POST) === 'starter') {
+            $landing = $this->marketplaceCache($this->settings())->cached()->starter;
+            $landing = is_array($landing) && ($landing['plugin'] ?? null) === $slug ? ($landing['landing'] ?? null) : null;
+            if (is_array($landing) && PluginOperations::installedVersionOf($slug) !== null
+                && \Piwik\Plugin\Manager::getInstance()->isPluginActivated($slug)) {
+                $this->redirectToIndex($landing['module'], $landing['action']);
+
+                return '';
+            }
+        }
+
         $this->backToScreen();
         return '';
     }
@@ -602,6 +658,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         }
 
         $pending = ConnectFlow::begin(time());
+        // "Try it free" on a Matomo that is not connected yet: after the return the trial starts (connectReturn). Kept in
+        // the stored state, bound to it; nothing from the return address is trusted (store contract 2026-11-16).
+        $intent = \Piwik\Common::getRequestVar('intent', '', 'string', $_POST);
+        $plugin = \Piwik\Common::getRequestVar('plugin', '', 'string', $_POST);
+        if ($intent === 'trial' && $this->isSlug($plugin)) {
+            $pending['then'] = ['intent' => 'trial', 'plugin' => $plugin];
+        }
         ConnectState::put($pending);
 
         $base = \Piwik\Url::getCurrentUrlWithoutFileName();
@@ -609,7 +672,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $siteUrl = \Piwik\SettingsPiwik::getPiwikUrl() ?: $base;
 
         $source = ConnectSource::of(__DIR__, InstalledMarketplacePlugins::isDevCheckout($this->pluginName));
-        \Piwik\Url::redirectToUrl(ConnectFlow::authorizeUrl(MarketplaceClientFactory::url(), $pending, $returnUrl, $siteUrl, $this->adminLang(), $source));
+        \Piwik\Url::redirectToUrl(ConnectFlow::authorizeUrl(MarketplaceClientFactory::url(), $pending, $returnUrl, $siteUrl, $this->adminLang(), $source, $pending['then'] ?? null));
 
         return '';
     }
@@ -625,6 +688,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $state = \Piwik\Common::getRequestVar('state', '', 'string');
         $code = \Piwik\Common::getRequestVar('code', '', 'string');
         $pending = ConnectState::take();
+        $open = [];
 
         if (! ConnectFlow::accepts($pending, $state, time())) {
             $this->notify(Piwik::translate('FeinwerkMarketplaceConnector_ConnectExpired'), Notification::CONTEXT_WARNING);
@@ -643,18 +707,112 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 $this->marketplaceCache($settings)->refresh(); // never throws
                 (new PluginDetailCache($this->client($settings), new OptionCacheStore()))->invalidateAll(); // never throws
 
-                $this->notify(
-                    Piwik::translate('FeinwerkMarketplaceConnector_ConnectDone', $result['label'] ?? '?'),
-                    Notification::CONTEXT_SUCCESS
-                );
+                $done = Piwik::translate('FeinwerkMarketplaceConnector_ConnectDone', $result['label'] ?? '?');
+                $then = $pending['then'] ?? null;
+                if (is_array($then) && ($then['intent'] ?? null) === 'trial' && $this->isSlug((string) ($then['plugin'] ?? ''))
+                    && ! MatomoForWordPress::detected()) {
+                    // The trial starts now; its window opens with the install button: an install keeps its nonce
+                    // (HARD RULE 3), and this return has none.
+                    $slug = (string) $then['plugin'];
+                    [$sentence, $context] = $this->beginTrial($settings, $slug, true);
+                    $this->notify($done.' '.$sentence, $context === Notification::CONTEXT_SUCCESS ? Notification::CONTEXT_SUCCESS : Notification::CONTEXT_WARNING);
+                    $open = ['fwmc_open' => $slug];
+                } else {
+                    StarterCard::begin(); // the first-step card on Discover (store `starter`)
+                    $this->notify($done, Notification::CONTEXT_SUCCESS);
+                }
             } catch (\Throwable $e) {
                 $this->notify(Piwik::translate('FeinwerkMarketplaceConnector_ConnectFailed', $e->getMessage()), Notification::CONTEXT_ERROR);
             }
         }
 
-        $this->redirectToIndex('FeinwerkMarketplaceConnector', 'index');
+        $this->redirectToIndex('FeinwerkMarketplaceConnector', 'index', null, null, null, $open);
 
         return '';
+    }
+
+    /**
+     * "Try it free" (store contract 2026-11-16): starts the free trial of a paid plugin the store offers one for, then
+     * installs and activates it in the same click. It installs code, so the page nonce is spent like an install's
+     * (HARD RULE 3). One notice says both. Only for a connected Matomo and a plugin the cached list offers a trial for.
+     */
+    public function startTrial(): string
+    {
+        Piwik::checkUserHasSuperUserAccess();
+        if (! $this->passedSecurityCheck()) {
+            $this->backToScreen();
+
+            return '';
+        }
+
+        $slug = \Piwik\Common::getRequestVar('slug', '', 'string', $_POST);
+        $settings = $this->settings();
+        $row = null;
+        $rows = $this->isSlug($slug) && $settings['token'] !== '' && ! MatomoForWordPress::detected()
+            ? PluginOperations::rows($this->marketplaceCache($settings)->cached(), $this->adminLang())
+            : [];
+        foreach ($rows as $candidate) {
+            if ($candidate->slug === $slug && $candidate->trialAvailable) {
+                $row = $candidate;
+            }
+        }
+        if ($row === null) {
+            $this->backToScreen();
+
+            return '';
+        }
+
+        // A beta is installed only by its own labelled click (5.6.0): the trial starts, the window offers the install.
+        [$sentence, $context] = $this->beginTrial($settings, $slug, $row->beta);
+        if ($context !== Notification::CONTEXT_SUCCESS || $row->installedVersion !== null || $row->latestVersion === null || $row->beta) {
+            $this->notify($sentence, $context);
+            $this->backToScreen($slug);
+
+            return '';
+        }
+
+        $result = $this->installOne($slug, $row->latestVersion, true);
+        switch ($result['kind']) {
+            case 'activate':
+                $this->notify($sentence, Notification::CONTEXT_SUCCESS);
+                $this->notifyActivateOnConsole($result['installed']);
+                break;
+            case 'db':
+                $this->notify($sentence, Notification::CONTEXT_SUCCESS);
+                $this->notifyDbUpdateRequired($result['installed']);
+                break;
+            default:
+                $this->notify($sentence.' '.$result['message'], $result['kind'] === 'done' ? Notification::CONTEXT_SUCCESS : Notification::CONTEXT_WARNING);
+        }
+        $this->backToScreen($slug);
+
+        return '';
+    }
+
+    /**
+     * Asks the store for the trial and refreshes the list. Returns the sentence for the admin and its notice context.
+     *
+     * @param  array{url: string, token: string}  $settings
+     * @return array{0: string, 1: string}
+     */
+    private function beginTrial(array $settings, string $slug, bool $installNext): array
+    {
+        $name = $this->displayName($slug);
+        try {
+            $trial = $this->client($settings)->startTrial($slug, $this->adminLang());
+            $this->refreshLists($settings);
+            $until = substr($trial['valid_until'], 0, 10);
+
+            return [Piwik::translate($installNext ? 'FeinwerkMarketplaceConnector_TrialStartedInstallNow' : 'FeinwerkMarketplaceConnector_TrialStarted', [$name, $until]), Notification::CONTEXT_SUCCESS];
+        } catch (MarketplaceTrialRefusedException $e) {
+            $sentence = Piwik::translate('FeinwerkMarketplaceConnector_TrialRefused', [$name]);
+
+            return [$e->storeMessage !== '' ? $sentence.' '.$e->storeMessage : $sentence, Notification::CONTEXT_WARNING];
+        } catch (MarketplaceUnreachableException $e) {
+            return [Piwik::translate('FeinwerkMarketplaceConnector_Offline'), Notification::CONTEXT_WARNING];
+        } catch (\Throwable $e) {
+            return [Piwik::translate('FeinwerkMarketplaceConnector_LicensingFailed', [$name, $e->getMessage()]), Notification::CONTEXT_ERROR];
+        }
     }
 
     /**
@@ -803,6 +961,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $refreshed = $this->marketplaceCache($settings)->refresh();
         if ($refreshed->error === null) {
             (new PluginDetailCache($this->client($settings), new OptionCacheStore()))->invalidateAll();
+            Licensing::sync($refreshed->plugins); // trial ends, and the event for the paid plugins
         }
 
         return $refreshed;
@@ -857,7 +1016,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     public function switchNow(): string
     {
         Piwik::checkUserHasSuperUserAccess();
-        if ($this->passedSecurityCheck()) {
+        if ($this->passedSecurityCheck() && ! MatomoForWordPress::detected()) {
             UpgradeSwapper::run();
         }
 
@@ -911,7 +1070,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 $this->notifyDbUpdateRequired($result['installed']);
                 break;
             default:
-                $contexts = ['done' => Notification::CONTEXT_SUCCESS, 'dev' => Notification::CONTEXT_WARNING];
+                $contexts = ['done' => Notification::CONTEXT_SUCCESS, 'dev' => Notification::CONTEXT_WARNING, 'wordpress' => Notification::CONTEXT_WARNING];
                 $this->notify($result['message'], $contexts[$result['kind']] ?? Notification::CONTEXT_ERROR);
         }
     }
@@ -1003,12 +1162,13 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
      */
     private function batchCandidate(string $slug, string $version): bool
     {
-        if (! $this->isSlug($slug) || $slug === $this->pluginName || $version === '') {
+        if (! $this->isSlug($slug) || $slug === $this->pluginName || $version === '' || MatomoForWordPress::detected()) {
             return false;
         }
         foreach (PendingUpdates::rows() as $row) {
             if ($row->slug === $slug) {
-                return $row->latestVersion === $version && ! ($row->needsLicense && $row->license === null);
+                // A beta only by its own click, never with several at once.
+                return $row->latestVersion === $version && ! $row->beta && ! ($row->needsLicense && $row->license === null);
             }
         }
 
