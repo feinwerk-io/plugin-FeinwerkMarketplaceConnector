@@ -1,5 +1,24 @@
 # Changelog
 
+## 5.9.0
+
+- The Feinwerk Plugins screen reads better in every language and on small screens: the tabs fit on a phone, prices,
+  plan names and dates follow your Matomo language, labels such as "Kostenpflichtig" and "Umstellung ausstehend" are
+  translated and written correctly, a plugin window opens at the plugin's name, and on narrow screens the Manage tab
+  shows only the columns that matter.
+- The database update dialogs can be used with the keyboard (Tab stays in the dialog, Escape closes it), and failed
+  requests explain what to do instead of showing a technical error, with "Try again" in the plugin window.
+- "Refresh" is now "Refresh list", a quieter button next to Matomo's own update check.
+- The Feinwerk Plugins entry in the administration menu shows its icon.
+- Clearer Manage and Licenses tabs: the columns are called "Pricing" and "Latest version", Install is a quieter button
+  so that updates stand out, the time of the plugin list follows your Matomo language, and the Licenses tab starts with
+  a complete sentence.
+- In a German Matomo the plugin window shows the plugin's German description as soon as the Feinwerk store provides it.
+- A plugin window opened from a link or banner leaves Matomo's own notices on the page.
+- On the Tasks tab a pending switch to the new Matomo version appears once, as a task.
+- After a free trial ended, a license bought on the Feinwerk store website now reaches your plugins within an hour: for
+  up to 30 days after the end the connector fetches its plugin list every hour instead of once a day.
+
 ## 5.8.0
 
 - Paid Feinwerk plugins whose license ended more than 7 days ago now show super users and admins a warning on Matomo's

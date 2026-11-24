@@ -12,16 +12,16 @@
       <button
         v-if="candidates.length > 1"
         type="button"
-        :class="selected.length ? 'btn btn-flat' : 'btn'"
+        :class="selected.length ? 'btn btn-outline' : 'btn'"
         @click="start(candidates)"
       >{{ label('BatchUpdateAll', candidates.length) }}</button>
     </div>
 
-    <div v-else class="fwmc-batch-progress" aria-live="polite">
+    <div v-else ref="progress" class="fwmc-batch-progress" tabindex="-1" aria-live="polite">
       <p class="fwmc-batch-head">{{ progressText }}</p>
       <p v-if="expired" class="fwmc-batch-message">
         {{ expired }}
-        <a href="" class="btn btn-flat" @click.prevent="reload">
+        <a href="" class="btn btn-outline" @click.prevent="reload">
           {{ translate('FeinwerkMarketplaceConnector_BatchReload') }}
         </a>
       </p>
@@ -47,6 +47,7 @@
     <Teleport to="body">
       <div
         v-if="confirming"
+        ref="dialog"
         class="fwmc fwmc-dbdialog"
         role="alertdialog"
         aria-modal="true"
@@ -87,7 +88,7 @@
             <button type="button" class="btn" :disabled="large && !acknowledged" @click="confirm">
               {{ translate('FeinwerkMarketplaceConnector_BatchDbConfirm') }}
             </button>
-            <button type="button" class="btn btn-flat" @click="confirming = false">
+            <button ref="cancel" type="button" class="btn btn-outline" @click="confirming = false">
               {{ translate('FeinwerkMarketplaceConnector_DbChangeCancel') }}
             </button>
           </div>
@@ -102,6 +103,8 @@ import { defineComponent, PropType } from 'vue';
 import { translate } from 'CoreHome';
 import { addActionContext, claimSubmit } from '../actionContext';
 import { PluginRow } from '../types';
+import failureText from '../failure';
+import DialogFocus from '../dialogFocus';
 
 interface Step {
   slug: string;
@@ -177,6 +180,32 @@ export default defineComponent({
       return translate('FeinwerkMarketplaceConnector_BatchProgress', String(done), String(this.steps.length));
     },
   },
+  // A dialog that is still open when the component goes leaves no listener behind.
+  beforeUnmount() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const trap = (this as any).focusTrap;
+    if (trap) trap.release(false);
+  },
+  watch: {
+    // Focus into the dialog, Tab inside, Escape closes, focus back to the button (F9).
+    confirming(open: boolean) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const self = this as any;
+      self.focusTrap = self.focusTrap || new DialogFocus();
+      if (open) {
+        this.$nextTick(() => {
+          const dialog = this.$refs.dialog as HTMLElement|undefined;
+          if (dialog) {
+            self.focusTrap.open(dialog, this.$refs.cancel as HTMLElement, () => {
+              this.confirming = false;
+            });
+          }
+        });
+      } else {
+        self.focusTrap.release();
+      }
+    },
+  },
   methods: {
     translate,
     label(key: string, count: number): string {
@@ -216,8 +245,17 @@ export default defineComponent({
       if (this.large && !this.acknowledged) {
         return;
       }
+      // The buttons that opened the dialog go away while the batch runs: focus moves to the
+      // progress instead of back to them.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const trap = (this as any).focusTrap;
+      if (trap) trap.release(false);
       this.confirming = false;
       this.run();
+      this.$nextTick(() => {
+        const progress = this.$refs.progress as HTMLElement|undefined;
+        if (progress) progress.focus();
+      });
     },
     async run() {
       // The page's other forms share a nonce: nothing else may be sent while this runs.
@@ -261,7 +299,7 @@ export default defineComponent({
             // No answer of ours (Bad Gateway, an error page, the login page): the update may
             // still run on the server, so nothing more is started next to it.
             step.state = 'noanswer';
-            step.message = `HTTP ${response.status}`;
+            step.message = failureText(null, response.status);
             rest = 'notstarted';
             stop = true;
           } else {
@@ -280,7 +318,7 @@ export default defineComponent({
         } catch (e) {
           // The connection broke: as with no answer, nothing more is started.
           step.state = 'noanswer';
-          step.message = String(e);
+          step.message = failureText(e);
           rest = 'notstarted';
           stop = true;
         }

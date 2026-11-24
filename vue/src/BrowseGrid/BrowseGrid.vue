@@ -47,7 +47,7 @@
     </div>
     <div v-else class="fwmc-empty">
       <p>{{ translate('FeinwerkMarketplaceConnector_NoResults') }}</p>
-      <button type="button" class="btn btn-flat" @click="reset">
+      <button type="button" class="btn btn-outline" @click="reset">
         {{ translate('FeinwerkMarketplaceConnector_ResetFilters') }}
       </button>
     </div>
@@ -58,6 +58,7 @@
 import { defineComponent } from 'vue';
 import { translate } from 'CoreHome';
 import PluginCard from '../PluginCard/PluginCard.vue';
+import { categoryLabel } from '../labels';
 
 export default defineComponent({
   components: { PluginCard },
@@ -105,19 +106,7 @@ export default defineComponent({
   },
   methods: {
     translate,
-    // The store sends category codes (analytics, monitoring, ...): show the translation, else
-    // the code. Matomo's translate() answers an unknown key with "The string ... was not
-    // loaded", so only keys in Matomo's table (piwik_translations, 5.0 to 6) are translated.
-    categoryLabel(code: string): string {
-      if (!code) return '';
-      const key = `FeinwerkMarketplaceConnector_Category_${String(code).toLowerCase()}`;
-      const known = (window as any).piwik_translations || {};
-      if (typeof known[key] === 'string') {
-        return translate(key);
-      }
-      const text = String(code);
-      return text.charAt(0).toUpperCase() + text.slice(1);
-    },
+    categoryLabel,
     reset() {
       this.search = '';
       this.category = '';

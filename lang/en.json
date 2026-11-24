@@ -2,14 +2,14 @@
     "FeinwerkMarketplaceConnector": {
         "MenuTitle": "Feinwerk Plugins",
         "ColumnPlugin": "Plugin",
-        "ColumnTier": "Tier",
+        "ColumnTier": "Pricing",
         "ColumnLicense": "License",
         "ColumnInstalled": "Installed",
-        "ColumnLatest": "Latest",
+        "ColumnLatest": "Latest version",
         "ColumnStatus": "Status",
         "TabDiscover": "Discover",
         "TabManage": "Manage",
-        "Refresh": "Refresh",
+        "Refresh": "Refresh list",
         "Updated": "Updated %s",
         "CachedNote": "Showing cached data. The marketplace did not answer as expected just now.",
         "SearchPlaceholder": "Search plugins…",
@@ -218,7 +218,7 @@
         "Task_renew": "Renew in the customer account",
         "Task_license_claimable": "You have a license for %s that no Matomo instance uses yet.",
         "Task_view": "View plugin",
-        "LicensesIntro": "Which paid Feinwerk plugins are licensed for this Matomo instance. You manage subscriptions, invoices and payment details in your customer account.",
+        "LicensesIntro": "This list shows which paid Feinwerk plugins are licensed for this Matomo instance. You manage subscriptions, invoices and payment details in your customer account.",
         "LicensesAccount": "Open customer account",
         "LicensesEmpty": "The Feinwerk store lists no paid plugins.",
         "NotInstalled": "not installed",
@@ -302,6 +302,11 @@
         "WordPressDetailsFailed": "The Feinwerk store did not send the details of %1$s: %2$s",
         "LicenseEnded": "The license of these Feinwerk plugins ended more than 7 days ago: %s. The plugins keep working, but updates are only available with a valid license. Please renew the license.",
         "LicenseEndedItem": "%1$s (ended on %2$s, %3$srenew%4$s)",
-        "LicenseEndedAdminNote": "Your super user can renew it."
+        "LicenseEndedAdminNote": "Your super user can renew it.",
+        "ChannelStable": "Stable",
+        "TryAgain": "Try again",
+        "FailureTimeout": "The server did not answer in time. Please try again.",
+        "FailureReload": "You may have been logged out, or the page is outdated. Please reload the page.",
+        "FailureConnection": "The connection to the server broke. Please check your connection and try again."
     }
 }

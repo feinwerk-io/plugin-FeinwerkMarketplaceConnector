@@ -2,14 +2,14 @@
     "FeinwerkMarketplaceConnector": {
         "MenuTitle": "Feinwerk Plugins",
         "ColumnPlugin": "Plugin",
-        "ColumnTier": "Nivel",
+        "ColumnTier": "Modelo de precio",
         "ColumnLicense": "Licencia",
         "ColumnInstalled": "Instalada",
-        "ColumnLatest": "Última",
+        "ColumnLatest": "Última versión",
         "ColumnStatus": "Estado",
         "TabDiscover": "Descubrir",
         "TabManage": "Gestión",
-        "Refresh": "Actualizar",
+        "Refresh": "Actualizar la lista",
         "Updated": "Actualizado: %s",
         "CachedNote": "Se muestran datos en caché. El Marketplace no respondió como se esperaba hace un momento.",
         "SearchPlaceholder": "Buscar plugins…",
@@ -218,7 +218,7 @@
         "Task_renew": "Renovar en la cuenta de cliente",
         "Task_license_claimable": "Tiene una licencia para %s que aún no usa ninguna instancia de Matomo.",
         "Task_view": "Ver plugin",
-        "LicensesIntro": "Qué plugins de pago de Feinwerk tienen licencia para esta instancia de Matomo. Las suscripciones, las facturas y los datos de pago se gestionan en su cuenta de cliente.",
+        "LicensesIntro": "Esta lista muestra qué plugins de pago de Feinwerk tienen licencia para esta instancia de Matomo. Las suscripciones, las facturas y los datos de pago se gestionan en su cuenta de cliente.",
         "LicensesAccount": "Abrir cuenta de cliente",
         "LicensesEmpty": "La tienda de Feinwerk no ofrece plugins de pago.",
         "NotInstalled": "no instalado",
@@ -302,6 +302,11 @@
         "WordPressDetailsFailed": "La tienda de Feinwerk no ha enviado los detalles de %1$s: %2$s",
         "LicenseEnded": "La licencia de estos plugins de Feinwerk caducó hace más de 7 días: %s. Los plugins siguen funcionando, pero las actualizaciones solo están disponibles con una licencia válida. Renueve la licencia.",
         "LicenseEndedItem": "%1$s (caducó el %2$s, %3$srenovar%4$s)",
-        "LicenseEndedAdminNote": "Su superusuario puede renovarla."
+        "LicenseEndedAdminNote": "Su superusuario puede renovarla.",
+        "ChannelStable": "Estable",
+        "TryAgain": "Intentar de nuevo",
+        "FailureTimeout": "El servidor no ha respondido a tiempo. Inténtelo de nuevo.",
+        "FailureReload": "Es posible que se haya cerrado su sesión o que la página esté desactualizada. Recargue la página.",
+        "FailureConnection": "Se ha interrumpido la conexión con el servidor. Compruebe su conexión e inténtelo de nuevo."
     }
 }

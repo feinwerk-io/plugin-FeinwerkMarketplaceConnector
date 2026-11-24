@@ -13,7 +13,8 @@
       <table class="fwmc-table entityTable">
         <thead>
           <tr>
-            <th class="fwmc-select">
+            <!-- The selection column only when something can be selected (UI review, F7). -->
+            <th v-if="batchCandidates.length" class="fwmc-select">
               <label v-if="batchCandidates.length > 1">
                 <input
                   type="checkbox"
@@ -25,17 +26,21 @@
               </label>
             </th>
             <th>{{ translate('FeinwerkMarketplaceConnector_ColumnPlugin') }}</th>
-            <th>{{ translate('FeinwerkMarketplaceConnector_ColumnTier') }}</th>
+            <th class="fwmc-col-wide">
+              {{ translate('FeinwerkMarketplaceConnector_ColumnTier') }}
+            </th>
             <th>{{ translate('FeinwerkMarketplaceConnector_ColumnLicense') }}</th>
             <th>{{ translate('FeinwerkMarketplaceConnector_ColumnInstalled') }}</th>
-            <th>{{ translate('FeinwerkMarketplaceConnector_ColumnLatest') }}</th>
+            <th class="fwmc-col-wide">
+              {{ translate('FeinwerkMarketplaceConnector_ColumnLatest') }}
+            </th>
             <th>{{ translate('FeinwerkMarketplaceConnector_ColumnStatus') }}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="row in rows" :key="row.slug">
-            <td class="fwmc-select">
+            <td v-if="batchCandidates.length" class="fwmc-select">
               <label v-if="canBatch(row)">
                 <input
                   v-model="selected"
@@ -67,8 +72,10 @@
                 </div>
               </div>
             </td>
-            <td>
-              <span class="fwmc-badge" :class="'fwmc-badge--' + row.tier">{{ row.tier }}</span>
+            <td class="fwmc-col-wide">
+              <span class="fwmc-badge" :class="'fwmc-badge--' + row.tier">
+                {{ tierLabel(row.tier) }}
+              </span>
             </td>
             <td>
               <span v-if="row.license && trialText(row)" class="fwmc-badge fwmc-badge--trial">
@@ -79,7 +86,7 @@
                 <template v-if="row.license.valid_until">
                   · {{ translate(
                     'FeinwerkMarketplaceConnector_LicenseUntil',
-                    row.license.valid_until,
+                    formatDay(row.license.valid_until),
                   ) }}
                 </template>
               </span>
@@ -87,7 +94,10 @@
                 v-else-if="row.needsLicense && row.trialEndedOn"
                 class="fwmc-badge fwmc-badge--license-missing"
               >
-                {{ translate('FeinwerkMarketplaceConnector_TrialEnded', row.trialEndedOn) }}
+                {{ translate(
+                  'FeinwerkMarketplaceConnector_TrialEnded',
+                  formatDay(row.trialEndedOn),
+                ) }}
               </span>
               <span v-else-if="row.needsLicense" class="fwmc-badge fwmc-badge--license-missing">
                 {{ translate('FeinwerkMarketplaceConnector_NoLicense') }}
@@ -95,7 +105,7 @@
               <span v-else>-</span>
             </td>
             <td>{{ row.installedVersion || '-' }}</td>
-            <td>
+            <td class="fwmc-col-wide">
               {{ row.latestVersion || '-' }}
               <span
                 v-if="row.beta"
@@ -129,6 +139,7 @@
                 :label="actionFor(row)"
                 :plugin-name="row.displayName"
                 :is-update="row.status === 'update_available'"
+                :quiet="row.status !== 'update_available'"
                 :db-change="row.dbChange || null"
                 :held="dbHeld.includes(row.slug) && row.status === 'update_available'"
               />
@@ -182,6 +193,7 @@ import BatchUpdate from '../BatchUpdate/BatchUpdate.vue';
 import canBatch from '../batch';
 import activateLink from '../activate';
 import trialLabel, { trialRunning } from '../trial';
+import { tierLabel, formatDay } from '../labels';
 
 interface Row {
   slug: string; displayName: string; tier: string; status: string;
@@ -233,9 +245,11 @@ export default defineComponent({
   },
   methods: {
     translate,
+    tierLabel,
+    formatDay,
     activateLink,
     trialText(row: Row): string {
-      return trialLabel(row.license, (day) => day);
+      return trialLabel(row.license, formatDay);
     },
     canBatch(row: Row): boolean {
       // Matomo for WordPress: no "update several at once" (WordPress updates the plugins there).

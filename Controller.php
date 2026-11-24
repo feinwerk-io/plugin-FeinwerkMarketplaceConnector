@@ -145,6 +145,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         $wordpressLists = $this->wordpressLists($wordpress && $connected ? PendingUpdates::cachedPlugins() : []);
 
         return $this->renderTemplate('index', [
+            // The user's language for piwik.language and <html lang> (ui-standards 7; UI review 2026-11-23 F5): without it
+            // Intl formats in the browser's language and the plan names stay English.
+            'language' => self::userLanguage(),
             // Vue consumes plain objects, not PluginStatusRow instances. availableHere: the store has a build of it for
             // this Matomo (browse without an account; connected, the list already answers for this Matomo).
             'rows' => array_map(fn ($r) => array_merge(get_object_vars($r), [
@@ -1022,6 +1025,16 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
     }
 
     /** "de" for German admins, else "en": the language of the store pages this Matomo links to. */
+    /** The current user's Matomo language code ("de", "fr", "en" ...); "en" when it cannot be read. Never throws. */
+    public static function userLanguage(): string
+    {
+        try {
+            return (string) StaticContainer::get(\Piwik\Translation\Translator::class)->getCurrentLanguage();
+        } catch (\Throwable $e) {
+            return 'en';
+        }
+    }
+
     private function adminLang(): string
     {
         return str_starts_with((string) \Piwik\Plugins\LanguagesManager\LanguagesManager::getLanguageCodeForCurrentUser(), 'de') ? 'de' : 'en';

@@ -23,8 +23,9 @@ __What data leaves my server?__
 
 Nothing before you connect, except the request for the public plugin list when you click Show Feinwerk plugins. After
 connecting: once a day the instance token, the Matomo and PHP version, the address of this Matomo, the number of users
-and the installed Feinwerk plugins with their versions; when you use the screen, the plugin concerned. Never visitor
-data or reports. The plugin description lists it in full.
+and the installed Feinwerk plugins with their versions; for up to 30 days after a free trial ended, once an hour the
+token and the Matomo and PHP version, to fetch the plugin list; when you use the screen, the plugin concerned. Never
+visitor data or reports. The plugin description lists it in full.
 
 __Can I look around before I create an account?__
 
@@ -39,8 +40,8 @@ log in or sign up, pick the instance, and you are back in Matomo.
 
 __Does the connector slow down Matomo?__
 
-No. It checks for updates once a day in Matomo's scheduled tasks and sends nothing beyond the cases listed in the
-description. The Feinwerk Plugins screen loads only when an administrator opens it, and the connector does not touch
+No. It checks for updates once a day in Matomo's scheduled tasks (after a free trial ended, it fetches the plugin list
+once an hour for up to 30 days) and sends nothing beyond the cases listed in the description. The Feinwerk Plugins screen loads only when an administrator opens it, and the connector does not touch
 tracking.
 
 __What happens when a license runs out?__

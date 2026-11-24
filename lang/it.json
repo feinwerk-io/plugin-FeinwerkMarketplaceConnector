@@ -2,14 +2,14 @@
     "FeinwerkMarketplaceConnector": {
         "MenuTitle": "Feinwerk Plugins",
         "ColumnPlugin": "Plugin",
-        "ColumnTier": "Livello",
+        "ColumnTier": "Modello di prezzo",
         "ColumnLicense": "Licenza",
         "ColumnInstalled": "Installata",
-        "ColumnLatest": "Più recente",
+        "ColumnLatest": "Ultima versione",
         "ColumnStatus": "Stato",
         "TabDiscover": "Scopri",
         "TabManage": "Gestione",
-        "Refresh": "Aggiorna",
+        "Refresh": "Aggiorna elenco",
         "Updated": "Aggiornato: %s",
         "CachedNote": "Sono visualizzati i dati in cache: poco fa il Marketplace non ha risposto come previsto.",
         "SearchPlaceholder": "Cerca plugin…",
@@ -302,6 +302,11 @@
         "WordPressDetailsFailed": "Lo store Feinwerk non ha inviato i dettagli di %1$s: %2$s",
         "LicenseEnded": "La licenza di questi plugin Feinwerk è scaduta da più di 7 giorni: %s. I plugin continuano a funzionare, ma gli aggiornamenti sono disponibili solo con una licenza valida. Rinnovi la licenza.",
         "LicenseEndedItem": "%1$s (scaduta il %2$s, %3$srinnovare%4$s)",
-        "LicenseEndedAdminNote": "Il suo super utente può rinnovarla."
+        "LicenseEndedAdminNote": "Il suo super utente può rinnovarla.",
+        "ChannelStable": "Stabile",
+        "TryAgain": "Riprova",
+        "FailureTimeout": "Il server non ha risposto in tempo. Riprovi.",
+        "FailureReload": "Potrebbe essere stato disconnesso, oppure la pagina non è aggiornata. Ricarichi la pagina.",
+        "FailureConnection": "La connessione al server si è interrotta. Verifichi la connessione e riprovi."
     }
 }

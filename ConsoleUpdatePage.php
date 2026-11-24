@@ -18,7 +18,7 @@ final class ConsoleUpdatePage
     /** Matomo's run, addressed to CoreUpdater directly: the form on its page goes through a redirect that drops a POST body. */
     public const BROWSER_RUN_URL = 'index.php?module=CoreUpdater&action=index&updateCorePlugins=1';
 
-    /** @return array{command: string, superUser: bool, themeMode: string, override: string, browserRunNonce: string, browserRunNote: string} */
+    /** @return array{command: string, superUser: bool, themeMode: string, override: string, browserRunNonce: string, browserRunNote: string, language: string} */
     public static function variables(): array
     {
         $superUser = false;
@@ -32,7 +32,8 @@ final class ConsoleUpdatePage
         }
 
         return ['command' => self::command(), 'superUser' => $superUser, 'themeMode' => self::themeMode(), 'override' => self::OVERRIDE,
-            'browserRunNonce' => $nonce, 'browserRunNote' => (string) FeinwerkMarketplaceConnector::$browserRunNote];
+            'browserRunNonce' => $nonce, 'browserRunNote' => (string) FeinwerkMarketplaceConnector::$browserRunNote,
+            'language' => Controller::userLanguage()];
     }
 
     /** The command of Matomo's own update page, which also names the instance of a multi-instance install. */
@@ -70,7 +71,7 @@ final class ConsoleUpdatePage
         return 'auto';
     }
 
-    /** @param  array{command: string, superUser: bool, themeMode: string, override: string, browserRunNonce: string, browserRunNote: string}  $page */
+    /** @param  array{command: string, superUser: bool, themeMode: string, override: string, browserRunNonce: string, browserRunNote: string, language?: string}  $page */
     public static function plain(array $page): string
     {
         $text = function (string $key, array $args = []): string {
@@ -82,7 +83,7 @@ final class ConsoleUpdatePage
         };
         $e = fn (string $value): string => htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 
-        return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">'
+        return '<!DOCTYPE html><html lang="'.htmlspecialchars((string) ($page['language'] ?? 'en'), ENT_QUOTES).'"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">'
             .'<title>'.$e($text('ConsoleUpdateTitle')).'</title></head><body>'
             .'<h1>'.$e($text('ConsoleUpdateTitle')).'</h1>'
             .'<p>'.$e($text('ConsoleUpdateIntro')).'</p>'

@@ -483,6 +483,15 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
                 $major = htmlspecialchars((string) ($pending['to_major'] ?? ''), ENT_QUOTES, 'UTF-8');
                 $message = Piwik::translate('FeinwerkMarketplaceConnector_SwapPendingNotice', [htmlspecialchars(Version::VERSION, ENT_QUOTES, 'UTF-8')]);
                 $waiting = $this->stillWaiting((array) ($result['waiting'] ?? []), (int) ($pending['since'] ?? 0));
+                // The Tasks tab lists the pending switch with its own "Switch now" button (UI review 2026-11-23, W6): the
+                // notice comes there only when it names plugins still waiting for their build.
+                // Not in Matomo for WordPress: its Tasks tab has no switch item (Controller::withoutWordPressItems).
+                if ($waiting === [] && Piwik::getModule() === 'FeinwerkMarketplaceConnector' && Piwik::getAction() === 'tasks'
+                    && ! MatomoForWordPress::detected()) {
+                    $pending = null;
+                }
+            }
+            if ($pending !== null) {
                 if ($waiting !== []) {
                     $message .= ' '.Piwik::translate('FeinwerkMarketplaceConnector_SwapWaiting', [$major, $list($waiting)]);
                 }
@@ -595,6 +604,7 @@ class FeinwerkMarketplaceConnector extends \Piwik\Plugin
         foreach (array_keys($json['FeinwerkMarketplaceConnector'] ?? []) as $key) {
             $translationKeys[] = 'FeinwerkMarketplaceConnector_'.$key;
         }
+        $translationKeys[] = 'General_Loading';   // the plugin window while it loads (5.0 to 6)
     }
 }
 

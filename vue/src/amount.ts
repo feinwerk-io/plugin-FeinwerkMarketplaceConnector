@@ -1,7 +1,7 @@
 /**
  * A euro amount from the store ("1299.00") in the admin's number format ("1.299,00" in
- * German), through Matomo's own global NumberFormatter (5.0 to 6; the admin pages set no
- * html lang). Without it: the plain amount.
+ * German), through Matomo's own global NumberFormatter (5.0 to 6), which follows the user's
+ * Matomo language. Without it: the plain amount.
  */
 export default function amount(value: unknown): string {
   if (value === null || value === undefined) {

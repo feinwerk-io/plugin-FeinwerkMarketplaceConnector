@@ -87,13 +87,13 @@
           <button
             v-else-if="item.kind === 'trial_ending'"
             type="button"
-            class="btn btn-flat"
+            class="btn btn-outline"
             @click="$emit('open', item.slug)"
           >{{ tr('Task_view') }}</button>
           <button
             v-else-if="item.kind === 'license_claimable'"
             type="button"
-            class="btn btn-flat"
+            class="btn btn-outline"
             @click="$emit('open', item.slug)"
           >{{ tr('Task_view') }}</button>
         </div>
@@ -110,6 +110,7 @@ import InstallForm from '../InstallForm/InstallForm.vue';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
 import BatchUpdate from '../BatchUpdate/BatchUpdate.vue';
 import canBatch from '../batch';
+import { formatDay } from '../labels';
 
 const PREFIX = 'FeinwerkMarketplaceConnector_';
 
@@ -157,11 +158,7 @@ export default defineComponent({
       return /^https?:\/\//i.test(url || '');
     },
     date(value: string): string {
-      try {
-        return new Date(`${value}T12:00:00`).toLocaleDateString(Matomo.language || undefined);
-      } catch (e) {
-        return value;
-      }
+      return formatDay(value);
     },
     text(item: ActionItem): string {
       const row = this.row(item);

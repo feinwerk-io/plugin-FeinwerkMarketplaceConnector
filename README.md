@@ -73,6 +73,8 @@ Once connected, the connector talks to plugins.feinwerk.io:
 
 - **Once a day**, to check for updates and licenses: the instance token, the Matomo and PHP version, the address of this
   Matomo, the number of Matomo users (for license seats) and the installed Feinwerk plugins with their versions.
+- **Every hour for up to 30 days after a free trial ended**, to fetch the plugin list again: the instance token, the
+  Matomo and PHP version. A license bought on the store website then reaches your plugins within an hour.
 - **When you use the Feinwerk Plugins screen or its console commands** (open it, refresh the list, open a plugin,
   install, update, use or buy a license, start a free trial): the instance token, the Matomo and PHP version and the
   plugin concerned.

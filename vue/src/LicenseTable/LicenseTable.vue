@@ -11,7 +11,7 @@
       {{ translate('FeinwerkMarketplaceConnector_LicensesEmpty') }}
     </p>
     <div v-else class="fwmc-tablewrap">
-      <table class="entityTable dataTable fwmc-table">
+      <table class="fwmc-table entityTable">
         <thead>
           <tr>
             <th>{{ translate('FeinwerkMarketplaceConnector_ColumnPlugin') }}</th>
@@ -88,6 +88,7 @@ import { translate, Matomo } from 'CoreHome';
 import { PluginRow } from '../types';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
 import trialLabel, { trialRunning } from '../trial';
+import { formatDay } from '../labels';
 
 export default defineComponent({
   components: { LicenseActions },
@@ -116,12 +117,7 @@ export default defineComponent({
       return trialLabel(row.license, (day) => this.date(day));
     },
     date(value: string): string {
-      const day = String(value || '').slice(0, 10);
-      try {
-        return new Date(`${day}T12:00:00`).toLocaleDateString(Matomo.language || undefined);
-      } catch (e) {
-        return value;
-      }
+      return formatDay(value);
     },
   },
 });

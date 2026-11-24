@@ -2,14 +2,14 @@
     "FeinwerkMarketplaceConnector": {
         "MenuTitle": "Feinwerk Plugins",
         "ColumnPlugin": "Plugin",
-        "ColumnTier": "Stufe",
+        "ColumnTier": "Preismodell",
         "ColumnLicense": "Lizenz",
         "ColumnInstalled": "Installiert",
-        "ColumnLatest": "Aktuell",
+        "ColumnLatest": "Neueste Version",
         "ColumnStatus": "Status",
         "TabDiscover": "Entdecken",
         "TabManage": "Verwaltung",
-        "Refresh": "Aktualisieren",
+        "Refresh": "Liste aktualisieren",
         "Updated": "Stand %s",
         "CachedNote": "Es werden gecachte Daten angezeigt. Der Marketplace hat gerade nicht wie erwartet geantwortet.",
         "SearchPlaceholder": "Plugins durchsuchen…",
@@ -218,7 +218,7 @@
         "Task_renew": "Im Kundenkonto verlängern",
         "Task_license_claimable": "Für %s haben Sie eine Lizenz, die noch keine Matomo-Instanz nutzt.",
         "Task_view": "Plugin ansehen",
-        "LicensesIntro": "Welche kostenpflichtigen Feinwerk Plugins für diese Matomo-Instanz lizenziert sind. Abos, Rechnungen und Zahlungsdaten verwalten Sie in Ihrem Kundenkonto.",
+        "LicensesIntro": "Diese Liste zeigt, welche kostenpflichtigen Feinwerk Plugins für diese Matomo-Instanz lizenziert sind. Abos, Rechnungen und Zahlungsdaten verwalten Sie in Ihrem Kundenkonto.",
         "LicensesAccount": "Kundenkonto öffnen",
         "LicensesEmpty": "Der Feinwerk Store listet keine kostenpflichtigen Plugins.",
         "NotInstalled": "nicht installiert",
@@ -302,6 +302,11 @@
         "WordPressDetailsFailed": "Der Feinwerk Store hat die Details zu %1$s nicht geliefert: %2$s",
         "LicenseEnded": "Die Lizenz dieser Feinwerk Plugins ist seit mehr als 7 Tagen abgelaufen: %s. Die Plugins arbeiten weiter, Updates gibt es aber nur mit gültiger Lizenz. Bitte verlängern Sie die Lizenz.",
         "LicenseEndedItem": "%1$s (abgelaufen am %2$s, %3$sverlängern%4$s)",
-        "LicenseEndedAdminNote": "Ihr Hauptadministrator kann sie verlängern."
+        "LicenseEndedAdminNote": "Ihr Hauptadministrator kann sie verlängern.",
+        "ChannelStable": "Stabil",
+        "TryAgain": "Erneut versuchen",
+        "FailureTimeout": "Der Server hat nicht rechtzeitig geantwortet. Bitte versuchen Sie es erneut.",
+        "FailureReload": "Sie wurden möglicherweise abgemeldet, oder die Seite ist veraltet. Bitte laden Sie die Seite neu.",
+        "FailureConnection": "Die Verbindung zum Server ist abgebrochen. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut."
     }
 }

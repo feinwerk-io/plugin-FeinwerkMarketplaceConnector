@@ -2,11 +2,16 @@
   <MatomoDialog v-model="opened" @close="$emit('close')">
     <div class="fwmc fwmc-modal uiControl">
       <div v-if="loading" class="loadingPiwik">
-        <img src="plugins/Morpheus/images/loading-blue.gif" alt="" /> Loading…
+        <img src="plugins/Morpheus/images/loading-blue.gif" alt="" />
+        {{ translate('General_Loading') }}
       </div>
 
-      <div v-else-if="errorMessage" class="alert alert-warning">
+      <div v-else-if="errorMessage !== null" class="alert alert-warning">
         {{ translate('FeinwerkMarketplaceConnector_DetailError') }} {{ errorMessage }}
+        <!-- A way out (UI review 2026-11-23, F10). -->
+        <button v-if="slug" type="button" class="btn btn-outline fwmc-retry" @click="open(slug)">
+          {{ translate('FeinwerkMarketplaceConnector_TryAgain') }}
+        </button>
       </div>
 
       <template v-else-if="detail">
@@ -27,13 +32,15 @@
             <span v-else class="fwmc-avatar fwmc-avatar--lg">{{ monogram }}</span>
           </div>
           <div>
-            <h2>{{ detail.display_name }}</h2>
-            <p class="fwmc-sub" v-if="detail.description">{{ detail.description }}</p>
+            <h2 ref="heading" tabindex="-1" class="fwmc-modal-title">{{ detail.display_name }}</h2>
+            <p class="fwmc-sub" v-if="description">{{ description }}</p>
             <p class="fwmc-meta">
               <span class="fwmc-badge" :class="'fwmc-badge--' + detail.tier">
-                {{ detail.tier }}
+                {{ tierLabel(detail.tier) }}
               </span>
-              <span v-if="detail.category" class="fwmc-badge">{{ detail.category }}</span>
+              <span v-if="detail.category" class="fwmc-badge fwmc-badge--category">
+                {{ categoryLabel(detail.category) }}
+              </span>
               <template v-if="latestVersionInfo"> · v{{ latestVersionInfo.version }}
                 <template v-if="latestVersionInfo.matomo_min">
                   · Matomo ≥ {{ latestVersionInfo.matomo_min }}</template>
@@ -119,8 +126,8 @@
 
         <div class="fwmc-modal-columns">
           <div class="fwmc-modal-main">
-            <div v-if="detail.listing && detail.listing.long_description_html"
-                 v-html="detail.listing.long_description_html"></div>
+            <!-- Trusted only because the store sanitizes both fields (html_input strip). -->
+            <div v-if="longDescription" v-html="longDescription"></div>
             <template v-if="screenshots.length">
               <h3>{{ translate('FeinwerkMarketplaceConnector_Screenshots') }}</h3>
               <div class="fwmc-shots">
@@ -181,7 +188,7 @@
                 <template v-if="row.license.valid_until">
                   · {{ translate(
                     'FeinwerkMarketplaceConnector_LicenseUntil',
-                    row.license.valid_until,
+                    formatDay(row.license.valid_until),
                   ) }}
                 </template>
               </span>
@@ -189,7 +196,10 @@
                 v-else-if="row && row.needsLicense && row.trialEndedOn"
                 class="fwmc-badge fwmc-badge--license-missing"
               >
-                {{ translate('FeinwerkMarketplaceConnector_TrialEnded', row.trialEndedOn) }}
+                {{ translate(
+                  'FeinwerkMarketplaceConnector_TrialEnded',
+                  formatDay(row.trialEndedOn),
+                ) }}
               </span>
               <span
                 v-else-if="row && row.needsLicense"
@@ -209,8 +219,8 @@
                 <tbody>
                   <tr v-for="v in detail.versions" :key="v.version">
                     <td>v{{ v.version }}</td>
-                    <td>{{ (v.released_at || '').slice(0, 10) }}</td>
-                    <td>{{ v.channel }}</td>
+                    <td>{{ formatDay(v.released_at) }}</td>
+                    <td>{{ channelLabel(v.channel) }}</td>
                     <td>
                       <template v-if="v.matomo_min">Matomo ≥ {{ v.matomo_min }}</template>
                       <template v-if="v.php_min"> · PHP ≥ {{ v.php_min }}</template>
@@ -332,6 +342,10 @@ import BugReportForm from '../BugReportForm/BugReportForm.vue';
 import InstallForm from '../InstallForm/InstallForm.vue';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
 import trialLabel, { trialRunning } from '../trial';
+import failureText from '../failure';
+import {
+  tierLabel, categoryLabel, channelLabel, formatDay, inAdminLanguage,
+} from '../labels';
 
 export default defineComponent({
   components: {
@@ -389,6 +403,20 @@ export default defineComponent({
     window.removeEventListener('keydown', this.onLightboxKeydown, true);
   },
   computed: {
+    // The store's texts in a German Matomo in German when it sends them (W1): description_de,
+    // listing.long_description_html_de; else the English ones.
+    description(): string {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const d = this.detail as any;
+      return d ? inAdminLanguage(d.description || '', d.description_de) : '';
+    },
+    longDescription(): string {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const listing = (this.detail as any)?.listing;
+      return listing
+        ? inAdminLanguage(listing.long_description_html || '', listing.long_description_html_de)
+        : '';
+    },
     monogram(): string {
       return (this.detail?.display_name || '?').trim().charAt(0).toUpperCase();
     },
@@ -407,7 +435,7 @@ export default defineComponent({
       return !!target?.db_warning;
     },
     trialText(): string {
-      return trialLabel(this.row ? this.row.license : null, (day) => day);
+      return trialLabel(this.row ? this.row.license : null, formatDay);
     },
     // Peter, 2026-11-17 ("3. ja"): during a free trial "Buy a license" stands next to the action.
     buyDuringTrial(): boolean {
@@ -442,6 +470,10 @@ export default defineComponent({
   },
   methods: {
     translate,
+    tierLabel,
+    categoryLabel,
+    channelLabel,
+    formatDay,
     async open(slug: string) {
       this.opened = true;
       this.loading = true;
@@ -468,22 +500,38 @@ export default defineComponent({
           this.detail = payload.data;
           this.stale = !!payload.stale;
           this.errorKind = payload.errorKind || null;
+          this.showTop();
         } else {
           this.errorMessage = payload.error || '';
         }
       } catch (e) {
         if (seq !== this.requestSeq) return;
-        this.errorMessage = String(e);
+        this.errorMessage = failureText(e);
       } finally {
         window.clearTimeout(timer);
         if (seq === this.requestSeq) this.loading = false;
       }
     },
+    // The window starts at the plugin's name (UI review 2026-11-23, F2): Matomo's modalConfirm
+    // focuses the first link of an open modal once it has opened, which scrolled the window into
+    // its text. Focus the heading and scroll to the top after rendering and once the open
+    // animation is over (Materialize: 250 ms).
+    showTop() {
+      const run = () => {
+        const heading = this.$refs.heading as HTMLElement|undefined;
+        if (!heading) return;
+        heading.focus({ preventScroll: true });
+        const modal = heading.closest('.modal') as HTMLElement|null;
+        if (modal) modal.scrollTop = 0;
+      };
+      this.$nextTick(run);
+      window.setTimeout(run, 400);
+    },
     planName(plan: any): string {
-      return Matomo.language === 'de' && plan.name_de ? plan.name_de : plan.name_en;
+      return inAdminLanguage(plan.name_en, plan.name_de);
     },
     planNote(plan: any): string|null {
-      return Matomo.language === 'de' && plan.note_de ? plan.note_de : plan.note_en;
+      return inAdminLanguage(plan.note_en, plan.note_de);
     },
     intervalLabel,
     amount,

@@ -2,7 +2,7 @@
    as Matomo's update page (@CoreUpdater/layout.twig), which has no dark theme: this page brings its own, with the
    values of core/Plugin/ThemeStyles.php. Without login only the command and the hint (superUser false). #}
 <!DOCTYPE html>
-<html data-theme-mode="{{ themeMode }}">
+<html lang="{{ language|default('en') }}" data-theme-mode="{{ themeMode }}">
 <head>
     <meta charset="utf-8">
     <title>Matomo &rsaquo; {{ 'FeinwerkMarketplaceConnector_ConsoleUpdateTitle'|translate }}</title>

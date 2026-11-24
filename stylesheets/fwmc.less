@@ -10,7 +10,8 @@
 @text-body: ~"var(--theme-color-text-light, #374151)";
 @muted: ~"var(--theme-color-text-lighter, #6b7280)";
 @accent: ~"var(--theme-color-link, #4183C4)";
-@line: ~"var(--theme-color-border-alternative, var(--theme-color-border, #e5e7eb))";
+// Matomo 6 deprecates --theme-color-border-alternative as a duplicate of --theme-color-border (UI review, W5).
+@line: ~"var(--theme-color-border, #e5e7eb)";
 @surface: ~"var(--theme-color-background-contrast, #fff)";
 @subtle: ~"var(--theme-color-background-tinyContrast, #f9fafb)";
 @success: #43a047;
@@ -123,15 +124,24 @@
     .fwmc-note a { color: inherit; font-weight: 600; text-decoration: underline; }
 
     // --- Tabs ------------------------------------------------------------
+    // The tab list scrolls inside itself on a narrow screen instead of widening the page (UI review 2026-11-23, F1:
+    // "Aufgaben (1) Entdecken Verwaltung Lizenzen" did not fit 390 px).
+    // A scroll container clips at its padding box: the grey line is an inset shadow (painted under the tabs) and the
+    // active tab's underline lies inside the list, not over a border that would be cut off.
     .fwmc-tabs {
         display: flex; gap: 4px; margin: 16px 0 12px; padding: 0; list-style: none;
-        border-bottom: 2px solid @line;
-        li { margin: 0; }
+        box-shadow: inset 0 -2px 0 @line;
+        overflow-x: auto; overflow-y: hidden; max-width: 100%;
+        li { margin: 0; flex: none; }
         a {
-            display: inline-block; padding: 8px 16px; color: @muted; text-decoration: none;
-            border-bottom: 2px solid transparent; margin-bottom: -2px; font-weight: 600;
+            display: block; padding: 8px 16px; color: @muted; text-decoration: none; white-space: nowrap;
+            border-bottom: 2px solid transparent; font-weight: 600;
         }
         li.active a { color: @text; border-bottom-color: @accent; }
+        @media (max-width: 480px) {
+            gap: 0;
+            a { padding: 8px 10px; }
+        }
     }
 
     // --- Browse: filters + card grid --------------------------------------
@@ -189,6 +199,7 @@
 
     // --- Avatars -----------------------------------------------------------
     .fwmc-avatar {
+        flex: none;   // a long name squeezed it to about 12 px in the Manage table (UI review 2026-11-23, F7)
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -210,13 +221,16 @@
         border-radius: 999px;
         font-size: 11px;
         font-weight: 600;
-        text-transform: capitalize;
+        // No text-transform: the language files carry the right casing ("Nicht installiert", "Mise à jour"); capitalize
+        // turned it into wrong words (UI review 2026-11-23, F4).
     }
 
     // Tier badges (built as `fwmc-badge--${tier}`, tier is "free" or "paid").
     .fwmc-badge--free { .fwmc-tone-gray(); }
 
     .fwmc-badge--paid { .fwmc-tone-blue(); }
+    // The category in the plugin window (UI review 2026-11-23, W3: it had no colour).
+    .fwmc-badge--category { .fwmc-tone-gray(); }
 
     // License badges.
     .fwmc-badge--license-ok { .fwmc-tone-green(); }
@@ -278,6 +292,12 @@
 
     .fwmc-table tbody tr:hover {
         background: @subtle;
+    }
+
+    // Manage on a narrow screen (UI review 2026-11-23, F7): the action column stays in view; the tier and latest-version
+    // columns and the description go (the action button names the version, the window has the rest).
+    @media (max-width: 1000px) {
+        .fwmc-table .fwmc-col-wide, .fwmc-table .fwmc-desc { display: none; }
     }
 
     .fwmc-plugin-cell {
@@ -376,7 +396,16 @@
 
     // --- Bug report form -----------------------------------------------------
     .fwmc-bugreport { flex-basis: 100%; margin-top: 8px; }
-    .fwmc-bugreport-toggle { color: @muted; font-size: 13px; text-decoration: underline; }
+    // A button since the UI review (2026-11-23, F9: aria-expanded), still looking like the quiet link it was.
+    .fwmc-bugreport-toggle {
+        color: @muted; font-size: 13px; text-decoration: underline;
+        background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit;
+    }
+    .fwmc-bugreport-toggle:focus-visible { outline: 2px solid @accent; outline-offset: 2px; }
+    .fwmc-retry { margin-left: 8px; }
+    // The window's heading takes focus only so the window starts at the top (F2); it is no tab stop, so no ring (Chrome
+    // drew one after opening by link).
+    .fwmc-modal-title:focus, .fwmc-modal-title:focus-visible { outline: none; }
     .fwmc-bugreport-form {
         margin-top: 12px; padding: 14px; border: 1px solid @line; border-radius: 4px;
         display: flex; flex-direction: column; gap: 10px; background: @subtle;
@@ -459,7 +488,7 @@
     gap: 6px;
     margin: 16px 0 2px;
     padding: 8px 0 2px;
-    border-top: 1px solid ~"var(--theme-color-border-alternative, var(--theme-color-border, #e3e3e3))";
+    border-top: 1px solid ~"var(--theme-color-border, #e3e3e3)";
     font-size: 12px;
     line-height: 1.4;
     color: ~"var(--theme-color-text-lighter, #646464)";
@@ -814,7 +843,8 @@
     line-height: 30px;
     cursor: pointer;
 
-    &:hover, &:focus-visible { background: fade(@fwmc-orange, 12%); color: @text; }
+    // petrol like the banner (UI review 2026-11-23, W5: it turned orange)
+    &:hover, &:focus-visible { background: fade(@fwmc-petrol, 12%); color: @text; }
   }
 
   @media (max-width: 720px) {

@@ -1,8 +1,13 @@
 <template>
   <div class="fwmc-bugreport">
-    <a href="#" @click.prevent="open = !open" class="fwmc-bugreport-toggle">
+    <button
+      type="button"
+      class="fwmc-bugreport-toggle"
+      :aria-expanded="open ? 'true' : 'false'"
+      @click="open = !open"
+    >
       {{ translate('FeinwerkMarketplaceConnector_ReportBug') }}
-    </a>
+    </button>
 
     <form v-if="open" class="fwmc-bugreport-form" @submit.prevent="submit">
       <label>
@@ -47,6 +52,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { translate } from 'CoreHome';
+import failureText from '../failure';
 
 const MAX_FILES = 3;
 const MAX_BYTES = 4 * 1024 * 1024;
@@ -145,7 +151,7 @@ export default defineComponent({
           this.title = ''; this.description = ''; this.files = [];
         }
       } catch (e) {
-        this.errorMessage = translate('FeinwerkMarketplaceConnector_ReportBugFailed', String(e));
+        this.errorMessage = translate('FeinwerkMarketplaceConnector_ReportBugFailed', failureText(e));
       } finally {
         this.sending = false;
       }

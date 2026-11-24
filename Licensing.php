@@ -258,4 +258,22 @@ final class Licensing
             return false;
         }
     }
+
+    /**
+     * Whether a remembered trial has ended (after its day of grace) within the last $window seconds: then a purchase on
+     * the store website is likely and the hourly task fetches the list again (Tasks::refreshAfterEndedTrial). Never throws.
+     */
+    public static function trialEndedWithin(int $window, int $now): bool
+    {
+        try {
+            foreach (self::ends() as $end) {
+                if (TrialClock::ended($end, $now) && $now - $end <= $window) {
+                    return true;
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        return false;
+    }
 }

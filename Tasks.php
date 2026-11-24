@@ -19,6 +19,45 @@ class Tasks extends \Piwik\Plugin\Tasks
     {
         $this->daily('checkForUpdates', null, self::LOW_PRIORITY);
         $this->hourly('runPendingSwap', null, self::LOW_PRIORITY);
+        $this->hourly('refreshAfterEndedTrial', null, self::LOW_PRIORITY);
+    }
+
+    /** For tests: the current time. */
+    public static ?int $now = null;
+
+    /** How long after a trial's end the list is fetched hourly; later the daily task is enough. */
+    public const ENDED_TRIAL_WINDOW = 30 * 86400;
+
+    /**
+     * Peter, 2026-11-23 ("ja, bau das stündliche Nachladen"): while a trial has ended (within ENDED_TRIAL_WINDOW), fetch the
+     * list every hour, so a purchase on the store website reaches the plugins without a licence check of their own
+     * (they read Licensing) within an hour instead of the next day. Only when connected, not when the list is less than
+     * an hour old; Licensing::sync then clears the trial and posts the licensesChanged event. Never throws.
+     */
+    public function refreshAfterEndedTrial(): void
+    {
+        try {
+            $settings = StaticContainer::get(SystemSettings::class);
+            $url = MarketplaceClientFactory::url();
+            $token = (string) $settings->instanceToken->getValue();
+            $now = self::$now ?? time();
+            if ($url === '' || $token === '' || ! Licensing::trialEndedWithin(self::ENDED_TRIAL_WINDOW, $now)) {
+                return;
+            }
+            $cache = new MarketplaceCache(MarketplaceClientFactory::make($url, $token), new OptionCacheStore());
+            $fetchedAt = $cache->cached()->fetchedAt;
+            if ($fetchedAt !== null && $now - $fetchedAt < 3300) {
+                return;   // fetched within the hour (daily task, Refresh or a click)
+            }
+            $refreshed = $cache->refresh();   // never throws; a failure stays in the cache with its kind
+            if ($refreshed->error === null) {
+                Licensing::sync($refreshed->plugins);
+            } else {
+                MarketplaceLog::failure('the hourly list refresh after an ended trial', new \RuntimeException($refreshed->error));
+            }
+        } catch (\Throwable $e) {
+            MarketplaceLog::failure('the hourly list refresh after an ended trial', $e);
+        }
     }
 
     /** Finish a Matomo major change: retry hourly for a day, then daily, until every plugin is switched. */

@@ -5,11 +5,11 @@
         "ColumnTier": "Tarif",
         "ColumnLicense": "Licence",
         "ColumnInstalled": "Installée",
-        "ColumnLatest": "Dernière",
+        "ColumnLatest": "Dernière version",
         "ColumnStatus": "État",
         "TabDiscover": "Découvrir",
         "TabManage": "Gestion",
-        "Refresh": "Actualiser",
+        "Refresh": "Actualiser la liste",
         "Updated": "Mis à jour : %s",
         "CachedNote": "Affichage des données en cache. Le Marketplace n'a pas répondu comme prévu à l'instant.",
         "SearchPlaceholder": "Rechercher des plugins…",
@@ -302,6 +302,11 @@
         "WordPressDetailsFailed": "La boutique Feinwerk n’a pas envoyé les détails de %1$s : %2$s",
         "LicenseEnded": "La licence de ces plugins Feinwerk a expiré il y a plus de 7 jours : %s. Les plugins continuent de fonctionner, mais les mises à jour nécessitent une licence valide. Veuillez renouveler la licence.",
         "LicenseEndedItem": "%1$s (expirée le %2$s, %3$srenouveler%4$s)",
-        "LicenseEndedAdminNote": "Votre super utilisateur peut la renouveler."
+        "LicenseEndedAdminNote": "Votre super utilisateur peut la renouveler.",
+        "ChannelStable": "Stable",
+        "TryAgain": "Réessayer",
+        "FailureTimeout": "Le serveur n’a pas répondu à temps. Veuillez réessayer.",
+        "FailureReload": "Vous avez peut-être été déconnecté, ou la page n’est plus à jour. Veuillez recharger la page.",
+        "FailureConnection": "La connexion au serveur a été interrompue. Veuillez vérifier votre connexion et réessayer."
     }
 }

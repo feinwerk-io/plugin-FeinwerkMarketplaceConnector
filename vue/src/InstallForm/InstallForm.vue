@@ -12,7 +12,13 @@
     <input type="hidden" name="version" :value="version" />
     <input v-if="activateOnConsole" type="hidden" name="activate" value="0" />
     <input v-if="then" type="hidden" name="fwmc_then" :value="then" />
-    <button type="submit" class="btn" :disabled="busy" :aria-busy="busy" @click="onClick">
+    <button
+      type="submit"
+      :class="quiet ? 'btn btn-outline' : 'btn'"
+      :disabled="busy"
+      :aria-busy="busy"
+      @click="onClick"
+    >
       {{ busy ? translate('FeinwerkMarketplaceConnector_Working') : label }}
     </button>
     <span
@@ -26,6 +32,7 @@
     <Teleport to="body">
       <div
         v-if="confirming"
+        ref="dialog"
         class="fwmc fwmc-dbdialog"
         role="alertdialog"
         aria-modal="true"
@@ -86,7 +93,7 @@
             <button type="button" class="btn" :disabled="large && !acknowledged" @click="submit">
               {{ confirmLabel }}
             </button>
-            <button type="button" class="btn btn-flat" @click="confirming = false">
+            <button ref="cancel" type="button" class="btn btn-outline" @click="confirming = false">
               {{ translate('FeinwerkMarketplaceConnector_DbChangeCancel') }}
             </button>
           </div>
@@ -100,6 +107,7 @@
 import { defineComponent } from 'vue';
 import { translate } from 'CoreHome';
 import { addActionContext, claimSubmit } from '../actionContext';
+import DialogFocus from '../dialogFocus';
 
 interface DbChange { migrations: string[]; columns: string[]; note: string|null }
 interface InstanceInfo {
@@ -112,6 +120,8 @@ interface InstanceInfo {
 // checkbox. Only the dialog's button installs.
 export default defineComponent({
   props: {
+    // A quiet outline button where many of them stand together (Manage: Install; UI review, W6).
+    quiet: { type: Boolean, default: false },
     actionUrl: { type: String, required: true },
     nonce: { type: String, required: true },
     slug: { type: String, required: true },
@@ -278,25 +288,29 @@ export default defineComponent({
       (this.$refs.form as HTMLFormElement).submit();
     },
   },
+  // A dialog that is still open when the component goes leaves no listener behind.
   beforeUnmount() {
-    const { onKey } = this as any;
-    if (onKey) {
-      document.removeEventListener('keydown', onKey, true);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const trap = (this as any).focusTrap;
+    if (trap) trap.release(false);
   },
   watch: {
+    // Focus into the dialog, Tab inside, Escape closes, focus back to the button (F9).
     confirming(open: boolean) {
-      const onKey = (this as any).onKey || ((e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          e.stopPropagation();
-          this.confirming = false;
-        }
-      });
-      (this as any).onKey = onKey;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const self = this as any;
+      self.focusTrap = self.focusTrap || new DialogFocus();
       if (open) {
-        document.addEventListener('keydown', onKey, true);
+        this.$nextTick(() => {
+          const dialog = this.$refs.dialog as HTMLElement|undefined;
+          if (dialog) {
+            self.focusTrap.open(dialog, this.$refs.cancel as HTMLElement, () => {
+              this.confirming = false;
+            });
+          }
+        });
       } else {
-        document.removeEventListener('keydown', onKey, true);
+        self.focusTrap.release();
       }
     },
   },

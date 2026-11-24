@@ -26,6 +26,9 @@ class Menu extends \Piwik\Plugin\Menu
         if (method_exists($menu, 'registerMenuIcon')) {
             $menu->registerMenuIcon(self::SECTION, 'icon-marketplace');
         }
+        // The section itself as an entry: only then does Matomo copy the icon into the menu (MenuAbstract::addItem with no
+        // sub-entry, as core's PrivacyManager does; Page Filter Report, 2026-11-24). Order 3 = the section's place.
+        $menu->addItem(self::SECTION, null, [], 3);
         $menu->addItem(self::SECTION, $this->tasksTitle(), $this->urlForAction('tasks', self::CLEAN), 3);
         $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabDiscover'), $this->urlForAction('index', self::CLEAN), 4);
         $menu->addItem(self::SECTION, Piwik::translate('FeinwerkMarketplaceConnector_TabManage'), $this->urlForAction('manage', self::CLEAN), 5);

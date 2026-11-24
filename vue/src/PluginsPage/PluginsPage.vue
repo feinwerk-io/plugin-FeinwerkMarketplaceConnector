@@ -6,11 +6,13 @@
       </div>
       <div class="fwmc-head-actions" v-if="!error && isConnected">
         <span class="fwmc-meta" v-if="lastUpdated">
-          {{ translate('FeinwerkMarketplaceConnector_Updated', lastUpdated) }}
+          {{ translate('FeinwerkMarketplaceConnector_Updated', formatMoment(lastUpdated)) }}
         </span>
         <form method="post" :action="refreshUrl" @submit="onFormSubmit($event, 'refresh')">
           <input type="hidden" name="nonce" :value="formNonce" />
-          <button type="submit" class="btn" :disabled="busyForm === 'refresh'">
+          <!-- A quiet secondary button (UI review 2026-11-23, F6): the screen keeps its one filled
+               button for the task at hand; Matomo's own update check sits right above it. -->
+          <button type="submit" class="btn btn-outline" :disabled="busyForm === 'refresh'">
             {{ busyForm === 'refresh'
               ? translate('FeinwerkMarketplaceConnector_Working')
               : translate('FeinwerkMarketplaceConnector_Refresh') }}
@@ -259,6 +261,7 @@ import PromoBanner from '../PromoBanner/PromoBanner.vue';
 import StarterCard from '../StarterCard/StarterCard.vue';
 import DetailModal from '../DetailModal/DetailModal.vue';
 import FeedbackBar from '../FeedbackBar/FeedbackBar.vue';
+import { formatMoment } from '../labels';
 
 export default defineComponent({
   components: {
@@ -366,7 +369,20 @@ export default defineComponent({
   },
   mounted() {
     if (this.openSlug) {
-      this.detailSlug = this.openSlug;
+      // Matomo moves the page's notices into a modal that is open while it places them
+      // (Notifications.store parseNotificationDivs, on DOM ready): the window opens after that,
+      // so the HTTPS or update notices stay on the page (UI review 2026-11-23, W2).
+      const slug = this.openSlug;
+      let waited = 0;
+      const openWhenPlaced = () => {
+        if (document.querySelector('[data-role="notification"]') && waited < 3000) {
+          waited += 50;
+          window.setTimeout(openWhenPlaced, 50);
+          return;
+        }
+        if (this.detailSlug === null) this.detailSlug = slug;
+      };
+      openWhenPlaced();
     }
     this.tidyUrl();
     window.addEventListener('pageshow', this.onPageShow);
@@ -435,6 +451,7 @@ export default defineComponent({
     },
   },
   methods: {
+    formatMoment,
     translate,
     // The plugin window gets its own history entry (same address), so the browser's Back button
     // closes it instead of leaving the screen.
