@@ -310,6 +310,8 @@
         "FailureConnection": "The connection to the server broke. Please check your connection and try again.",
         "PlanBuy": "Buy this plan",
         "PriceFromVat": "from %1$s € / %2$s incl. VAT",
-        "PlanVat": "incl. %1$s VAT · %2$s € excl. VAT"
+        "PlanVat": "incl. %1$s VAT · %2$s € excl. VAT",
+        "NoAccountNext": "After connecting you can buy plugins and test them for free.",
+        "TrialPitch": "Test it free and without payment details. You buy a license only if you want to keep the plugin."
     }
 }

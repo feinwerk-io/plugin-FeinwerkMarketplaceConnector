@@ -33,6 +33,10 @@ use Piwik\Updater;
 
 class Controller extends \Piwik\Plugin\ControllerAdmin
 {
+    /** The result notice of an action (install, update, licence); the second asks to connect a customer account. */
+    private const RESULT_NOTICE = 'FeinwerkMarketplaceConnector_result';
+    private const RESULT_NOTICE_CONNECT = 'FeinwerkMarketplaceConnector_resultConnect';
+
     /** "Update several at once": its own nonce (every step verifies it, the finish spends it) and its results. */
     private const BATCH_NONCE = 'FeinwerkMarketplaceConnector.batch';
 
@@ -178,6 +182,7 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
             'activateUrl' => $wordpress ? '' : self::activateUrl(),
             'offlineDocsUrl' => MarketplaceEndpoint::offlineDocsUrl(MarketplaceClientFactory::url(), $this->adminLang()),
             'openSlug' => $openSlug,
+            'windowNotice' => $openSlug !== '' ? $this->takeResultNotice() : null,
             'initialTab' => $tab,
             // What the page shows, for the check when it gets the focus again (ScreenState, backlog 13).
             'screenState' => $connected ? ScreenState::fingerprint() : '',
@@ -1020,8 +1025,9 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
                 'no_account' => ['FeinwerkMarketplaceConnector_BuyNoAccount', Notification::CONTEXT_WARNING],
             ][$e->refusal] ?? null;
             if ($known !== null) {
-                // BuyNoAccount names no plugin, so it is translated without arguments.
-                $this->notify(Piwik::translate($known[0], $e->refusal === 'no_account' ? [] : [$name]), $known[1]);
+                // BuyNoAccount names no plugin, so it is translated without arguments; it offers the Connect button.
+                $this->notify(Piwik::translate($known[0], $e->refusal === 'no_account' ? [] : [$name]), $known[1],
+                    $e->refusal === 'no_account' ? self::RESULT_NOTICE_CONNECT : self::RESULT_NOTICE);
 
                 return;
             }
@@ -1404,12 +1410,39 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         NotificationManager::notify(FeinwerkMarketplaceConnector::NOTICE_ACTIVATE.'_'.$installed, $notification);
     }
 
-    private function notify(string $message, string $context): void
+    private function notify(string $message, string $context, string $id = self::RESULT_NOTICE): void
     {
         $notification = new Notification($message);
         $notification->context = $context;
         $notification->type = Notification::TYPE_TRANSIENT;
-        NotificationManager::notify('FeinwerkMarketplaceConnector_result', $notification);
+        NotificationManager::notify($id, $notification);
+    }
+
+    /**
+     * The result of the last action, for the plugin window the screen reopens (Peter, 2026-11-26: "der Klick auf Buy a
+     * License lädt einfach nur das Overlay neu"): since 5.9.0 the window waits until Matomo placed the page's notices, so
+     * they stayed behind it and a refused purchase looked like nothing happened. Taken out of Matomo's queue, so it shows
+     * once, inside the window: {context, message (plain text), connect (offer the Connect button)}. Null without one.
+     *
+     * @return array{context: string, message: string, connect: bool}|null
+     */
+    private function takeResultNotice(): ?array
+    {
+        try {
+            $all = NotificationManager::getAllNotificationsToDisplay();
+            foreach ([self::RESULT_NOTICE => false, self::RESULT_NOTICE_CONNECT => true] as $id => $connect) {
+                $notification = $all[$id] ?? null;
+                if ($notification instanceof Notification) {
+                    NotificationManager::cancel($id);
+                    $message = (string) $notification->message;
+
+                    return ['context' => (string) $notification->context, 'message' => $notification->raw ? strip_tags($message) : $message, 'connect' => $connect];
+                }
+            }
+        } catch (\Throwable $e) {
+        }
+
+        return null;
     }
 
     /** @return array{url: string, token: string} */

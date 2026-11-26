@@ -242,6 +242,8 @@
       :buy-url="buyUrl"
       :trial-url="trialUrl"
       :licensing-available="licensingOn"
+      :notice="detailSlug && detailSlug === openSlug ? pageNotice : null"
+      :connect-url="connectUrl"
       @close="closeDetail"
     />
   </div>
@@ -330,6 +332,8 @@ export default defineComponent({
     licensingAvailable: { type: [Boolean, String], default: false },
     offlineDocsUrl: { type: String, default: '' },
     openSlug: { type: String, default: '' },
+    // The last action's result for the window opened with the page (Controller::takeResultNotice).
+    windowNotice: { type: Object, default: null },
     // The tab to open after an action (fwmc_tab, Controller::backToScreen).
     initialTab: { type: String, default: '' },
     claimUrl: { type: String, default: '' },
@@ -354,6 +358,9 @@ export default defineComponent({
   },
   data() {
     return {
+      // Shown once, in the window the page opens; gone when that window closes.
+      pageNotice: this.windowNotice as
+        { context: string, message: string, connect: boolean }|null,
       // The server says which tab (one action per tab); index#verwaltung is an old bookmark.
       tab: (window.location.hash === `#${TAB_MANAGE}` && (this.initialTab || 'entdecken') === 'entdecken')
         ? TAB_MANAGE : (this.initialTab || 'entdecken'),
@@ -471,6 +478,7 @@ export default defineComponent({
       }
     },
     closeDetail() {
+      this.pageNotice = null;
       this.detailSlug = null;
       const { state } = window.history;
       if (state && state.fwmcOpen) {

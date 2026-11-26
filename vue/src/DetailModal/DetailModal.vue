@@ -1,6 +1,26 @@
 <template>
   <MatomoDialog v-model="opened" @close="$emit('close')">
     <div class="fwmc fwmc-modal uiControl">
+      <!-- What the last action here answered (e.g. the store refused a purchase), at the top of the
+           window instead of behind it (Peter, 2026-11-26). -->
+      <div v-if="notice && notice.message" class="alert fwmc-window-notice" :class="noticeClass">
+        <p>{{ notice.message }}</p>
+        <!-- Buying and the free trial both need the customer account (store, 2026-11-26). -->
+        <p v-if="notice.connect">
+          {{ translate('FeinwerkMarketplaceConnector_NoAccountNext') }}
+        </p>
+        <form
+          v-if="notice.connect && connectUrl"
+          method="post"
+          :action="connectUrl"
+          @submit="onConnectSubmit"
+        >
+          <input type="hidden" name="nonce" :value="nonce" />
+          <button type="submit" class="btn">
+            {{ translate('FeinwerkMarketplaceConnector_ConnectButton') }}
+          </button>
+        </form>
+      </div>
       <div v-if="loading" class="loadingPiwik">
         <img src="plugins/Morpheus/images/loading-blue.gif" alt="" />
         {{ translate('General_Loading') }}
@@ -71,14 +91,22 @@
                 :nonce="nonce"
                 :slug="slug"
               />
+              <!-- One filled action: the free trial when there is one, buying as the quiet second
+                   button (the plan cards buy directly; Peter, 2026-11-26: "2. ja"). -->
               <template v-else-if="cta === 'buyhere'">
-                <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="slug" />
                 <LicenseActions
-                  v-if="row && row.trialAvailable && trialUrl"
+                  v-if="trialOffered"
                   kind="trial"
                   :url="trialUrl"
                   :nonce="nonce"
                   :slug="slug"
+                />
+                <LicenseActions
+                  kind="buy"
+                  :url="buyUrl"
+                  :nonce="nonce"
+                  :slug="slug"
+                  :quiet="trialOffered"
                 />
               </template>
               <a
@@ -121,6 +149,11 @@
                 :slug="slug"
               />
             </div>
+            <!-- Trying comes before paying (Peter, 2026-11-26: "anstatt 'Lizenz kaufen' sollte der
+                 Marketplace Connector die Testphase bewerben"). -->
+            <p v-if="cta === 'buyhere' && trialOffered" class="fwmc-trial-pitch">
+              {{ translate('FeinwerkMarketplaceConnector_TrialPitch') }}
+            </p>
           </div>
         </div>
 
@@ -264,14 +297,22 @@
               :nonce="nonce"
               :slug="slug"
             />
+            <!-- One filled action: the free trial when there is one, buying as the quiet second
+                 button (the plan cards buy directly; Peter, 2026-11-26: "2. ja"). -->
             <template v-else-if="cta === 'buyhere'">
-              <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="slug" />
               <LicenseActions
-                v-if="row && row.trialAvailable && trialUrl"
+                v-if="trialOffered"
                 kind="trial"
                 :url="trialUrl"
                 :nonce="nonce"
                 :slug="slug"
+              />
+              <LicenseActions
+                kind="buy"
+                :url="buyUrl"
+                :nonce="nonce"
+                :slug="slug"
+                :quiet="trialOffered"
               />
             </template>
             <a
@@ -367,6 +408,12 @@ export default defineComponent({
   emits: ['close'],
   props: {
     slug: { type: String, default: null },
+    // {context, message, connect} from the page (Controller::takeResultNotice), or null.
+    notice: {
+      type: Object as () => { context: string, message: string, connect: boolean }|null,
+      default: null,
+    },
+    connectUrl: { type: String, default: '' },
     row: { type: Object as () => any, default: null },
     nonce: { type: String, required: true },
     // Base URLs for the install/update actions, built server-side with linkTo()
@@ -461,6 +508,16 @@ export default defineComponent({
       };
       if (wordpress && !wordpressAvailable.includes(this.slug)) return false;
       return this.cta === 'buyhere' || this.buyDuringTrial;
+    },
+    noticeClass(): string {
+      const context = this.notice?.context || 'info';
+      return {
+        error: 'alert-danger', warning: 'alert-warning', success: 'alert-success',
+      }[context] || 'alert-info';
+    },
+    // The store offers a free trial of this plugin here.
+    trialOffered(): boolean {
+      return !!(this.row && this.row.trialAvailable && this.trialUrl);
     },
     // A bought licence is active (a row carries only an active one, UpdateMapper): the plans
     // are information only.
@@ -606,10 +663,16 @@ export default defineComponent({
         self.topGuard = null;
       }
     },
-    // Only with an id from a store that offers the plan checkout (store, 2026-11-24).
+    onConnectSubmit(event: Event) {
+      if (!claimSubmit()) {
+        event.preventDefault();
+      }
+    },
+    // Only with an id from a store that offers the plan checkout (store, 2026-11-24), and not
+    // for a plan the store lists but does not sell yet (`buyable: false`; missing = true).
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     planCheckout(plan: any): boolean {
-      return this.canBuyPlans && Number.isInteger(plan.id) && plan.id > 0;
+      return this.canBuyPlans && Number.isInteger(plan.id) && plan.id > 0 && plan.buyable !== false;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onPlanSubmit(event: Event, plan: any) {

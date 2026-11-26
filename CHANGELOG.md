@@ -1,5 +1,17 @@
 # Changelog
 
+## 5.10.1
+
+- When the Feinwerk store refuses a purchase, the plugin window says why at its top instead of reopening without a
+  word (since 5.9.0 the message stayed behind the window). A Matomo that is connected with a typed-in token but not
+  with a customer account gets the button "Connect with Feinwerk account" right there: buying and the free trial
+  need the account.
+- When a free trial is offered, the window says that testing is free and needs no payment details, and that a license
+  is bought only to keep the plugin.
+- In the window of a plugin you do not own yet, the free trial is the one highlighted action when there is one;
+  "Buy a license" is the quieter button next to it, and the plans below lead straight to their checkout.
+- A plan the Feinwerk store lists but does not sell yet is shown as information, without a buy link.
+
 ## 5.10.0
 
 - In the plugin window a click on a plan opens the checkout of exactly that plan on the Feinwerk store, for this

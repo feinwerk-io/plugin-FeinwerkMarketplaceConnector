@@ -8,7 +8,13 @@
   >
     <input type="hidden" name="nonce" :value="nonce" />
     <input type="hidden" name="slug" :value="slug" />
-    <button type="submit" class="btn" :title="hint" :disabled="busy" :aria-busy="busy">
+    <button
+      type="submit"
+      :class="quiet ? 'btn btn-outline' : 'btn'"
+      :title="hint"
+      :disabled="busy"
+      :aria-busy="busy"
+    >
       {{ busy ? translate('FeinwerkMarketplaceConnector_Working') : label }}
     </button>
   </form>
@@ -39,6 +45,8 @@ export default defineComponent({
     url: { type: String, required: true },
     nonce: { type: String, required: true },
     slug: { type: String, required: true },
+    // The second of two actions: an outline button (the window's buy next to its trial).
+    quiet: { type: Boolean, default: false },
   },
   inject: {
     inWindow: { from: 'fwmcInWindow', default: false },

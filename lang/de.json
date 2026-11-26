@@ -310,6 +310,8 @@
         "FailureConnection": "Die Verbindung zum Server ist abgebrochen. Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
         "PlanBuy": "Diesen Plan kaufen",
         "PriceFromVat": "ab %1$s € / %2$s inkl. MwSt.",
-        "PlanVat": "inkl. %1$s MwSt. · %2$s € zzgl. MwSt."
+        "PlanVat": "inkl. %1$s MwSt. · %2$s € zzgl. MwSt.",
+        "NoAccountNext": "Danach können Sie Plugins kaufen und kostenlos testen.",
+        "TrialPitch": "Testen Sie kostenlos und ohne Zahlungsdaten. Eine Lizenz kaufen Sie erst, wenn Sie das Plugin behalten möchten."
     }
 }

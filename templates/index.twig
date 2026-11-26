@@ -31,6 +31,7 @@
     licensing-available="{{ licensingAvailable ? 'true' : 'false' }}"
     offline-docs-url="{{ offlineDocsUrl|default('') }}"
     open-slug="{{ openSlug|default('') }}"
+    window-notice="{{ windowNotice|default(null)|json_encode }}"
     initial-tab="{{ initialTab|default('') }}"
     claim-url="{{ linkTo({'action':'claimLicense','fwmc_tab':null,'fwmc_open':null}) }}"
     buy-url="{{ linkTo({'action':'buy','fwmc_tab':null,'fwmc_open':null}) }}"

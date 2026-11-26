@@ -310,6 +310,8 @@
         "FailureConnection": "La connessione al server si è interrotta. Verifichi la connessione e riprovi.",
         "PlanBuy": "Acquista questo piano",
         "PriceFromVat": "da %1$s € / %2$s IVA inclusa",
-        "PlanVat": "IVA %1$s inclusa · %2$s € IVA esclusa"
+        "PlanVat": "IVA %1$s inclusa · %2$s € IVA esclusa",
+        "NoAccountNext": "Dopo potrà acquistare i plugin e provarli gratuitamente.",
+        "TrialPitch": "Lo provi gratis e senza dati di pagamento. Acquista una licenza solo se desidera tenere il plugin."
     }
 }

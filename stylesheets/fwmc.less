@@ -346,6 +346,12 @@
     // The text next to the picture may shrink below its widest line (the action with its badge), so it wraps instead of
     // cutting the window off on the right (UI review 2026-11-26, F1).
     .fwmc-modal-headtext { flex: 1 1 auto; min-width: 0; }
+    .fwmc-trial-pitch { margin: 4px 0 0; color: @muted; font-size: 13px; }
+    .fwmc-window-notice { margin: 0 0 16px;
+        p { margin: 0 0 8px; } p:last-of-type { margin-bottom: 0; }
+        form { margin: 10px 0 0; }
+        // a long label wraps inside the button on a phone instead of running out of it
+        .btn { white-space: normal; height: auto; line-height: 1.4; padding-top: 8px; padding-bottom: 8px; max-width: 100%; } }
     .fwmc-card-media--modal { width: 154px; height: 96px; flex: 0 0 154px; border: 1px solid @line; border-radius: 4px; }
     // On a phone the window is about 310 px wide: picture above the text at its own size, the full width for the text
     // (Matomo's .modal-content keeps its padding), plans and licence state before the long store text (UI review
@@ -420,6 +426,8 @@
         display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     .fwmc-cta form { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: 100%; }
     .fwmc-cta--top { margin-top: 12px; }
+    // Two licence actions side by side (trial, then buy) keep a gap, also when they wrap (2026-11-26).
+    .fwmc-cta .fwmc-license-action { margin: 0 8px 8px 0; }
     .fwmc-buy-link { color: @accent; font-weight: 700; }
 
     // --- Bug report form -----------------------------------------------------
