@@ -117,6 +117,8 @@
     .fwmc-note-action { display: inline-block; margin: 0 0 0 12px; vertical-align: middle; }
     // "Use an existing license" and "Buy a license" sit in the action cell like Install/Update.
     .fwmc-license-action { display: inline-block; margin: 0; }
+    // Several licence actions in one table cell (Licenses tab): one gap, also when they wrap.
+    .fwmc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
     // Matomo's button has a fixed height: a label that wraps loses its second line ("BUY A", rc1 RC-F2 at 1400 px).
     // One line; the action cell takes the width and the description column wraps instead.
     .fwmc-license-action .btn, .fwmc-install .btn { white-space: nowrap; }
@@ -424,10 +426,12 @@
     }
     .fwmc-modal-foot { border-top: 1px solid @line; margin-top: 16px; padding-top: 12px;
         display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    // Every action row keeps one gap between its buttons and badges, also when they wrap (Peter, 2026-11-26: "Kein
+    // Abstand zwischen den Buttons"): install or update next to buy, trial next to buy.
+    .fwmc-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
     .fwmc-cta form { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: 100%; }
     .fwmc-cta--top { margin-top: 12px; }
-    // Two licence actions side by side (trial, then buy) keep a gap, also when they wrap (2026-11-26).
-    .fwmc-cta .fwmc-license-action { margin: 0 8px 8px 0; }
+
     .fwmc-buy-link { color: @accent; font-weight: 700; }
 
     // --- Bug report form -----------------------------------------------------

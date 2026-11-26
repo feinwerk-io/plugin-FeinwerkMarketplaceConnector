@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.10.2
+
+- Buttons next to each other keep a gap everywhere: install or update next to "Buy a license" in the plugin window,
+  and the trial and buy buttons on the Licenses tab, where the free trial now also comes first.
+- When the Feinwerk store offers no free trial for a plugin, the plugin window says why where you can change it: the
+  e-mail address of your customer account is not confirmed yet (with a link to the account), this Matomo is not
+  connected with your account, or the trial has already been used here.
+
 ## 5.10.1
 
 - When the Feinwerk store refuses a purchase, the plugin window says why at its top instead of reopening without a

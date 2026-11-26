@@ -62,10 +62,12 @@
                 :nonce="nonce"
                 :slug="row.slug"
               />
-              <template
+              <!-- The free trial first and filled when there is one, buying as the quiet second
+                   button, as in the plugin window (Peter, 2026-11-26). -->
+              <div
                 v-else-if="licensingAvailable && (row.needsLicense || trialRunning(row.license))"
+                class="fwmc-actions"
               >
-                <LicenseActions kind="buy" :url="buyUrl" :nonce="nonce" :slug="row.slug" />
                 <LicenseActions
                   v-if="row.trialAvailable && trialUrl"
                   kind="trial"
@@ -73,7 +75,14 @@
                   :nonce="nonce"
                   :slug="row.slug"
                 />
-              </template>
+                <LicenseActions
+                  kind="buy"
+                  :url="buyUrl"
+                  :nonce="nonce"
+                  :slug="row.slug"
+                  :quiet="!!(row.trialAvailable && trialUrl)"
+                />
+              </div>
             </td>
           </tr>
         </tbody>

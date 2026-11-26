@@ -154,6 +154,15 @@
             <p v-if="cta === 'buyhere' && trialOffered" class="fwmc-trial-pitch">
               {{ translate('FeinwerkMarketplaceConnector_TrialPitch') }}
             </p>
+            <!-- No trial here: why, when the admin can change it (store field
+                 trial_unavailable_reason, 2026-11-26). -->
+            <p v-else-if="cta === 'buyhere' && trialReasonText" class="fwmc-trial-pitch">
+              {{ trialReasonText }}
+              <a v-if="trialReasonAccount" :href="trialReasonAccount" target="_blank"
+                 rel="noreferrer noopener">
+                {{ translate('FeinwerkMarketplaceConnector_LicensesAccount') }} ↗
+              </a>
+            </p>
           </div>
         </div>
 
@@ -414,6 +423,7 @@ export default defineComponent({
       default: null,
     },
     connectUrl: { type: String, default: '' },
+    accountUrl: { type: String, default: '' },
     row: { type: Object as () => any, default: null },
     nonce: { type: String, required: true },
     // Base URLs for the install/update actions, built server-side with linkTo()
@@ -514,6 +524,19 @@ export default defineComponent({
       return {
         error: 'alert-danger', warning: 'alert-warning', success: 'alert-success',
       }[context] || 'alert-info';
+    },
+    // Why the store offers no trial here, as one sentence, only where the admin can act on it.
+    trialReasonText(): string {
+      const key = ({
+        email_unverified: 'TrialReasonEmailUnverified',
+        no_account: 'TrialReasonNoAccount',
+        trial_used: 'TrialReasonUsed',
+      } as Record<string, string>)[String(this.detail?.trial_unavailable_reason || '')];
+      return key ? translate(`FeinwerkMarketplaceConnector_${key}`) : '';
+    },
+    trialReasonAccount(): string {
+      return this.detail?.trial_unavailable_reason === 'email_unverified'
+        && /^https?:\/\//i.test(this.accountUrl) ? this.accountUrl : '';
     },
     // The store offers a free trial of this plugin here.
     trialOffered(): boolean {

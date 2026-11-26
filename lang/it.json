@@ -312,6 +312,9 @@
         "PriceFromVat": "da %1$s € / %2$s IVA inclusa",
         "PlanVat": "IVA %1$s inclusa · %2$s € IVA esclusa",
         "NoAccountNext": "Dopo potrà acquistare i plugin e provarli gratuitamente.",
-        "TrialPitch": "Lo provi gratis e senza dati di pagamento. Acquista una licenza solo se desidera tenere il plugin."
+        "TrialPitch": "Lo provi gratis e senza dati di pagamento. Acquista una licenza solo se desidera tenere il plugin.",
+        "TrialReasonEmailUnverified": "Confermi l’indirizzo e-mail del Suo account cliente Feinwerk per provare questo plugin gratuitamente.",
+        "TrialReasonNoAccount": "Colleghi questo Matomo al Suo account Feinwerk per provare questo plugin gratuitamente.",
+        "TrialReasonUsed": "La prova gratuita di questo plugin è già stata utilizzata per questo Matomo."
     }
 }

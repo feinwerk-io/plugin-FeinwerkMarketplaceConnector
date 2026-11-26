@@ -244,6 +244,7 @@
       :licensing-available="licensingOn"
       :notice="detailSlug && detailSlug === openSlug ? pageNotice : null"
       :connect-url="connectUrl"
+      :account-url="accountUrl"
       @close="closeDetail"
     />
   </div>

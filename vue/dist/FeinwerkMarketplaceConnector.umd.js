@@ -140,7 +140,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PluginsPage/PluginsPage.vue?vue&type=template&id=5880e55c
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PluginsPage/PluginsPage.vue?vue&type=template&id=420378d0
 
 const _hoisted_1 = ["data-tab"];
 const _hoisted_2 = {
@@ -439,10 +439,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "licensing-available": _ctx.licensingOn,
     notice: _ctx.detailSlug && _ctx.detailSlug === _ctx.openSlug ? _ctx.pageNotice : null,
     "connect-url": _ctx.connectUrl,
+    "account-url": _ctx.accountUrl,
     onClose: _ctx.closeDetail
-  }, null, 8, ["slug", "row", "nonce", "install-url", "update-url", "activate-url", "claim-url", "buy-url", "trial-url", "licensing-available", "notice", "connect-url", "onClose"])], 8, _hoisted_1);
+  }, null, 8, ["slug", "row", "nonce", "install-url", "update-url", "activate-url", "claim-url", "buy-url", "trial-url", "licensing-available", "notice", "connect-url", "account-url", "onClose"])], 8, _hoisted_1);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/PluginsPage/PluginsPage.vue?vue&type=template&id=5880e55c
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/PluginsPage/PluginsPage.vue?vue&type=template&id=420378d0
 
 // EXTERNAL MODULE: external "CoreHome"
 var external_CoreHome_ = __webpack_require__("19dc");
@@ -2569,86 +2570,89 @@ const PREFIX = 'FeinwerkMarketplaceConnector_';
 TaskListvue_type_script_lang_ts.render = TaskListvue_type_template_id_e5935c2a_render
 
 /* harmony default export */ var TaskList = (TaskListvue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/LicenseTable/LicenseTable.vue?vue&type=template&id=3aa7d816
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/LicenseTable/LicenseTable.vue?vue&type=template&id=6f7bc49f
 
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_1 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_1 = {
   class: "fwmc-licenses"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_2 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_2 = {
   class: "fwmc-licenses-intro"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_3 = ["href"];
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_4 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_3 = ["href"];
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_4 = {
   key: 0,
   class: "fwmc-empty"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_5 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_5 = {
   key: 1,
   class: "fwmc-tablewrap"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_6 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_6 = {
   class: "fwmc-table entityTable"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_7 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, null, -1);
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_8 = ["onClick"];
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_9 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_7 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, null, -1);
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_8 = ["onClick"];
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_9 = {
   key: 0,
   class: "fwmc-badge fwmc-badge--trial"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_10 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_10 = {
   key: 1,
   class: "fwmc-badge fwmc-badge--license-ok"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_11 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_11 = {
   key: 2,
   class: "fwmc-badge fwmc-badge--license-missing"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_12 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_12 = {
   key: 3,
   class: "fwmc-badge fwmc-badge--license-missing"
 };
-const LicenseTablevue_type_template_id_3aa7d816_hoisted_13 = {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_13 = {
   key: 4
 };
-function LicenseTablevue_type_template_id_3aa7d816_render(_ctx, _cache, $props, $setup, $data, $options) {
+const LicenseTablevue_type_template_id_6f7bc49f_hoisted_14 = {
+  key: 1,
+  class: "fwmc-actions"
+};
+function LicenseTablevue_type_template_id_6f7bc49f_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_LicenseActions = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("LicenseActions");
-  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", LicenseTablevue_type_template_id_3aa7d816_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", LicenseTablevue_type_template_id_3aa7d816_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesIntro')) + " ", 1), _ctx.safeAccountUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+  return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", LicenseTablevue_type_template_id_6f7bc49f_hoisted_1, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", LicenseTablevue_type_template_id_6f7bc49f_hoisted_2, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesIntro')) + " ", 1), _ctx.safeAccountUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
     key: 0,
     href: _ctx.safeAccountUrl,
     target: "_blank",
     rel: "noreferrer noopener"
-  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesAccount')) + " ↗ ", 9, LicenseTablevue_type_template_id_3aa7d816_hoisted_3)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), !_ctx.paid.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", LicenseTablevue_type_template_id_3aa7d816_hoisted_4, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesEmpty')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", LicenseTablevue_type_template_id_3aa7d816_hoisted_5, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("table", LicenseTablevue_type_template_id_3aa7d816_hoisted_6, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ColumnPlugin')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ColumnLicense')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ColumnInstalled')), 1), LicenseTablevue_type_template_id_3aa7d816_hoisted_7])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.paid, row => {
+  }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesAccount')) + " ↗ ", 9, LicenseTablevue_type_template_id_6f7bc49f_hoisted_3)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), !_ctx.paid.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", LicenseTablevue_type_template_id_6f7bc49f_hoisted_4, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesEmpty')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", LicenseTablevue_type_template_id_6f7bc49f_hoisted_5, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("table", LicenseTablevue_type_template_id_6f7bc49f_hoisted_6, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("thead", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tr", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ColumnPlugin')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ColumnLicense')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("th", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ColumnInstalled')), 1), LicenseTablevue_type_template_id_6f7bc49f_hoisted_7])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.paid, row => {
     return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("tr", {
       key: row.slug
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
       type: "button",
       class: "fwmc-link-button",
       onClick: $event => _ctx.$emit('open', row.slug)
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.displayName), 9, LicenseTablevue_type_template_id_3aa7d816_hoisted_8)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [row.license && _ctx.trialText(row) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_3aa7d816_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.trialText(row)), 1)) : row.license ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_3aa7d816_hoisted_10, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseActive')) + " ", 1), row.license.valid_until ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.displayName), 9, LicenseTablevue_type_template_id_6f7bc49f_hoisted_8)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [row.license && _ctx.trialText(row) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_6f7bc49f_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.trialText(row)), 1)) : row.license ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_6f7bc49f_hoisted_10, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseActive')) + " ", 1), row.license.valid_until ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 0
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseUntil', _ctx.date(row.license.valid_until))), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : row.needsLicense && row.trialEndedOn ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_3aa7d816_hoisted_11, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TrialEnded', _ctx.date(row.trialEndedOn))), 1)) : row.needsLicense ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_3aa7d816_hoisted_12, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoLicense')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_3aa7d816_hoisted_13, "-"))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.installedVersion || _ctx.translate('FeinwerkMarketplaceConnector_NotInstalled')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [_ctx.licensingAvailable && row.needsLicense && row.licenseClaimable ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseUntil', _ctx.date(row.license.valid_until))), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : row.needsLicense && row.trialEndedOn ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_6f7bc49f_hoisted_11, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TrialEnded', _ctx.date(row.trialEndedOn))), 1)) : row.needsLicense ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_6f7bc49f_hoisted_12, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoLicense')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", LicenseTablevue_type_template_id_6f7bc49f_hoisted_13, "-"))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(row.installedVersion || _ctx.translate('FeinwerkMarketplaceConnector_NotInstalled')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [_ctx.licensingAvailable && row.needsLicense && row.licenseClaimable ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
       key: 0,
       kind: "claim",
       url: _ctx.claimUrl,
       nonce: _ctx.nonce,
       slug: row.slug
-    }, null, 8, ["url", "nonce", "slug"])) : _ctx.licensingAvailable && (row.needsLicense || _ctx.trialRunning(row.license)) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
-      key: 1
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_LicenseActions, {
-      kind: "buy",
-      url: _ctx.buyUrl,
-      nonce: _ctx.nonce,
-      slug: row.slug
-    }, null, 8, ["url", "nonce", "slug"]), row.trialAvailable && _ctx.trialUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
+    }, null, 8, ["url", "nonce", "slug"])) : _ctx.licensingAvailable && (row.needsLicense || _ctx.trialRunning(row.license)) ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", LicenseTablevue_type_template_id_6f7bc49f_hoisted_14, [row.trialAvailable && _ctx.trialUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
       key: 0,
       kind: "trial",
       url: _ctx.trialUrl,
       nonce: _ctx.nonce,
       slug: row.slug
-    }, null, 8, ["url", "nonce", "slug"])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
+    }, null, 8, ["url", "nonce", "slug"])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_LicenseActions, {
+      kind: "buy",
+      url: _ctx.buyUrl,
+      nonce: _ctx.nonce,
+      slug: row.slug,
+      quiet: !!(row.trialAvailable && _ctx.trialUrl)
+    }, null, 8, ["url", "nonce", "slug", "quiet"])])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
   }), 128))])])]))]);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/LicenseTable/LicenseTable.vue?vue&type=template&id=3aa7d816
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/LicenseTable/LicenseTable.vue?vue&type=template&id=6f7bc49f
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/LicenseTable/LicenseTable.vue?vue&type=script&lang=ts
 
@@ -2716,7 +2720,7 @@ function LicenseTablevue_type_template_id_3aa7d816_render(_ctx, _cache, $props, 
 
 
 
-LicenseTablevue_type_script_lang_ts.render = LicenseTablevue_type_template_id_3aa7d816_render
+LicenseTablevue_type_script_lang_ts.render = LicenseTablevue_type_template_id_6f7bc49f_render
 
 /* harmony default export */ var LicenseTable = (LicenseTablevue_type_script_lang_ts);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PromoBanner/PromoBanner.vue?vue&type=template&id=f62a2dbe
@@ -3185,162 +3189,167 @@ function StarterCardvue_type_template_id_4690f38e_render(_ctx, _cache, $props, $
 StarterCardvue_type_script_lang_ts.render = StarterCardvue_type_template_id_4690f38e_render
 
 /* harmony default export */ var StarterCard = (StarterCardvue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/DetailModal/DetailModal.vue?vue&type=template&id=8daa688e
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/DetailModal/DetailModal.vue?vue&type=template&id=37becaa4
 
-const DetailModalvue_type_template_id_8daa688e_hoisted_1 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_1 = {
   class: "fwmc fwmc-modal uiControl"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_2 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_2 = {
   key: 0
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_3 = ["action"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_4 = ["value"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_5 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_3 = ["action"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_4 = ["value"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_5 = {
   type: "submit",
   class: "btn"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_6 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_6 = {
   key: 1,
   class: "loadingPiwik"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_7 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("img", {
+const DetailModalvue_type_template_id_37becaa4_hoisted_7 = /*#__PURE__*/Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("img", {
   src: "plugins/Morpheus/images/loading-blue.gif",
   alt: ""
 }, null, -1);
-const DetailModalvue_type_template_id_8daa688e_hoisted_8 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_8 = {
   key: 2,
   class: "alert alert-warning"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_9 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_9 = {
   key: 0,
   class: "fwmc-note"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_10 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_10 = {
   class: "fwmc-modal-head"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_11 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_11 = {
   class: "fwmc-card-media fwmc-card-media--modal"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_12 = ["src", "alt"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_13 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_12 = ["src", "alt"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_13 = {
   key: 1,
   class: "fwmc-avatar fwmc-avatar--lg"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_14 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_14 = {
   class: "fwmc-modal-headtext"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_15 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_15 = {
   tabindex: "-1",
   class: "fwmc-modal-title"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_16 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_16 = {
   key: 0,
   class: "fwmc-sub"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_17 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_17 = {
   class: "fwmc-meta"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_18 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_18 = {
   key: 0,
   class: "fwmc-badge fwmc-badge--category"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_19 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_19 = {
   class: "fwmc-cta fwmc-cta--top"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_20 = ["href"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_21 = ["title"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_22 = ["title"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_23 = ["href", "title"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_24 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_20 = ["href"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_21 = ["title"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_22 = ["title"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_23 = ["href", "title"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_24 = {
   key: 7,
   class: "fwmc-badge fwmc-status--installed"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_25 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_25 = {
   key: 8,
   class: "fwmc-meta"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_26 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_26 = {
   key: 1,
   class: "fwmc-trial-pitch"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_27 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_27 = {
+  key: 2,
+  class: "fwmc-trial-pitch"
+};
+const DetailModalvue_type_template_id_37becaa4_hoisted_28 = ["href"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_29 = {
   class: "fwmc-modal-columns"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_28 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_30 = {
   class: "fwmc-modal-main"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_29 = ["innerHTML"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_30 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_31 = ["innerHTML"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_32 = {
   class: "fwmc-shots"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_31 = ["onClick"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_32 = ["src", "alt"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_33 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_33 = ["onClick"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_34 = ["src", "alt"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_35 = {
   class: "fwmc-modal-side"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_34 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_36 = {
   class: "fwmc-features"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_35 = ["action", "onSubmit"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_36 = ["value"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_37 = ["value"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_38 = ["value"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_39 = ["disabled", "aria-busy"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_40 = ["href"];
-const DetailModalvue_type_template_id_8daa688e_hoisted_41 = {
+const DetailModalvue_type_template_id_37becaa4_hoisted_37 = ["action", "onSubmit"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_38 = ["value"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_39 = ["value"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_40 = ["value"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_41 = ["disabled", "aria-busy"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_42 = ["href"];
+const DetailModalvue_type_template_id_37becaa4_hoisted_43 = {
   class: "fwmc-license-state"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_42 = {
+const _hoisted_44 = {
   key: 0,
   class: "fwmc-badge fwmc-badge--trial"
 };
-const DetailModalvue_type_template_id_8daa688e_hoisted_43 = {
+const _hoisted_45 = {
   key: 1,
   class: "fwmc-badge fwmc-badge--license-ok"
 };
-const _hoisted_44 = {
+const _hoisted_46 = {
   key: 2,
   class: "fwmc-badge fwmc-badge--license-missing"
 };
-const _hoisted_45 = {
+const _hoisted_47 = {
   key: 3,
   class: "fwmc-badge fwmc-badge--license-missing"
 };
-const _hoisted_46 = {
+const _hoisted_48 = {
   class: "fwmc-modal-foot"
 };
-const _hoisted_47 = {
+const _hoisted_49 = {
   key: 0,
   class: "fwmc-versions"
 };
-const _hoisted_48 = {
+const _hoisted_50 = {
   class: "fwmc-tablewrap"
 };
-const _hoisted_49 = {
+const _hoisted_51 = {
   class: "fwmc-table entityTable"
 };
-const _hoisted_50 = {
+const _hoisted_52 = {
   key: 0,
   class: "fwmc-badge fwmc-badge--dbwarn"
 };
-const _hoisted_51 = {
+const _hoisted_53 = {
   class: "fwmc-cta"
 };
-const _hoisted_52 = ["href"];
-const _hoisted_53 = ["title"];
-const _hoisted_54 = ["title"];
-const _hoisted_55 = ["href", "title"];
-const _hoisted_56 = {
+const _hoisted_54 = ["href"];
+const _hoisted_55 = ["title"];
+const _hoisted_56 = ["title"];
+const _hoisted_57 = ["href", "title"];
+const _hoisted_58 = {
   key: 7,
   class: "fwmc-badge fwmc-status--installed"
 };
-const _hoisted_57 = {
+const _hoisted_59 = {
   key: 8,
   class: "fwmc-meta"
 };
-const _hoisted_58 = ["aria-label"];
-const _hoisted_59 = ["src", "alt"];
-function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $setup, $data, $options) {
+const _hoisted_60 = ["aria-label"];
+const _hoisted_61 = ["src", "alt"];
+function DetailModalvue_type_template_id_37becaa4_render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_InstallForm = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("InstallForm");
   const _component_LicenseActions = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("LicenseActions");
   const _component_PlanCard = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["resolveComponent"])("PlanCard");
@@ -3351,10 +3360,10 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
     "onUpdate:modelValue": _cache[6] || (_cache[6] = $event => _ctx.opened = $event),
     onClose: _cache[7] || (_cache[7] = $event => _ctx.$emit('close'))
   }, {
-    default: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withCtx"])(() => [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_1, [_ctx.notice && _ctx.notice.message ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
+    default: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["withCtx"])(() => [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_1, [_ctx.notice && _ctx.notice.message ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
       key: 0,
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])(["alert fwmc-window-notice", _ctx.noticeClass])
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.notice.message), 1), _ctx.notice.connect ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_8daa688e_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoAccountNext')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.notice.connect && _ctx.connectUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("form", {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.notice.message), 1), _ctx.notice.connect ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_37becaa4_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoAccountNext')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.notice.connect && _ctx.connectUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("form", {
       key: 1,
       method: "post",
       action: _ctx.connectUrl,
@@ -3363,27 +3372,27 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
       type: "hidden",
       name: "nonce",
       value: _ctx.nonce
-    }, null, 8, DetailModalvue_type_template_id_8daa688e_hoisted_4), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", DetailModalvue_type_template_id_8daa688e_hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ConnectButton')), 1)], 40, DetailModalvue_type_template_id_8daa688e_hoisted_3)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 2)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.loading ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_6, [DetailModalvue_type_template_id_8daa688e_hoisted_7, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('General_Loading')), 1)])) : _ctx.errorMessage !== null ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_8, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DetailError')) + " " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.errorMessage) + " ", 1), _ctx.slug ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
+    }, null, 8, DetailModalvue_type_template_id_37becaa4_hoisted_4), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", DetailModalvue_type_template_id_37becaa4_hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_ConnectButton')), 1)], 40, DetailModalvue_type_template_id_37becaa4_hoisted_3)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 2)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.loading ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_6, [DetailModalvue_type_template_id_37becaa4_hoisted_7, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('General_Loading')), 1)])) : _ctx.errorMessage !== null ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_8, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DetailError')) + " " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.errorMessage) + " ", 1), _ctx.slug ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
       key: 0,
       type: "button",
       class: "btn btn-outline fwmc-retry",
       onClick: _cache[1] || (_cache[1] = $event => _ctx.open(_ctx.slug))
     }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TryAgain')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : _ctx.detail ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 3
-    }, [_ctx.stale ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate(_ctx.errorKind === 'auth' ? 'FeinwerkMarketplaceConnector_AuthErrorNote' : 'FeinwerkMarketplaceConnector_CachedNote')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_10, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_11, [_ctx.detail.artwork_url && !_ctx.artworkFailed ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("img", {
+    }, [_ctx.stale ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_9, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate(_ctx.errorKind === 'auth' ? 'FeinwerkMarketplaceConnector_AuthErrorNote' : 'FeinwerkMarketplaceConnector_CachedNote')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_10, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_11, [_ctx.detail.artwork_url && !_ctx.artworkFailed ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("img", {
       key: 0,
       src: _ctx.proxied(_ctx.detail.artwork_url),
       alt: _ctx.detail.display_name,
       onError: _cache[2] || (_cache[2] = $event => _ctx.artworkFailed = true)
-    }, null, 40, DetailModalvue_type_template_id_8daa688e_hoisted_12)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_8daa688e_hoisted_13, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.monogram), 1))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_14, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h2", DetailModalvue_type_template_id_8daa688e_hoisted_15, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.detail.display_name), 1), _ctx.description ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_8daa688e_hoisted_16, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.description), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", DetailModalvue_type_template_id_8daa688e_hoisted_17, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
+    }, null, 40, DetailModalvue_type_template_id_37becaa4_hoisted_12)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_37becaa4_hoisted_13, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.monogram), 1))]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_14, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h2", DetailModalvue_type_template_id_37becaa4_hoisted_15, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.detail.display_name), 1), _ctx.description ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_37becaa4_hoisted_16, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.description), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("p", DetailModalvue_type_template_id_37becaa4_hoisted_17, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", {
       class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])(["fwmc-badge", 'fwmc-badge--' + _ctx.detail.tier])
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tierLabel(_ctx.detail.tier)), 3), _ctx.detail.category ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_8daa688e_hoisted_18, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.categoryLabel(_ctx.detail.category)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.latestVersionInfo ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.tierLabel(_ctx.detail.tier)), 3), _ctx.detail.category ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_37becaa4_hoisted_18, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.categoryLabel(_ctx.detail.category)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.latestVersionInfo ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 1
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · v" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.latestVersionInfo.version) + " ", 1), _ctx.latestVersionInfo.matomo_min ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 0
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · Matomo ≥ " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.latestVersionInfo.matomo_min), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.latestVersionInfo.php_min ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 1
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · PHP ≥ " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.latestVersionInfo.php_min), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_19, [_ctx.cta === 'install' || _ctx.cta === 'update' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_InstallForm, {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · PHP ≥ " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.latestVersionInfo.php_min), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_19, [_ctx.cta === 'install' || _ctx.cta === 'update' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_InstallForm, {
       key: 0,
       "action-url": _ctx.actionUrl,
       nonce: _ctx.nonce,
@@ -3420,31 +3429,36 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
       target: "_blank",
       rel: "noreferrer noopener",
       class: "fwmc-buy-link"
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_BuyOnMarketplace')) + " ↗ ", 9, DetailModalvue_type_template_id_8daa688e_hoisted_20)) : _ctx.cta === 'dev' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_BuyOnMarketplace')) + " ↗ ", 9, DetailModalvue_type_template_id_37becaa4_hoisted_20)) : _ctx.cta === 'dev' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
       key: 4,
       class: "fwmc-badge fwmc-status--not_installed",
       title: _ctx.translate('FeinwerkMarketplaceConnector_DevCheckoutHint')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DevCheckout')), 9, DetailModalvue_type_template_id_8daa688e_hoisted_21)) : _ctx.cta === 'switching' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DevCheckout')), 9, DetailModalvue_type_template_id_37becaa4_hoisted_21)) : _ctx.cta === 'switching' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
       key: 5,
       class: "fwmc-badge fwmc-status--not_installed",
       title: _ctx.translate('FeinwerkMarketplaceConnector_SwitchingHint')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Switching')), 9, DetailModalvue_type_template_id_8daa688e_hoisted_22)) : _ctx.cta === 'activate' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Switching')), 9, DetailModalvue_type_template_id_37becaa4_hoisted_22)) : _ctx.cta === 'activate' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
       key: 6,
       class: "btn",
       href: _ctx.activateHref,
       title: _ctx.translate('FeinwerkMarketplaceConnector_StatusInactiveHint')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Activate')), 9, DetailModalvue_type_template_id_8daa688e_hoisted_23)) : _ctx.cta === 'current' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_8daa688e_hoisted_24, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_StatusCurrent')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_8daa688e_hoisted_25, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoVersionYet')), 1)), _ctx.buyDuringTrial ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Activate')), 9, DetailModalvue_type_template_id_37becaa4_hoisted_23)) : _ctx.cta === 'current' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_37becaa4_hoisted_24, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_StatusCurrent')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_37becaa4_hoisted_25, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoVersionYet')), 1)), _ctx.buyDuringTrial ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
       key: 9,
       kind: "buy",
       url: _ctx.buyUrl,
       nonce: _ctx.nonce,
       slug: _ctx.slug
-    }, null, 8, ["url", "nonce", "slug"])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), _ctx.cta === 'buyhere' && _ctx.trialOffered ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_8daa688e_hoisted_26, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TrialPitch')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_27, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_28, [_ctx.longDescription ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
+    }, null, 8, ["url", "nonce", "slug"])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), _ctx.cta === 'buyhere' && _ctx.trialOffered ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_37becaa4_hoisted_26, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TrialPitch')), 1)) : _ctx.cta === 'buyhere' && _ctx.trialReasonText ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("p", DetailModalvue_type_template_id_37becaa4_hoisted_27, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.trialReasonText) + " ", 1), _ctx.trialReasonAccount ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+      key: 0,
+      href: _ctx.trialReasonAccount,
+      target: "_blank",
+      rel: "noreferrer noopener"
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicensesAccount')) + " ↗ ", 9, DetailModalvue_type_template_id_37becaa4_hoisted_28)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_29, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_30, [_ctx.longDescription ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("div", {
       key: 0,
       innerHTML: _ctx.longDescription
-    }, null, 8, DetailModalvue_type_template_id_8daa688e_hoisted_29)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.screenshots.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }, null, 8, DetailModalvue_type_template_id_37becaa4_hoisted_31)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.screenshots.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 1
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Screenshots')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_30, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.screenshots, (shot, i) => {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Screenshots')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_32, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.screenshots, (shot, i) => {
       return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("button", {
         key: shot,
         type: "button",
@@ -3454,10 +3468,10 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
         src: _ctx.proxied(shot),
         onError: _cache[3] || (_cache[3] = (...args) => _ctx.hideImage && _ctx.hideImage(...args)),
         alt: `${_ctx.translate('FeinwerkMarketplaceConnector_Screenshots')} ${i + 1}`
-      }, null, 40, DetailModalvue_type_template_id_8daa688e_hoisted_32)], 8, DetailModalvue_type_template_id_8daa688e_hoisted_31);
-    }), 128))])], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_33, [_ctx.features.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+      }, null, 40, DetailModalvue_type_template_id_37becaa4_hoisted_34)], 8, DetailModalvue_type_template_id_37becaa4_hoisted_33);
+    }), 128))])], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_35, [_ctx.features.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 0
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Features')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", DetailModalvue_type_template_id_8daa688e_hoisted_34, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.features, f => {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("h3", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Features')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("ul", DetailModalvue_type_template_id_37becaa4_hoisted_36, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.features, f => {
       return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("li", {
         key: f
       }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(f), 1);
@@ -3476,15 +3490,15 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
         type: "hidden",
         name: "nonce",
         value: _ctx.nonce
-      }, null, 8, DetailModalvue_type_template_id_8daa688e_hoisted_36), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
+      }, null, 8, DetailModalvue_type_template_id_37becaa4_hoisted_38), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
         type: "hidden",
         name: "slug",
         value: _ctx.slug
-      }, null, 8, DetailModalvue_type_template_id_8daa688e_hoisted_37), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
+      }, null, 8, DetailModalvue_type_template_id_37becaa4_hoisted_39), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("input", {
         type: "hidden",
         name: "plan",
         value: plan.id
-      }, null, 8, DetailModalvue_type_template_id_8daa688e_hoisted_38), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
+      }, null, 8, DetailModalvue_type_template_id_37becaa4_hoisted_40), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("button", {
         type: "submit",
         class: "fwmc-plan-link fwmc-plan-button",
         disabled: _ctx.planBusy !== null,
@@ -3493,7 +3507,7 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
         plan: plan,
         buy: "",
         busy: _ctx.planBusy === plan.id
-      }, null, 8, ["plan", "busy"])], 8, DetailModalvue_type_template_id_8daa688e_hoisted_39)], 40, DetailModalvue_type_template_id_8daa688e_hoisted_35)) : _ctx.ownsLicense ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_PlanCard, {
+      }, null, 8, ["plan", "busy"])], 8, DetailModalvue_type_template_id_37becaa4_hoisted_41)], 40, DetailModalvue_type_template_id_37becaa4_hoisted_37)) : _ctx.ownsLicense ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_PlanCard, {
         key: 1,
         plan: plan
       }, null, 8, ["plan"])) : _ctx.safeStorefrontUrl ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
@@ -3504,21 +3518,21 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
         class: "fwmc-plan-link"
       }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createVNode"])(_component_PlanCard, {
         plan: plan
-      }, null, 8, ["plan"])], 8, DetailModalvue_type_template_id_8daa688e_hoisted_40)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_PlanCard, {
+      }, null, 8, ["plan"])], 8, DetailModalvue_type_template_id_37becaa4_hoisted_42)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_PlanCard, {
         key: 3,
         plan: plan
       }, null, 8, ["plan"]))], 64);
-    }), 128))], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_8daa688e_hoisted_41, [_ctx.row && _ctx.row.license && _ctx.trialText ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_8daa688e_hoisted_42, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.trialText), 1)) : _ctx.row && _ctx.row.license ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", DetailModalvue_type_template_id_8daa688e_hoisted_43, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseActive')) + " ", 1), _ctx.row.license.valid_until ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
+    }), 128))], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", DetailModalvue_type_template_id_37becaa4_hoisted_43, [_ctx.row && _ctx.row.license && _ctx.trialText ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_44, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.trialText), 1)) : _ctx.row && _ctx.row.license ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_45, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseActive')) + " ", 1), _ctx.row.license.valid_until ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
       key: 0
-    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseUntil', _ctx.formatDay(_ctx.row.license.valid_until))), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : _ctx.row && _ctx.row.needsLicense && _ctx.row.trialEndedOn ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_44, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TrialEnded', _ctx.formatDay(_ctx.row.trialEndedOn))), 1)) : _ctx.row && _ctx.row.needsLicense ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_45, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoLicense')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_46, [_ctx.detail.versions && _ctx.detail.versions.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("details", _hoisted_47, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("summary", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Versions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_48, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("table", _hoisted_49, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.detail.versions, v => {
+    }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_LicenseUntil', _ctx.formatDay(_ctx.row.license.valid_until))), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])) : _ctx.row && _ctx.row.needsLicense && _ctx.row.trialEndedOn ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_46, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_TrialEnded', _ctx.formatDay(_ctx.row.trialEndedOn))), 1)) : _ctx.row && _ctx.row.needsLicense ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_47, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoLicense')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])])]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_48, [_ctx.detail.versions && _ctx.detail.versions.length ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("details", _hoisted_49, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("summary", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Versions')), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_50, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("table", _hoisted_51, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("tbody", null, [(Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["renderList"])(_ctx.detail.versions, v => {
       return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("tr", {
         key: v.version
       }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, "v" + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(v.version), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.formatDay(v.released_at)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.channelLabel(v.channel)), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [v.matomo_min ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
         key: 0
       }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])("Matomo ≥ " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(v.matomo_min), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), v.php_min ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])(external_commonjs_vue_commonjs2_vue_root_Vue_["Fragment"], {
         key: 1
-      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · PHP ≥ " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(v.php_min), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [v.db_warning ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_50, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DbWarning')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
-    }), 128))])])])])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_51, [_ctx.cta === 'install' || _ctx.cta === 'update' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_InstallForm, {
+      }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createTextVNode"])(" · PHP ≥ " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(v.php_min), 1)], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("td", null, [v.db_warning ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_52, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DbWarning')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]);
+    }), 128))])])])])) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("div", _hoisted_53, [_ctx.cta === 'install' || _ctx.cta === 'update' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_InstallForm, {
       key: 0,
       "action-url": _ctx.actionUrl,
       nonce: _ctx.nonce,
@@ -3555,20 +3569,20 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
       target: "_blank",
       rel: "noreferrer noopener",
       class: "fwmc-buy-link"
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_BuyOnMarketplace')) + " ↗ ", 9, _hoisted_52)) : _ctx.cta === 'dev' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_BuyOnMarketplace')) + " ↗ ", 9, _hoisted_54)) : _ctx.cta === 'dev' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
       key: 4,
       class: "fwmc-badge fwmc-status--not_installed",
       title: _ctx.translate('FeinwerkMarketplaceConnector_DevCheckoutHint')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DevCheckout')), 9, _hoisted_53)) : _ctx.cta === 'switching' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_DevCheckout')), 9, _hoisted_55)) : _ctx.cta === 'switching' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
       key: 5,
       class: "fwmc-badge fwmc-status--not_installed",
       title: _ctx.translate('FeinwerkMarketplaceConnector_SwitchingHint')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Switching')), 9, _hoisted_54)) : _ctx.cta === 'activate' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Switching')), 9, _hoisted_56)) : _ctx.cta === 'activate' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("a", {
       key: 6,
       class: "btn",
       href: _ctx.activateHref,
       title: _ctx.translate('FeinwerkMarketplaceConnector_StatusInactiveHint')
-    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Activate')), 9, _hoisted_55)) : _ctx.cta === 'current' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_56, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_StatusCurrent')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_57, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoVersionYet')), 1)), _ctx.buyDuringTrial ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
+    }, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_Activate')), 9, _hoisted_57)) : _ctx.cta === 'current' ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_58, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_StatusCurrent')), 1)) : (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", _hoisted_59, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_NoVersionYet')), 1)), _ctx.buyDuringTrial ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])(_component_LicenseActions, {
       key: 9,
       kind: "buy",
       url: _ctx.buyUrl,
@@ -3592,11 +3606,11 @@ function DetailModalvue_type_template_id_8daa688e_render(_ctx, _cache, $props, $
     }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("img", {
       src: _ctx.proxied(_ctx.lightbox),
       alt: _ctx.translate('FeinwerkMarketplaceConnector_Screenshots')
-    }, null, 8, _hoisted_59)], 40, _hoisted_58)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]))], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]),
+    }, null, 8, _hoisted_61)], 40, _hoisted_60)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)]))], 64)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)])]),
     _: 1
   }, 8, ["modelValue"]);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/DetailModal/DetailModal.vue?vue&type=template&id=8daa688e
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/DetailModal/DetailModal.vue?vue&type=template&id=37becaa4
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/BugReportForm/BugReportForm.vue?vue&type=template&id=7058e80c
 
@@ -3931,6 +3945,10 @@ PlanCardvue_type_script_lang_ts.render = PlanCardvue_type_template_id_11b3a152_r
       type: String,
       default: ''
     },
+    accountUrl: {
+      type: String,
+      default: ''
+    },
     row: {
       type: Object,
       default: null
@@ -4071,6 +4089,20 @@ PlanCardvue_type_script_lang_ts.render = PlanCardvue_type_template_id_11b3a152_r
         success: 'alert-success'
       }[context] || 'alert-info';
     },
+    // Why the store offers no trial here, as one sentence, only where the admin can act on it.
+    trialReasonText() {
+      var _this$detail7;
+      const key = {
+        email_unverified: 'TrialReasonEmailUnverified',
+        no_account: 'TrialReasonNoAccount',
+        trial_used: 'TrialReasonUsed'
+      }[String(((_this$detail7 = this.detail) === null || _this$detail7 === void 0 ? void 0 : _this$detail7.trial_unavailable_reason) || '')];
+      return key ? Object(external_CoreHome_["translate"])(`FeinwerkMarketplaceConnector_${key}`) : '';
+    },
+    trialReasonAccount() {
+      var _this$detail8;
+      return ((_this$detail8 = this.detail) === null || _this$detail8 === void 0 ? void 0 : _this$detail8.trial_unavailable_reason) === 'email_unverified' && /^https?:\/\//i.test(this.accountUrl) ? this.accountUrl : '';
+    },
     // The store offers a free trial of this plugin here.
     trialOffered() {
       return !!(this.row && this.row.trialAvailable && this.trialUrl);
@@ -4111,8 +4143,8 @@ PlanCardvue_type_script_lang_ts.render = PlanCardvue_type_template_id_11b3a152_r
     // Marketplace-controlled URL: only bind it as an href when it's http(s), so a
     // crafted storefront_url can't smuggle a javascript: URI into the DOM.
     safeStorefrontUrl() {
-      var _this$detail7;
-      const u = ((_this$detail7 = this.detail) === null || _this$detail7 === void 0 ? void 0 : _this$detail7.storefront_url) || '';
+      var _this$detail9;
+      const u = ((_this$detail9 = this.detail) === null || _this$detail9 === void 0 ? void 0 : _this$detail9.storefront_url) || '';
       return /^https?:\/\//i.test(u) ? u : null;
     }
   },
@@ -4272,7 +4304,7 @@ PlanCardvue_type_script_lang_ts.render = PlanCardvue_type_template_id_11b3a152_r
 
 
 
-DetailModalvue_type_script_lang_ts.render = DetailModalvue_type_template_id_8daa688e_render
+DetailModalvue_type_script_lang_ts.render = DetailModalvue_type_template_id_37becaa4_render
 
 /* harmony default export */ var DetailModal = (DetailModalvue_type_script_lang_ts);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/FeedbackBar/FeedbackBar.vue?vue&type=template&id=551cc94b
