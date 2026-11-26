@@ -31,8 +31,8 @@
             />
             <span v-else class="fwmc-avatar fwmc-avatar--lg">{{ monogram }}</span>
           </div>
-          <div>
-            <h2 ref="heading" tabindex="-1" class="fwmc-modal-title">{{ detail.display_name }}</h2>
+          <div class="fwmc-modal-headtext">
+            <h2 tabindex="-1" class="fwmc-modal-title">{{ detail.display_name }}</h2>
             <p class="fwmc-sub" v-if="description">{{ description }}</p>
             <p class="fwmc-meta">
               <span class="fwmc-badge" :class="'fwmc-badge--' + detail.tier">
@@ -153,29 +153,35 @@
             <template v-if="detail.plans && detail.plans.length">
               <h3>{{ translate('FeinwerkMarketplaceConnector_Plans') }}</h3>
               <template v-for="plan in detail.plans" :key="plan.name_en">
-                <a v-if="safeStorefrontUrl" :href="safeStorefrontUrl" target="_blank"
+                <!-- Not bought yet (or in a trial): straight to this plan's checkout, bound to this
+                     Matomo, back here afterwards (Peter, 2026-11-24). -->
+                <form
+                  v-if="planCheckout(plan)"
+                  method="post"
+                  :action="buyUrl"
+                  class="fwmc-plan-form"
+                  @submit="onPlanSubmit($event, plan)"
+                >
+                  <input type="hidden" name="nonce" :value="nonce" />
+                  <input type="hidden" name="slug" :value="slug" />
+                  <input type="hidden" name="plan" :value="plan.id" />
+                  <button
+                    type="submit"
+                    class="fwmc-plan-link fwmc-plan-button"
+                    :disabled="planBusy !== null"
+                    :aria-busy="planBusy === plan.id"
+                  >
+                    <PlanCard :plan="plan" buy :busy="planBusy === plan.id" />
+                  </button>
+                </form>
+                <!-- A bought licence: the plans are information; a change of plan happens in the
+                     customer account. -->
+                <PlanCard v-else-if="ownsLicense" :plan="plan" />
+                <a v-else-if="safeStorefrontUrl" :href="safeStorefrontUrl" target="_blank"
                    rel="noreferrer noopener" class="fwmc-plan-link">
-                  <div class="fwmc-plan" :class="{ 'fwmc-plan--highlight': plan.highlight }">
-                    <div class="fwmc-plan-name">{{ planName(plan) }}</div>
-                    <div class="fwmc-plan-price">
-                      {{ amount(plan.price_eur) }} € / {{ intervalLabel(plan.interval) }}
-                    </div>
-                    <div class="fwmc-meta" v-if="plan.max_users">
-                      {{ translate('FeinwerkMarketplaceConnector_MaxUsers', plan.max_users) }}
-                    </div>
-                    <div class="fwmc-meta" v-if="planNote(plan)">{{ planNote(plan) }}</div>
-                  </div>
+                  <PlanCard :plan="plan" />
                 </a>
-                <div v-else class="fwmc-plan" :class="{ 'fwmc-plan--highlight': plan.highlight }">
-                  <div class="fwmc-plan-name">{{ planName(plan) }}</div>
-                  <div class="fwmc-plan-price">
-                    {{ amount(plan.price_eur) }} € / {{ intervalLabel(plan.interval) }}
-                  </div>
-                  <div class="fwmc-meta" v-if="plan.max_users">
-                    {{ translate('FeinwerkMarketplaceConnector_MaxUsers', plan.max_users) }}
-                  </div>
-                  <div class="fwmc-meta" v-if="planNote(plan)">{{ planNote(plan) }}</div>
-                </div>
+                <PlanCard v-else :plan="plan" />
               </template>
             </template>
 
@@ -334,13 +340,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { translate, MatomoDialog, Matomo } from 'CoreHome';
-import intervalLabel from '../intervals';
-import amount from '../amount';
 import proxied from '../proxied';
 import activateLink from '../activate';
 import BugReportForm from '../BugReportForm/BugReportForm.vue';
 import InstallForm from '../InstallForm/InstallForm.vue';
 import LicenseActions from '../LicenseActions/LicenseActions.vue';
+import PlanCard from '../PlanCard/PlanCard.vue';
+import { addActionContext, claimSubmit } from '../actionContext';
 import trialLabel, { trialRunning } from '../trial';
 import failureText from '../failure';
 import {
@@ -349,10 +355,15 @@ import {
 
 export default defineComponent({
   components: {
-    MatomoDialog, BugReportForm, InstallForm, LicenseActions,
+    MatomoDialog, BugReportForm, InstallForm, LicenseActions, PlanCard,
   },
   // Forms in this window tell the server to reopen it after their action (actionContext.ts).
   provide: { fwmcInWindow: true },
+  // Matomo for WordPress buys only what installs through WordPress here (as LicenseActions).
+  inject: {
+    wordpress: { from: 'fwmcWordPress', default: false },
+    wordpressAvailable: { from: 'fwmcWordPressAvailable', default: () => [] },
+  },
   emits: ['close'],
   props: {
     slug: { type: String, default: null },
@@ -372,6 +383,8 @@ export default defineComponent({
   },
   data() {
     return {
+      // The id of the plan whose checkout is being opened (one send per page).
+      planBusy: null as number|null,
       opened: false,
       loading: false,
       detail: null as any,
@@ -400,6 +413,7 @@ export default defineComponent({
     },
   },
   beforeUnmount() {
+    this.stopGuard();
     window.removeEventListener('keydown', this.onLightboxKeydown, true);
   },
   computed: {
@@ -438,6 +452,22 @@ export default defineComponent({
       return trialLabel(this.row ? this.row.license : null, formatDay);
     },
     // Peter, 2026-11-17 ("3. ja"): during a free trial "Buy a license" stands next to the action.
+    // Buying is offered here (the window's own buy button shows) and this Matomo may buy the
+    // plugin; then a plan card opens that plan's checkout.
+    canBuyPlans(): boolean {
+      if (!this.buyUrl || !this.slug) return false;
+      const { wordpress, wordpressAvailable } = this as unknown as {
+        wordpress: boolean, wordpressAvailable: string[],
+      };
+      if (wordpress && !wordpressAvailable.includes(this.slug)) return false;
+      return this.cta === 'buyhere' || this.buyDuringTrial;
+    },
+    // A bought licence is active (a row carries only an active one, UpdateMapper): the plans
+    // are information only.
+    ownsLicense(): boolean {
+      const license = this.row?.license;
+      return !!license && !trialRunning(license);
+    },
     buyDuringTrial(): boolean {
       const { row } = this;
       return !!this.licensingAvailable && !!row && trialRunning(row.license)
@@ -512,29 +542,84 @@ export default defineComponent({
         if (seq === this.requestSeq) this.loading = false;
       }
     },
-    // The window starts at the plugin's name (UI review 2026-11-23, F2): Matomo's modalConfirm
-    // focuses the first link of an open modal once it has opened, which scrolled the window into
-    // its text. Focus the heading and scroll to the top after rendering and once the open
-    // animation is over (Materialize: 250 ms).
+    // The window starts at the plugin's name (UI review 2026-11-23, F2). Matomo focuses every
+    // link of the open modal when its opening ends ($('.modal.open a').focus(), the last one
+    // wins), at a moment no fixed delay hits; Matomo 6 scrolls .modal-content, 5.x the .modal
+    // (measured 2026-11-24). The heading is looked up in the page: the window lives in
+    // Matomo's modal.
+    windowHeading(): HTMLElement|null {
+      return document.querySelector('.modal.open .fwmc-modal-title');
+    },
+    toTop(heading: HTMLElement) {
+      heading.focus({ preventScroll: true });
+      [heading.closest('.modal-content'), heading.closest('.modal')].forEach((box) => {
+        if (box) (box as HTMLElement).scrollTop = 0;
+      });
+    },
     showTop() {
-      const run = () => {
-        const heading = this.$refs.heading as HTMLElement|undefined;
-        if (!heading) return;
-        heading.focus({ preventScroll: true });
-        const modal = heading.closest('.modal') as HTMLElement|null;
-        if (modal) modal.scrollTop = 0;
+      let tries = 0;
+      const attempt = () => {
+        const heading = this.windowHeading();
+        if (heading) {
+          this.toTop(heading);
+        } else if (tries < 30) {
+          tries += 1;
+          window.setTimeout(attempt, 50);
+        }
       };
-      this.$nextTick(run);
-      window.setTimeout(run, 400);
+      attempt();
+      this.guardTop();
     },
-    planName(plan: any): string {
-      return inAdminLanguage(plan.name_en, plan.name_de);
+    // For four seconds, until the admin presses a key, clicks or scrolls, a focus that lands
+    // elsewhere in the window goes back to the heading at the top.
+    guardTop() {
+      this.stopGuard();
+      const stop = () => this.stopGuard();
+      const onFocus = (event: FocusEvent) => {
+        const heading = this.windowHeading();
+        const modal = heading ? heading.closest('.modal') : null;
+        const { target } = event;
+        const inWindow = !!modal && target instanceof Node && modal.contains(target);
+        if (heading && inWindow && target !== heading) {
+          this.toTop(heading);
+          // Matomo focuses its links in one go: once that has passed, the guard ends, so a
+          // screen reader moving focus without key events is not pulled back (UI review, W9).
+          window.setTimeout(stop, 300);
+        }
+      };
+      const inputs = ['keydown', 'pointerdown', 'wheel', 'touchstart'];
+      document.addEventListener('focusin', onFocus, true);
+      inputs.forEach((type) => document.addEventListener(type, stop, true));
+      const timer = window.setTimeout(stop, 4000);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (this as any).topGuard = () => {
+        document.removeEventListener('focusin', onFocus, true);
+        inputs.forEach((type) => document.removeEventListener(type, stop, true));
+        window.clearTimeout(timer);
+      };
     },
-    planNote(plan: any): string|null {
-      return inAdminLanguage(plan.note_en, plan.note_de);
+    stopGuard() {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const self = this as any;
+      if (self.topGuard) {
+        self.topGuard();
+        self.topGuard = null;
+      }
     },
-    intervalLabel,
-    amount,
+    // Only with an id from a store that offers the plan checkout (store, 2026-11-24).
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    planCheckout(plan: any): boolean {
+      return this.canBuyPlans && Number.isInteger(plan.id) && plan.id > 0;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onPlanSubmit(event: Event, plan: any) {
+      if (this.planBusy !== null || !claimSubmit()) {
+        event.preventDefault();
+        return;
+      }
+      addActionContext(event.target as HTMLFormElement, this.slug || '');
+      this.planBusy = plan.id;
+    },
     proxied,
     onLightboxKeydown(event: KeyboardEvent) {
       if (event.key === 'Escape' && this.lightbox) {

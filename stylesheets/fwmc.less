@@ -245,7 +245,7 @@
     // A trial licence ("Trial until ...") and the card's "Free trial" (store fields license.trial, trial_available).
     .fwmc-badge--trial { .fwmc-tone-green(); text-transform: none; }
     .fwmc-card .fwmc-badge--trial { margin-left: 6px; }
-    .fwmc-table form .fwmc-badge, .fwmc-cta form .fwmc-badge { margin-left: 8px; }
+    .fwmc-table form .fwmc-badge { margin-left: 8px; }
 
     // Install-status pills (built as `fwmc-status--${status}`).
     .fwmc-status--installed { .fwmc-tone-green(); }
@@ -343,11 +343,26 @@
     max-width: 920px; padding: 24px;
     .fwmc-modal-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px;
         h2 { margin: 0 0 4px; } }
+    // The text next to the picture may shrink below its widest line (the action with its badge), so it wraps instead of
+    // cutting the window off on the right (UI review 2026-11-26, F1).
+    .fwmc-modal-headtext { flex: 1 1 auto; min-width: 0; }
     .fwmc-card-media--modal { width: 154px; height: 96px; flex: 0 0 154px; border: 1px solid @line; border-radius: 4px; }
+    // On a phone the window is about 310 px wide: picture above the text at its own size, the full width for the text
+    // (Matomo's .modal-content keeps its padding), plans and licence state before the long store text (UI review
+    // 2026-11-26: F1, F2, W3, D1).
+    @media (max-width: 560px) {
+        padding: 0;
+        .fwmc-modal-head { flex-direction: column; align-items: stretch; }
+        .fwmc-card-media--modal { flex: none; }
+    }
     .fwmc-modal-columns { display: flex; gap: 24px; align-items: flex-start;
-        @media (max-width: 760px) { flex-direction: column; } }
+        // stretch, not flex-start, one below the other: a column as wide as its content let the store's tables widen it
+        @media (max-width: 760px) { flex-direction: column; align-items: stretch;
+            .fwmc-modal-side { order: -1; } } }
     .fwmc-modal-main {
-        flex: 1 1 60%; min-width: 0;
+        flex: 1 1 60%; min-width: 0; overflow-wrap: anywhere;
+        // A wide table of the store's description scrolls inside itself instead of widening the window.
+        table { display: block; max-width: 100%; overflow-x: auto; }
 
         // Typography for the server-rendered plugin description (v-html from
         // sanitized Markdown) — without this the raw h1/p/ul render cramped.
@@ -376,13 +391,26 @@
             &:focus-visible { outline: 2px solid @accent; outline-offset: 2px; } }
         img { width: 120px; height: 80px; object-fit: cover; border: 1px solid @line; border-radius: 4px; cursor: zoom-in; } }
     .fwmc-features { padding-left: 18px; margin: 8px 0; li { margin: 4px 0; } }
-    .fwmc-plan { border: 1px solid @line; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px;
+    .fwmc-plan { display: block; border: 1px solid @line; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px;
         &.fwmc-plan--highlight { border-color: @success; box-shadow: 0 0 0 1px @success inset;
             .fwmc-dark({ border-color: @success-dark; box-shadow: 0 0 0 1px @success-dark inset; }); } }
-    .fwmc-plan-name { font-weight: 700; color: @text; }
-    .fwmc-plan-price { color: @text; }
+    .fwmc-plan-name { display: block; font-weight: 700; color: @text; }
+    .fwmc-plan-price { display: block; color: @text; }
+    .fwmc-plan .fwmc-meta { display: block; }
     .fwmc-plan-link { color: inherit; text-decoration: none; display: block;
-        &:hover .fwmc-plan { border-color: @accent; } }
+        &:hover .fwmc-plan, &:focus-visible .fwmc-plan { border-color: @accent; }
+        // the highlighted plan's inner line follows, one colour on hover (UI review 2026-11-26, W4)
+        &:hover .fwmc-plan--highlight, &:focus-visible .fwmc-plan--highlight { box-shadow: 0 0 0 1px @accent inset; } }
+    // A plan card that opens its checkout (Peter, 2026-11-24): a button that looks like the card.
+    .fwmc-plan-form { margin: 0; }
+    .fwmc-plan-button {
+        width: 100%; padding: 0; border: 0; background: none; text-align: left; font: inherit; cursor: pointer;
+        &:focus { outline: none; }
+        &:focus-visible .fwmc-plan { outline: 2px solid @accent; outline-offset: 1px; }
+        &[disabled] { cursor: default; }
+    }
+    .fwmc-plan-buy-cue { display: block; margin-top: 6px; color: @accent; font-weight: 600; font-size: 13px; }
+    .fwmc-plan--busy { opacity: .7; }
     .fwmc-license-state { margin-top: 12px; }
     .fwmc-versions {
         margin-bottom: 12px;
@@ -390,7 +418,7 @@
     }
     .fwmc-modal-foot { border-top: 1px solid @line; margin-top: 16px; padding-top: 12px;
         display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .fwmc-cta form { display: inline-flex; align-items: center; gap: 8px; }
+    .fwmc-cta form { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: 100%; }
     .fwmc-cta--top { margin-top: 12px; }
     .fwmc-buy-link { color: @accent; font-weight: 700; }
 
@@ -631,7 +659,7 @@
     margin: 0 0 14px;
     color: @text-body;
 
-    a { margin-left: 6px; white-space: nowrap; }
+    a { white-space: nowrap; }
   }
 
   .fwmc-link-button {

@@ -92,6 +92,41 @@ final class Promotions
     }
 
     /**
+     * Shared interface (2026-11-25, asked by Page Filter Report for the kit's Campaign Manager tip, Peter's decision 8 of
+     * 2026-11-23): the address of one Feinwerk plugin's window on the Feinwerk Plugins screen, where a super user installs
+     * it, free or paid. '' unless the current user is a super user, promotions are on, the connector is connected, this
+     * is no Matomo for WordPress, and the cached store list names the plugin with a build for this Matomo while it is not
+     * installed here (demo mode: any listed plugin). Never the connector itself. From the cached list only, no request,
+     * never throws; released plugins will call it: never rename it or change its meaning.
+     *
+     * @param  string  $slug  the plugin's technical name, e.g. "FeinwerkCampaignManager"
+     * @return string  a relative Matomo URL (index.php?module=FeinwerkMarketplaceConnector&action=index&fwmc_open=<slug>) or ''
+     */
+    public static function pluginInstallUrl(string $slug): string
+    {
+        try {
+            if (! preg_match('/^Feinwerk[A-Za-z0-9]+$/', $slug) || $slug === 'FeinwerkMarketplaceConnector'
+                || ! \Piwik\Piwik::hasUserSuperUserAccess() || ! self::areEnabled() || MatomoForWordPress::detected()) {
+                return '';
+            }
+            foreach (PendingUpdates::cachedPlugins() as $plugin) {   // empty without an instance token
+                if (! is_array($plugin) || ($plugin['slug'] ?? null) !== $slug) {
+                    continue;
+                }
+                if (! self::demo() && (empty($plugin['latest']['version']) || isset(InstalledMarketplacePlugins::versions([$plugin])[$slug]))) {
+                    return '';
+                }
+
+                return 'index.php?module=FeinwerkMarketplaceConnector&action=index&fwmc_open='.rawurlencode($slug);
+            }
+
+            return '';
+        } catch (\Throwable $e) {
+            return '';
+        }
+    }
+
+    /**
      * Paid Feinwerk plugins this Matomo lacks (has a build, not installed, not the connector), store order, cached list.
      *
      * @return list<array{slug: string, name: string, description: string, price: string, image: string, storeUrl: string, installUrl: string}>
@@ -135,7 +170,7 @@ final class Promotions
         return $out;
     }
 
-    /** "from 59,00 € / month" in the admin's language (the connector's own texts), '' without a price. */
+    /** "from 59,00 € / month" (or "... incl. VAT" with the store's VAT rate) in the admin's language, '' without a price. */
     private static function priceFrom($price): string
     {
         if (! is_array($price) || ! is_numeric($price['amount_eur'] ?? null)) {
@@ -148,7 +183,10 @@ final class Promotions
             $amount = number_format((float) $price['amount_eur'], 2);
         }
 
-        return \Piwik\Piwik::translate('FeinwerkMarketplaceConnector_PriceFrom', [
+        // The store's prices are gross; with its VAT rate the text says so (Peter, 2026-11-26: "Netto und brutto").
+        $vat = is_numeric($price['vat_rate'] ?? null) && (float) $price['vat_rate'] > 0;
+
+        return \Piwik\Piwik::translate($vat ? 'FeinwerkMarketplaceConnector_PriceFromVat' : 'FeinwerkMarketplaceConnector_PriceFrom', [
             $amount,
             \Piwik\Piwik::translate('FeinwerkMarketplaceConnector_'.($intervals[$price['interval'] ?? ''] ?? 'IntervalMonthly')),
         ]);

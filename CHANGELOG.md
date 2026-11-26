@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.10.0
+
+- In the plugin window a click on a plan opens the checkout of exactly that plan on the Feinwerk store, for this
+  Matomo, and brings you back afterwards (before, it opened the plugin's page on the store website). With a bought
+  license the plans are shown as information.
+- Prices say that they include VAT, as on the Feinwerk store: "from 70.21 € / month incl. VAT" on the cards, and
+  each plan in the plugin window also names the rate and the net price ("incl. 19% VAT · 59.00 € excl. VAT").
+- The plugin window now always opens at the plugin's name (Matomo could still move it to the last link of the
+  description), and it fits a phone screen: picture above the text, wide tables scroll inside themselves.
+
 ## 5.9.0
 
 - The Feinwerk Plugins screen reads better in every language and on small screens: the tabs fit on a phone, prices,

@@ -886,9 +886,23 @@ class Controller extends \Piwik\Plugin\ControllerAdmin
         try {
             $returnUrl = \Piwik\Url::getCurrentUrlWithoutFileName().'index.php?'
                 .http_build_query(['module' => 'FeinwerkMarketplaceConnector', 'action' => 'buyReturn', 'slug' => $slug]);
-            $url = $this->client($this->settings())->createPurchaseIntent($slug, $returnUrl, $this->adminLang());
+            // A plan card of the window sends its plan (Peter, 2026-11-24): straight to that plan's checkout. Anything but a
+            // positive id of at most ten digits is dropped, and the store shows its plan choice.
+            $planInput = \Piwik\Common::getRequestVar('plan', '', 'string');
+            $plan = preg_match('/^[1-9][0-9]{0,9}$/', $planInput) === 1 && (int) $planInput <= 2147483647 ? (int) $planInput : null;
+            $client = $this->client($this->settings());
+            try {
+                $url = $client->createPurchaseIntent($slug, $returnUrl, $this->adminLang(), $plan);
+            } catch (MarketplaceRefusedException $e) {
+                // A plan the store sells no more (a window open for long): its plan choice instead (store, 2026-11-24).
+                if ($plan === null || $e->refusal !== 'invalid_plan') {
+                    throw $e;
+                }
+                $plan = null;
+                $url = $client->createPurchaseIntent($slug, $returnUrl, $this->adminLang());
+            }
 
-            if (PurchaseLink::isOnStore($url, MarketplaceClientFactory::url())) {
+            if (PurchaseLink::isOnStore($url, MarketplaceClientFactory::url(), $plan)) {
                 \Piwik\Url::redirectToUrl($url);
 
                 return '';

@@ -8,7 +8,12 @@ namespace Piwik\Plugins\FeinwerkMarketplaceConnector\Core;
  */
 final class PurchaseLink
 {
-    public static function isOnStore(string $url, string $storeBase): bool
+    /**
+     * @param  int|null  $plan  the plan the admin clicked (Peter, 2026-11-24: straight to that plan's checkout): then the
+     *                          store's checkout of exactly this plan, /buy/<intent>/plan/<plan>, is accepted as well as the
+     *                          plain /buy/<intent> of a store that ignores the plan; without a plan only the plain one.
+     */
+    public static function isOnStore(string $url, string $storeBase, ?int $plan = null): bool
     {
         $link = parse_url($url);
         $base = parse_url(trim($storeBase));
@@ -36,7 +41,9 @@ final class PurchaseLink
 
         $prefix = rtrim((string) ($base['path'] ?? ''), '/').'/buy/';
 
-        return preg_match('~^'.preg_quote($prefix, '~').'[A-Za-z0-9]{40}$~', (string) ($link['path'] ?? '')) === 1;
+        $planPage = $plan !== null && $plan > 0 ? '(/plan/'.$plan.')?' : '';
+
+        return preg_match('~^'.preg_quote($prefix, '~').'[A-Za-z0-9]{40}'.$planPage.'$~', (string) ($link['path'] ?? '')) === 1;
     }
 
     /** @param  array<string, mixed>  $parts */

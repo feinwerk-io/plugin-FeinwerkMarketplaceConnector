@@ -21,13 +21,7 @@
       <p class="fwmc-card-desc" v-if="row.description">{{ row.description }}</p>
       <div class="fwmc-card-foot">
         <span class="fwmc-meta" v-if="row.category">{{ categoryLabel || row.category }}</span>
-        <span class="fwmc-price" v-if="row.priceFrom">
-          {{ translate(
-            'FeinwerkMarketplaceConnector_PriceFrom',
-            amount(row.priceFrom.amount_eur),
-            intervalLabel(row.priceFrom.interval),
-          ) }}
-        </span>
+        <span class="fwmc-price" v-if="row.priceFrom">{{ priceFromText(row.priceFrom) }}</span>
         <span class="fwmc-meta fwmc-card-na" v-if="row.availableHere === false">
           {{ translate('FeinwerkMarketplaceConnector_NotAvailableHere') }}
         </span>
@@ -70,9 +64,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { translate } from 'CoreHome';
-import intervalLabel from '../intervals';
-import amount from '../amount';
 import proxied from '../proxied';
+import { priceFromText } from '../vat';
 
 export default defineComponent({
   emits: ['open'],
@@ -93,9 +86,8 @@ export default defineComponent({
     },
   },
   methods: {
+    priceFromText,
     translate,
-    intervalLabel,
-    amount,
     proxied,
   },
 });

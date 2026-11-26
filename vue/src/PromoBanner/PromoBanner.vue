@@ -73,10 +73,9 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { translate } from 'CoreHome';
-import intervalLabel from '../intervals';
-import amount from '../amount';
 import FeinwerkLogo from '../FeinwerkLogo/FeinwerkLogo.vue';
 import proxied from '../proxied';
+import { priceFromText } from '../vat';
 
 interface Promo {
   slug: string;
@@ -84,7 +83,7 @@ interface Promo {
   description: string;
   artworkUrl: string|null;
   tier: string;
-  priceFrom: { amount_eur: string, interval: string }|null;
+  priceFrom: { amount_eur: string, interval: string, vat_rate?: number }|null;
   // "Switch recommendations off" right here (Recommendation::current, backlog 12).
   offUrl?: string;
   offNonce?: string;
@@ -124,14 +123,7 @@ export default defineComponent({
       return (this.promo?.name || '?').trim().charAt(0).toUpperCase();
     },
     price(): string {
-      const from = this.promo?.priceFrom;
-      return from
-        ? translate(
-          'FeinwerkMarketplaceConnector_PriceFrom',
-          amount(from.amount_eur),
-          intervalLabel(from.interval),
-        )
-        : '';
+      return priceFromText(this.promo?.priceFrom);
     },
     // Store-controlled URL: bound as an href only when it is http(s).
     safeStoreUrl(): string {

@@ -14,7 +14,7 @@
         "CachedNote": "Showing cached data. The marketplace did not answer as expected just now.",
         "SearchPlaceholder": "Search plugins…",
         "AllCategories": "All categories",
-        "AllTiers": "All tiers",
+        "AllTiers": "All pricing models",
         "TierFree": "Free",
         "TierPaid": "Paid",
         "PriceFrom": "from %1$s € / %2$s",
@@ -307,6 +307,9 @@
         "TryAgain": "Try again",
         "FailureTimeout": "The server did not answer in time. Please try again.",
         "FailureReload": "You may have been logged out, or the page is outdated. Please reload the page.",
-        "FailureConnection": "The connection to the server broke. Please check your connection and try again."
+        "FailureConnection": "The connection to the server broke. Please check your connection and try again.",
+        "PlanBuy": "Buy this plan",
+        "PriceFromVat": "from %1$s € / %2$s incl. VAT",
+        "PlanVat": "incl. %1$s VAT · %2$s € excl. VAT"
     }
 }

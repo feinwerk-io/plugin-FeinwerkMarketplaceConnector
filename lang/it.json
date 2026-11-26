@@ -14,7 +14,7 @@
         "CachedNote": "Sono visualizzati i dati in cache: poco fa il Marketplace non ha risposto come previsto.",
         "SearchPlaceholder": "Cerca plugin…",
         "AllCategories": "Tutte le categorie",
-        "AllTiers": "Tutti i livelli",
+        "AllTiers": "Tutti i modelli di prezzo",
         "TierFree": "Gratuito",
         "TierPaid": "A pagamento",
         "PriceFrom": "da %1$s € / %2$s",
@@ -307,6 +307,9 @@
         "TryAgain": "Riprova",
         "FailureTimeout": "Il server non ha risposto in tempo. Riprovi.",
         "FailureReload": "Potrebbe essere stato disconnesso, oppure la pagina non è aggiornata. Ricarichi la pagina.",
-        "FailureConnection": "La connessione al server si è interrotta. Verifichi la connessione e riprovi."
+        "FailureConnection": "La connessione al server si è interrotta. Verifichi la connessione e riprovi.",
+        "PlanBuy": "Acquista questo piano",
+        "PriceFromVat": "da %1$s € / %2$s IVA inclusa",
+        "PlanVat": "IVA %1$s inclusa · %2$s € IVA esclusa"
     }
 }

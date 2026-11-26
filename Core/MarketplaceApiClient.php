@@ -285,13 +285,21 @@ final class MarketplaceApiClient
         return $body;
     }
 
-    /** Asks the store for a buy page of this plugin that returns to $returnUrl; returns its URL. */
-    public function createPurchaseIntent(string $slug, string $returnUrl, string $lang): string
+    /**
+     * Asks the store for a buy page of this plugin that returns to $returnUrl; returns its URL. With $plan (the id of one
+     * of the plugin's plans from the detail answer) the store answers with that plan's checkout; a store without it
+     * ignores the field and answers with its plan choice.
+     */
+    public function createPurchaseIntent(string $slug, string $returnUrl, string $lang, ?int $plan = null): string
     {
+        $body = ['slug' => $slug, 'return_url' => $returnUrl, 'lang' => $lang];
+        if ($plan !== null && $plan > 0) {
+            $body['plan'] = $plan;
+        }
         $response = $this->transport->postJson(
             $this->baseUrl.'/api/v1/instances/purchase-intents',
             $this->authHeaders(),
-            ['slug' => $slug, 'return_url' => $returnUrl, 'lang' => $lang]
+            $body
         );
         $this->ensureAccepted($response);
 

@@ -307,6 +307,9 @@
         "TryAgain": "Réessayer",
         "FailureTimeout": "Le serveur n’a pas répondu à temps. Veuillez réessayer.",
         "FailureReload": "Vous avez peut-être été déconnecté, ou la page n’est plus à jour. Veuillez recharger la page.",
-        "FailureConnection": "La connexion au serveur a été interrompue. Veuillez vérifier votre connexion et réessayer."
+        "FailureConnection": "La connexion au serveur a été interrompue. Veuillez vérifier votre connexion et réessayer.",
+        "PlanBuy": "Acheter cette formule",
+        "PriceFromVat": "à partir de %1$s € / %2$s TTC",
+        "PlanVat": "TVA %1$s incluse · %2$s € HT"
     }
 }
