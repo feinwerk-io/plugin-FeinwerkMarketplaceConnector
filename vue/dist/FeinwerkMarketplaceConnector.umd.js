@@ -2160,6 +2160,9 @@ function intervalLabel(interval) {
 
 
 
+function numeric(value) {
+  return value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+}
 function vatRate(price) {
   const rate = Number(price === null || price === void 0 ? void 0 : price.vat_rate);
   return Number.isFinite(rate) && rate > 0 && rate < 100 ? rate : null;
@@ -2181,12 +2184,22 @@ function percent(rate) {
   }
   return `${rate}\u00a0%`;
 }
-// "from 70,21 € / month" or, with the store's VAT rate, "... incl. VAT".
+// "from 59,00 € / month plus VAT" with the store's VAT rate and net amount, as the store shows it
+// (Peter, 2026-11-27: "Netto groß, brutto klein"); a rate without a net amount: the gross "incl.
+// VAT"; no rate (an older store): the plain amount.
 function priceFromText(price) {
   if (!price) {
     return '';
   }
-  return Object(external_CoreHome_["translate"])(vatRate(price) !== null ? 'FeinwerkMarketplaceConnector_PriceFromVat' : 'FeinwerkMarketplaceConnector_PriceFrom', amount(price.amount_eur), intervalLabel(String(price.interval || '')));
+  const vat = vatRate(price) !== null;
+  const net = vat && numeric(price.amount_net_eur);
+  let key = 'PriceFrom';
+  if (net) {
+    key = 'PriceFromNet';
+  } else if (vat) {
+    key = 'PriceFromVat';
+  }
+  return Object(external_CoreHome_["translate"])(`FeinwerkMarketplaceConnector_${key}`, amount(net ? price.amount_net_eur : price.amount_eur), intervalLabel(String(price.interval || '')));
 }
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PluginCard/PluginCard.vue?vue&type=script&lang=ts
 
@@ -3804,39 +3817,39 @@ const TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 BugReportFormvue_type_script_lang_ts.render = BugReportFormvue_type_template_id_7058e80c_render
 
 /* harmony default export */ var BugReportForm = (BugReportFormvue_type_script_lang_ts);
-// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PlanCard/PlanCard.vue?vue&type=template&id=11b3a152
+// CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-babel/node_modules/cache-loader/dist/cjs.js??ref--13-0!./node_modules/@vue/cli-plugin-babel/node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PlanCard/PlanCard.vue?vue&type=template&id=2ae34a3f
 
-const PlanCardvue_type_template_id_11b3a152_hoisted_1 = {
+const PlanCardvue_type_template_id_2ae34a3f_hoisted_1 = {
   class: "fwmc-plan-name"
 };
-const PlanCardvue_type_template_id_11b3a152_hoisted_2 = {
+const PlanCardvue_type_template_id_2ae34a3f_hoisted_2 = {
   class: "fwmc-plan-price"
 };
-const PlanCardvue_type_template_id_11b3a152_hoisted_3 = {
+const PlanCardvue_type_template_id_2ae34a3f_hoisted_3 = {
   key: 0,
   class: "fwmc-meta"
 };
-const PlanCardvue_type_template_id_11b3a152_hoisted_4 = {
+const PlanCardvue_type_template_id_2ae34a3f_hoisted_4 = {
   key: 1,
   class: "fwmc-meta"
 };
-const PlanCardvue_type_template_id_11b3a152_hoisted_5 = {
+const PlanCardvue_type_template_id_2ae34a3f_hoisted_5 = {
   key: 2,
   class: "fwmc-meta"
 };
-const PlanCardvue_type_template_id_11b3a152_hoisted_6 = {
+const PlanCardvue_type_template_id_2ae34a3f_hoisted_6 = {
   key: 3,
   class: "fwmc-plan-buy-cue"
 };
-function PlanCardvue_type_template_id_11b3a152_render(_ctx, _cache, $props, $setup, $data, $options) {
+function PlanCardvue_type_template_id_2ae34a3f_render(_ctx, _cache, $props, $setup, $data, $options) {
   return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", {
     class: Object(external_commonjs_vue_commonjs2_vue_root_Vue_["normalizeClass"])(["fwmc-plan", {
       'fwmc-plan--highlight': _ctx.plan.highlight,
       'fwmc-plan--busy': _ctx.busy
     }])
-  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", PlanCardvue_type_template_id_11b3a152_hoisted_1, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.name), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", PlanCardvue_type_template_id_11b3a152_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.amount(_ctx.plan.price_eur)) + " € / " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.intervalLabel(_ctx.plan.interval)), 1), _ctx.vatLine ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_11b3a152_hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.vatLine), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.plan.max_users ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_11b3a152_hoisted_4, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_MaxUsers', _ctx.plan.max_users)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.note ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_11b3a152_hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.note), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.buy ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_11b3a152_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.busy ? _ctx.translate('FeinwerkMarketplaceConnector_Working') : _ctx.translate('FeinwerkMarketplaceConnector_PlanBuy')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 2);
+  }, [Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", PlanCardvue_type_template_id_2ae34a3f_hoisted_1, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.name), 1), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementVNode"])("span", PlanCardvue_type_template_id_2ae34a3f_hoisted_2, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.amount(_ctx.shownPrice)) + " € / " + Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.intervalLabel(_ctx.plan.interval)), 1), _ctx.vatLine ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_2ae34a3f_hoisted_3, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.vatLine), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.plan.max_users ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_2ae34a3f_hoisted_4, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.translate('FeinwerkMarketplaceConnector_MaxUsers', _ctx.plan.max_users)), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.note ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_2ae34a3f_hoisted_5, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.note), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true), _ctx.buy ? (Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createElementBlock"])("span", PlanCardvue_type_template_id_2ae34a3f_hoisted_6, Object(external_commonjs_vue_commonjs2_vue_root_Vue_["toDisplayString"])(_ctx.busy ? _ctx.translate('FeinwerkMarketplaceConnector_Working') : _ctx.translate('FeinwerkMarketplaceConnector_PlanBuy')), 1)) : Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createCommentVNode"])("", true)], 2);
 }
-// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/PlanCard/PlanCard.vue?vue&type=template&id=11b3a152
+// CONCATENATED MODULE: ./plugins/FeinwerkMarketplaceConnector/vue/src/PlanCard/PlanCard.vue?vue&type=template&id=2ae34a3f
 
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/PlanCard/PlanCard.vue?vue&type=script&lang=ts
 
@@ -3869,14 +3882,22 @@ function PlanCardvue_type_template_id_11b3a152_render(_ctx, _cache, $props, $set
     note() {
       return inAdminLanguage(this.plan.note_en, this.plan.note_de);
     },
-    // "incl. 19 % VAT · 59,00 € excl. VAT" when the store sends its rate and the net price.
+    // With the store's rate and net price the card shows the net price large and the gross small,
+    // as the store does (Peter, 2026-11-27: "Netto groß, brutto klein").
+    netShown() {
+      const net = this.plan.price_net_eur;
+      return vatRate(this.plan) !== null && net !== null && net !== undefined && net !== '' && Number.isFinite(Number(net));
+    },
+    shownPrice() {
+      return this.netShown ? this.plan.price_net_eur : this.plan.price_eur;
+    },
+    // "plus VAT · 70,21 € incl. 19 % VAT"
     vatLine() {
       const rate = vatRate(this.plan);
-      const net = Number(this.plan.price_net_eur);
-      if (rate === null || this.plan.price_net_eur === '' || !Number.isFinite(net)) {
+      if (!this.netShown || rate === null) {
         return '';
       }
-      return Object(external_CoreHome_["translate"])('FeinwerkMarketplaceConnector_PlanVat', percent(rate), amount(net));
+      return Object(external_CoreHome_["translate"])('FeinwerkMarketplaceConnector_PlanGross', amount(this.plan.price_eur), percent(rate));
     }
   },
   methods: {
@@ -3891,7 +3912,7 @@ function PlanCardvue_type_template_id_11b3a152_render(_ctx, _cache, $props, $set
 
 
 
-PlanCardvue_type_script_lang_ts.render = PlanCardvue_type_template_id_11b3a152_render
+PlanCardvue_type_script_lang_ts.render = PlanCardvue_type_template_id_2ae34a3f_render
 
 /* harmony default export */ var PlanCard = (PlanCardvue_type_script_lang_ts);
 // CONCATENATED MODULE: ./node_modules/@vue/cli-plugin-typescript/node_modules/cache-loader/dist/cjs.js??ref--15-0!./node_modules/babel-loader/lib!./node_modules/@vue/cli-plugin-typescript/node_modules/ts-loader??ref--15-2!./node_modules/@vue/cli-service/node_modules/cache-loader/dist/cjs.js??ref--1-0!./node_modules/@vue/cli-service/node_modules/vue-loader-v16/dist??ref--1-1!./plugins/FeinwerkMarketplaceConnector/vue/src/DetailModal/DetailModal.vue?vue&type=script&lang=ts

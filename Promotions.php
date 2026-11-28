@@ -170,23 +170,27 @@ final class Promotions
         return $out;
     }
 
-    /** "from 59,00 € / month" (or "... incl. VAT" with the store's VAT rate) in the admin's language, '' without a price. */
+    /** "from 59,00 € / month plus VAT" (net, with the store's VAT rate) in the admin's language, '' without a price. */
     private static function priceFrom($price): string
     {
         if (! is_array($price) || ! is_numeric($price['amount_eur'] ?? null)) {
             return '';
         }
         $intervals = ['monthly' => 'IntervalMonthly', 'yearly' => 'IntervalYearly', 'two_years' => 'IntervalTwoYears', 'once' => 'IntervalOnce'];
-        try {
-            $amount = \Piwik\NumberFormatter::getInstance()->formatNumber((float) $price['amount_eur'], 2, 2);
-        } catch (\Throwable $e) {
-            $amount = number_format((float) $price['amount_eur'], 2);
-        }
-
-        // The store's prices are gross; with its VAT rate the text says so (Peter, 2026-11-26: "Netto und brutto").
+        // The store's amount_eur is gross. With its VAT rate the store also sends the net amount, which it shows large
+        // (Peter, 2026-11-27: "Netto groß, brutto klein"): the net price plus VAT; a rate without a net amount keeps the
+        // gross with "incl. VAT"; no rate (an older store) keeps the plain amount.
         $vat = is_numeric($price['vat_rate'] ?? null) && (float) $price['vat_rate'] > 0;
+        $net = $vat && is_numeric($price['amount_net_eur'] ?? null);
+        $value = (float) ($net ? $price['amount_net_eur'] : $price['amount_eur']);
+        try {
+            $amount = \Piwik\NumberFormatter::getInstance()->formatNumber($value, 2, 2);
+        } catch (\Throwable $e) {
+            $amount = number_format($value, 2);
+        }
+        $key = $net ? 'PriceFromNet' : ($vat ? 'PriceFromVat' : 'PriceFrom');
 
-        return \Piwik\Piwik::translate($vat ? 'FeinwerkMarketplaceConnector_PriceFromVat' : 'FeinwerkMarketplaceConnector_PriceFrom', [
+        return \Piwik\Piwik::translate('FeinwerkMarketplaceConnector_'.$key, [
             $amount,
             \Piwik\Piwik::translate('FeinwerkMarketplaceConnector_'.($intervals[$price['interval'] ?? ''] ?? 'IntervalMonthly')),
         ]);

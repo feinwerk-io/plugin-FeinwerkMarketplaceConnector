@@ -7,7 +7,7 @@
   >
     <span class="fwmc-plan-name">{{ name }}</span>
     <span class="fwmc-plan-price">
-      {{ amount(plan.price_eur) }} € / {{ intervalLabel(plan.interval) }}
+      {{ amount(shownPrice) }} € / {{ intervalLabel(plan.interval) }}
     </span>
     <span class="fwmc-meta" v-if="vatLine">{{ vatLine }}</span>
     <span class="fwmc-meta" v-if="plan.max_users">
@@ -45,14 +45,23 @@ export default defineComponent({
     note(): string|null {
       return inAdminLanguage(this.plan.note_en, this.plan.note_de);
     },
-    // "incl. 19 % VAT · 59,00 € excl. VAT" when the store sends its rate and the net price.
+    // With the store's rate and net price the card shows the net price large and the gross small,
+    // as the store does (Peter, 2026-11-27: "Netto groß, brutto klein").
+    netShown(): boolean {
+      const net = this.plan.price_net_eur;
+      return vatRate(this.plan) !== null && net !== null && net !== undefined && net !== ''
+        && Number.isFinite(Number(net));
+    },
+    shownPrice(): unknown {
+      return this.netShown ? this.plan.price_net_eur : this.plan.price_eur;
+    },
+    // "plus VAT · 70,21 € incl. 19 % VAT"
     vatLine(): string {
       const rate = vatRate(this.plan);
-      const net = Number(this.plan.price_net_eur);
-      if (rate === null || this.plan.price_net_eur === '' || !Number.isFinite(net)) {
+      if (!this.netShown || rate === null) {
         return '';
       }
-      return translate('FeinwerkMarketplaceConnector_PlanVat', percent(rate), amount(net));
+      return translate('FeinwerkMarketplaceConnector_PlanGross', amount(this.plan.price_eur), percent(rate));
     },
   },
   methods: {

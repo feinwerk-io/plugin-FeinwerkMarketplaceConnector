@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.11.0
+
+- Prices show the net amount first, as on the Feinwerk store: "from 59.00 € / month plus VAT" on the cards, and each
+  plan in the plugin window shows the net price large with the gross price including VAT below it.
+
 ## 5.10.2
 
 - Buttons next to each other keep a gap everywhere: install or update next to "Buy a license" in the plugin window,

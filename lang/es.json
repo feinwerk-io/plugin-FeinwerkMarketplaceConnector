@@ -310,11 +310,12 @@
         "FailureConnection": "Se ha interrumpido la conexión con el servidor. Compruebe su conexión e inténtelo de nuevo.",
         "PlanBuy": "Comprar este plan",
         "PriceFromVat": "desde %1$s € / %2$s IVA incluido",
-        "PlanVat": "IVA del %1$s incluido · %2$s € sin IVA",
         "NoAccountNext": "Después podrá comprar plugins y probarlos gratis.",
         "TrialPitch": "Pruébelo gratis y sin datos de pago. Solo compra una licencia si desea conservar el plugin.",
         "TrialReasonEmailUnverified": "Confirme la dirección de correo electrónico de su cuenta de cliente de Feinwerk para probar este plugin gratis.",
         "TrialReasonNoAccount": "Conecte este Matomo con su cuenta de Feinwerk para probar este plugin gratis.",
-        "TrialReasonUsed": "La prueba gratuita de este plugin ya se ha utilizado para este Matomo."
+        "TrialReasonUsed": "La prueba gratuita de este plugin ya se ha utilizado para este Matomo.",
+        "PriceFromNet": "desde %1$s € / %2$s sin IVA",
+        "PlanGross": "sin IVA · %1$s € con IVA del %2$s"
     }
 }

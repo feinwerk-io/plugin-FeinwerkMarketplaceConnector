@@ -310,11 +310,12 @@
         "FailureConnection": "The connection to the server broke. Please check your connection and try again.",
         "PlanBuy": "Buy this plan",
         "PriceFromVat": "from %1$s € / %2$s incl. VAT",
-        "PlanVat": "incl. %1$s VAT · %2$s € excl. VAT",
         "NoAccountNext": "After connecting you can buy plugins and test them for free.",
         "TrialPitch": "Test it free and without payment details. You buy a license only if you want to keep the plugin.",
         "TrialReasonEmailUnverified": "Confirm the e-mail address of your Feinwerk customer account to test this plugin for free.",
         "TrialReasonNoAccount": "Connect this Matomo with your Feinwerk account to test this plugin for free.",
-        "TrialReasonUsed": "The free trial of this plugin has already been used for this Matomo."
+        "TrialReasonUsed": "The free trial of this plugin has already been used for this Matomo.",
+        "PriceFromNet": "from %1$s € / %2$s plus VAT",
+        "PlanGross": "plus VAT · %1$s € incl. %2$s VAT"
     }
 }
